@@ -1,0 +1,79 @@
+METAMAGO 1.0.0 BETA
+=========================
+
+AVVIO
+1. Estrarre tutto lo ZIP in una cartella locale.
+2. Chiudere il documento in Word, Excel o PowerPoint.
+3. Fare doppio clic su Avvia-MetaMago.bat.
+4. Aprire un documento, modificare i campi, premere SALVA DOCUMENTO.
+   La scelta predefinita salva una copia con suffisso _metadati.
+   Per sostituire l'originale, selezionare l'opzione dedicata: viene creato
+   automaticamente un backup con nome univoco nella stessa cartella.
+   Il file di destinazione di una copia non deve gia esistere.
+
+REQUISITI
+Windows 10/11, Windows PowerShell 5.1 e .NET Framework (componenti Windows).
+Nessuna installazione di Python, moduli o Office COM. Office 365 e utile per
+aprire e verificare il risultato. Funzionamento locale senza connessione.
+Il BAT usa ExecutionPolicy Bypass solo per il processo lanciato; non cambia
+le impostazioni del sistema e non aggira criteri aziendali, AppLocker o WDAC.
+Se una policy aziendale blocca gli script, rivolgersi all'amministratore IT.
+
+FORMATI
+Word: DOCX, DOCM, DOTX, DOTM.
+Excel: XLSX, XLSM, XLTX, XLTM.
+PowerPoint: PPTX, PPTM, POTX, POTM, PPSX, PPSM.
+Non supportati: DOC, XLS, PPT, XLSB, PDF, file cifrati, file con firma digitale
+sul pacchetto, varianti Strict con namespace non riconosciuti.
+Le macro non vengono eseguite e i relativi contenuti non vengono modificati.
+
+AUTORI E RUBRICA
+Separare gli autori con punto e virgola o una nuova riga. I valori vengono
+salvati in dc:creator nel formato convenzionale di Office (es. Mario Rossi;
+Anna Verdi). Il campo ultima modifica da contiene normalmente una persona.
+La rubrica locale permette di aggiungere, selezionare, riutilizzare e rimuovere
+contatti e di importare in rubrica gli autori del documento aperto.
+Per impostazione predefinita gli autori salvati vengono memorizzati nella
+rubrica locale; deselezionare la relativa casella per disabilitarlo.
+File rubrica: %LOCALAPPDATA%\OfficeMetadataEditor\rubrica.json
+Non crea contatti nella rubrica aziendale Microsoft 365 / Outlook, non attribuisce
+identita verificate, non modifica i coautori online. Il riconoscimento delle
+persone in File > Informazioni dipende dalla versione e dagli account Office.
+
+DATE E ALTRI METADATI
+Le date mostrate sono in ora locale. Inserire AAAA-MM-GG HH:mm:ss, oppure
+un timestamp ISO con offset esplicito (es. 2026-11-24T14:30:00+01:00).
+Le date modificate vengono scritte in UTC. I campi lasciati invariati non
+vengono riscritti. Svuotare un campo per rimuovere la relativa proprieta.
+Le date interne del documento sono diverse dalle date di Explorer/NTFS.
+Office puo aggiornare data di modifica e ultimo autore a ogni salvataggio.
+Commenti indica la proprieta descrittiva del file, non le annotazioni interne.
+Le proprieta non esposte, il contenuto, le revisioni, i commenti interni e le
+parti macro restano intatti a livello di contenuto dei rispettivi XML/parti.
+Non modifica cronologia SharePoint, log, firme o informazioni di audit.
+
+PROTEZIONE
+Contrassegna come finale: aggiunge la proprieta Office _MarkAsFinal. E un
+avviso reversibile, non una password. L'effettivo avviso dipende dalla versione
+Office. Uno stato finale gia presente viene mantenuto. Sola lettura Windows:
+flag del file, rimovibile. Nessun blocco selettivo dell'autore. Non rimuove le
+protezioni preesistenti. Non gestisce password, cifratura o IRM.
+
+VERIFICA
+Aprire il risultato in Office > File > Informazioni > Proprieta (o Proprieta
+avanzate). Non salvare nuovamente da Office se si vuole verificare la data
+e l'ultimo autore impostati. Verificare anche che contenuto e macro siano
+presenti. Per documenti ufficiali usare solo metadati autorizzati e corretti.
+Il motore rilegge e confronta tutti i campi gestiti prima di pubblicare il file.
+Eseguire Esegui-Test.bat per avviare il test automatico locale su tre documenti
+di prova inclusi. Controlla metadati, copie, backup, protezione e hash SHA256
+delle parti non modificate. Non apre Office e non sostituisce il test visivo.
+Questa versione non e stata eseguita su Windows/Office in ambiente di sviluppo:
+si raccomanda il collaudo su una copia prima dell'uso operativo.
+
+PROGETTO
+Autore: Iannaman
+Profilo: https://github.com/Iannaman
+Repository: https://github.com/Iannaman/MetaMago
+Release: https://github.com/Iannaman/MetaMago/releases
+Licenza proposta: MIT.

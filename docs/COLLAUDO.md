@@ -1,0 +1,13 @@
+# Collaudo manuale Windows / Office 365
+- [ ] Avvio BAT da cartella con spazi; apertura interfaccia e icona.
+- [ ] Link profilo, repository e release (dopo la creazione del repository).
+- [ ] Esegui-Test.bat restituisce PASS sui tre formati.
+- [ ] Aprire una copia di ciascun documento di prova, modificare due autori e ultimo autore.
+- [ ] Verificare date locali, UTC e proprietà avanzate in Office senza risalvare.
+- [ ] Riavviare e verificare persistenza della rubrica.
+- [ ] Verificare salvataggio predefinito su copia e hash dell'originale.
+- [ ] Verificare backup sovrascrittura, rifiuto file in uso, sola lettura e avviso finale.
+- [ ] Provare template e file con macro autorizzati; verificare che Office non mostri avvisi di riparazione.
+- [ ] Verificare il rifiuto di un file cifrato/firmato.
+- [ ] Verificare visualizzazione al 100%, 125% e 150% DPI.
+- [ ] Eseguire la CI GitHub e pubblicare la beta solo dopo i controlli.
