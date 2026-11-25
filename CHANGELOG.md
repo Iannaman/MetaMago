@@ -1,5 +1,9 @@
 # Changelog
 
+## Office Edition 2.7.0 — Compliance Edition (candidato)
+- Controllo massivo in sola lettura rispetto ai modelli, esiti per regola e documento, report CSV/HTML.
+- Verifiche PDF limitate con risultati non conclusivi espliciti; nessuna certificazione legale.
+
 ## Office Edition 2.6.0 — Privacy Edition (candidato)
 - Pulizia selettiva metadati Office con consenso, verifica della copia e analisi degli elementi residui.
 - Test di conservazione delle parti di contenuto Word, Excel e PowerPoint.

@@ -28,7 +28,7 @@ function modelOption(id,items,emptyLabel){
 }
 function refreshModels(){
  const items=getModels();modelOption('modelSelect',items,null);modelOption('inspectModel',items,tr('Nessun modello'));modelOption('renameModel',items,tr('Nome originale + metadati'));modelOption('batchRename',items,tr('Nome originale + metadati'));
- batchInvalidate();renderModelEvaluation();if(typeof syncProfessionalControls==='function')syncProfessionalControls();
+ batchInvalidate();renderModelEvaluation();if(typeof complianceRefresh==='function'&&$('complianceModel')?.options.length)complianceRefresh();if(typeof syncProfessionalControls==='function')syncProfessionalControls();
 }
 function modelRow(rule={field:'title',op:'present',value:''}){
  const row=document.createElement('div');row.className='model-rule';
