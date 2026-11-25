@@ -66,6 +66,8 @@ jobs:
         run: node Office/tests/protection.mjs
       - name: Test PDF Inspector
         run: node Office/tests/pdf-inspector.mjs
+      - name: Test PDF Publication
+        run: node Office/tests/publication.mjs
       - uses: actions/configure-pages@v5
       - uses: actions/upload-pages-artifact@v3
         with:
