@@ -1,6 +1,6 @@
 
 let batchFiles=[],batchPlan=null,batchZip=null,batchCancelled=false;
-const batchFields=['batchAuthorMode','batchAuthors','batchLastOn','batchLast','batchCompanyOn','batchCompany','batchManagerOn','batchManager','batchMark','batchRename','batchPdfTitleOn','batchPdfTitle','batchWatermarkOn','batchWatermarkText','batchWatermarkPosition','batchProtectOn','batchOwner','batchOwnerConfirm','batchUser','batchUserConfirm','batchPrint','batchExtract'];
+const batchFields=['batchAuthorMode','batchAuthors','batchLastOn','batchLast','batchCompanyOn','batchCompany','batchManagerOn','batchManager','batchMark','batchRename','batchPdfTitleOn','batchPdfTitle','batchWatermarkOn','batchWatermarkText','batchWatermarkPosition','batchProtectOn','batchOwner','batchOwnerConfirm','batchUser','batchUserConfirm','batchPrint','batchExtract','batchPrivacyOffice','batchPrivacyPdf'];
 function batchInvalidate(){if(typeof clearBatchAudit==='function')clearBatchAudit();batchPlan=null;batchZip=null;$('batchRun').disabled=true;$('batchAgain').hidden=true;$('batchRows').replaceChildren();msg('batchStatus','')}
 function clearBatchPasswords(){for(const id of ['batchOwner','batchOwnerConfirm','batchUser','batchUserConfirm'])$(id).value=''}
 function batchInputs(){for(const id of ['batchWatermarkText','batchWatermarkPosition'])$(id).disabled=!$('batchWatermarkOn').checked;for(const id of ['batchOwner','batchOwnerConfirm','batchUser','batchUserConfirm','batchPrint','batchExtract'])$(id).disabled=!$('batchProtectOn').checked;if(!$('batchProtectOn').checked)clearBatchPasswords(); $('batchPdfTitle').disabled=!$('batchPdfTitleOn').checked; $('batchAuthors').disabled=$('batchAuthorMode').value==='keep';for(const key of ['Last','Company','Manager'])$('batch'+key).disabled=!$('batch'+key+'On').checked}
@@ -18,13 +18,13 @@ function batchConfig(){const mode=$('batchAuthorMode').value,names=mode==='keep'
  const protect=$('batchProtectOn').checked?{print:$('batchPrint').value,modify:'none',extract:$('batchExtract').checked}:null;
  if(watermark)validatePublication({watermark,fields:[],flatten:false,custom:false,mark:false});
  if(protect)batchProtectionCredentials(protect);
- const mark=$('batchMark').value;if(mode==='keep'&&!Object.keys(fields).length&&mark==='keep'&&!pdfTitleOn&&!watermark&&!protect)throw Error(tr('Scegli almeno una proprietà da modificare.'));return {mode,names,fields,mark,pdfTitleOn,pdfTitle,watermark,protect,naming:getNamingModel($('batchRename').value)}}
+ const privacyOffice=$('batchPrivacyOffice').checked,privacyPdf=$('batchPrivacyPdf').checked;if(privacyOffice&&(mode!=='keep'||Object.keys(fields).length)||privacyPdf&&mode!=='keep')throw Error(tr('Operazioni privacy incompatibili con le modifiche identificative.'));const mark=$('batchMark').value;if(mode==='keep'&&!Object.keys(fields).length&&mark==='keep'&&!pdfTitleOn&&!watermark&&!protect&&!privacyOffice&&!privacyPdf)throw Error(tr('Scegli almeno una proprietà da modificare.'));return {mode,names,fields,mark,pdfTitleOn,pdfTitle,watermark,protect,privacyOffice,privacyPdf,naming:getNamingModel($('batchRename').value)}}
 function batchProtectionCredentials(p){
  const user=$('batchUser').value,owner=$('batchOwner').value;
  if(user!==$('batchUserConfirm').value||owner!==$('batchOwnerConfirm').value)throw pdfErr('Password non valida, non confermata o uguale all’altra.');
  return protectionOptions(user,owner,p.print,p.modify,p.extract);
 }
-function batchChanges(meta,config){const changes={};if(config.mode!=='keep'){const old=split(meta.values.author),next=config.mode==='append'?[...new Set([...old,...config.names])]:config.names;if(next.length>100||!next.every(validName))throw Error(tr('Elenco autori risultante non valido.'));const v=next.join('; ');if(v!==old.join('; '))changes.author=v}for(const [k,v] of Object.entries(config.fields))if(v!==meta.values[k])changes[k]=v;const changeMark=markChanges(meta.marker,config.mark);return {changes,changeMark}}
+function batchChanges(meta,config){const changes={};if(config.privacyOffice)for(const k of ['author','lastAuthor','company','manager'])if(meta.values[k])changes[k]='';if(config.mode!=='keep'){const old=split(meta.values.author),next=config.mode==='append'?[...new Set([...old,...config.names])]:config.names;if(next.length>100||!next.every(validName))throw Error(tr('Elenco autori risultante non valido.'));const v=next.join('; ');if(v!==old.join('; '))changes.author=v}for(const [k,v] of Object.entries(config.fields))if(v!==meta.values[k])changes[k]=v;const changeMark=markChanges(meta.marker,config.mark);return {changes,changeMark}}
 function batchName(file,ext,used){let stem=file.name.slice(0,-ext.length-1).replace(/[\\/:*?"<>|\x00-\x1f]/g,'_').replace(/[. ]+$/,'').slice(0,180)||'Documento';if(/^(con|prn|aux|nul|com[1-9]|lpt[1-9])(?:\.|$)/i.test(stem))stem='Documento_'+stem;let i=1,name;do{name=stem+'_metadati'+(i===1?'':'_'+i)+'.'+ext;i++}while(used.has(name.toLowerCase()));used.add(name.toLowerCase());return name}
 // PDF fields are deliberately mapped only where semantics match. Office-only fields are never silently applied.
 function batchPdfChanges(meta,config){
@@ -46,6 +46,7 @@ function batchPdfChanges(meta,config){
  if(config.mark!=='keep'&&meta.marker==='conflict')throw pdfErr('PDF: Mark in conflitto, mantenuto.');
  const changeMark=config.mark==='add'||config.mark==='remove'&&meta.marker==='present';
  if(changeMark)auditChanges.push({label:'MetaMago Mark',before:meta.marker,after:config.mark});
+ if(config.privacyPdf)for(const k of ['Author','Creator','Producer','Keywords']){const f=meta.fields.find(x=>x.key===k);if(!f?.editable)throw pdfErr('Modifica non consentita per questo campo XMP.');if(f.value||f.xmp){changes[k]='';auditChanges.push({label:f.label,before:[f.value,f.xmp].join(' / '),after:''})}}
  if(config.watermark)auditChanges.push({label:tr('Filigrana'),before:'—',after:config.watermark.text});
  if(config.protect)auditChanges.push({label:'AES-256',before:'—',after:tr('PDF protetto')});
  if(Object.keys(config.fields).length)throw Error(tr('PDF: deselect Office-only properties before processing.'));

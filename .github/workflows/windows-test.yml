@@ -99,3 +99,5 @@ jobs:
         run: node Office/tests/privacy.mjs
       - name: Test Compliance
         run: node Office/tests/compliance.mjs
+      - name: Test Workflow
+        run: node Office/tests/workflow.mjs

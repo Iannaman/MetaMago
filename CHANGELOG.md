@@ -1,5 +1,10 @@
 # Changelog
 
+## Office Edition 2.8.0 — Workflow Edition (candidato)
+- Configurazioni batch riutilizzabili, import/export JSON senza credenziali.
+- Pulizia identificativi Office/PDF integrata nella sequenza batch.
+- Rifiuto delle operazioni incompatibili; verifica documentale separata.
+
 ## Office Edition 2.7.0 — Compliance Edition (candidato)
 - Controllo massivo in sola lettura rispetto ai modelli, esiti per regola e documento, report CSV/HTML.
 - Verifiche PDF limitate con risultati non conclusivi espliciti; nessuna certificazione legale.
