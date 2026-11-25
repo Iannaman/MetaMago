@@ -16,7 +16,7 @@ var professionalReady=false;
 function syncProfessionalControls(){
  if(!professionalReady)return;
  const el=$('homeSessionStatus');if(!el)return;
- el.textContent=((pending()||(typeof pdfPending==='function'&&pdfPending()))?tr('Documento con modifiche non salvate'):state||(typeof pdfSession!=='undefined'&&pdfSession)?tr('Documento aperto'):tr('Nessun documento aperto'))+' · '+contacts.length+' '+tr('nominativi')+' · '+profiles.length+' '+tr('profili')+' · '+groups.length+' '+tr('gruppi')+' · '+(typeof customModels==='undefined'?0:customModels.length)+' '+tr('modelli personalizzati');
+ el.textContent=((pending()||(typeof pdfPending==='function'&&pdfPending()))?tr('Documento con modifiche non salvate'):state||(typeof pdfSession!=='undefined'&&pdfSession)?tr('Documento aperto'):tr('Nessun documento aperto'))+' · '+contacts.length+' '+tr('nominativi')+' · '+profiles.length+' '+tr('profili')+' · '+groups.length+' '+tr('gruppi')+' · '+(typeof customModels==='undefined'?0:customModels.length)+' '+tr('modelli personalizzati')+' · '+(typeof workflows==='undefined'?0:workflows.length)+' workflow';
  $('resumeEditor').hidden=!state;$('resumePdf').hidden=typeof pdfSession==='undefined'||!pdfSession;
  if($('modelDelete')&&typeof modelEditing!=='undefined')$('modelDelete').disabled=busy||!modelEditing;
 }
