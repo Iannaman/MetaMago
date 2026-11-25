@@ -27,7 +27,7 @@ Editor locale dei metadati di Microsoft Word, Excel e PowerPoint. Sviluppato da 
 
 La modalità Semplice è predefinita; Avanzata mostra altre proprietà e protezione. Puoi gestire la rubrica anche senza aprire un documento, richiamare un profilo dal menu rapido, selezionare l'ultimo autore con un clic e confermare i nomi digitati anche al salvataggio. La schermata di completamento permette di scaricare di nuovo la copia o aprire un altro documento. Le date visualizzate seguono la lingua selezionata; il confronto Audit usa valori originali.
 
-**PDF Batch Edition (2.5.0, candidato):** batch misto Office/PDF per autori e Mark; titolo PDF facoltativo, impronta SHA-256 tra anteprima e salvataggio, verifica strutturale QPDF, ZIP e report. Protezione e filigrana restano individuali. Le proprietà solo Office non vengono applicate ai PDF.
+**PDF Batch Edition (2.5.0, candidato):** batch misto Office/PDF per autori e Mark; titolo PDF facoltativo, impronta SHA-256 tra anteprima e salvataggio, verifica strutturale QPDF, ZIP e report. Filigrana e protezione AES-256 applicabili in batch, con cifratura per ultima e password comuni non incluse nei report. Le proprietà solo Office non vengono applicate ai PDF.
 
 **Publication Edition (2.4.0):** profili Bozza/Uso interno/Distribuzione esterna, filigrana testuale su tutte le pagine (posizione, dimensione, opacità, colore), pulizia selettiva Info/XMP e Mark, appiattimento conservativo dei soli campi di testo AcroForm semplici. Nuova copia verificata con QPDF, utilizzabile dalla sezione Proteggi PDF. Non è redazione sicura né anonimizzazione. Vedi [Publication](docs/PUBLICATION.md).
 
