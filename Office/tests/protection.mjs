@@ -35,7 +35,11 @@ try{
  await id('protectOwner').fill(owner);await id('protectOwnerConfirm').fill(owner);
  await id('protectPrint').selectOption('none');
  await id('protectModify').selectOption('none');
- const [download]=await Promise.all([page.waitForEvent('download',{timeout:180000}),id('protectRun').click()]);
+ await id('protectAck').check();assert.equal(await id('protectRun').isDisabled(),false);
+ const downloadWait=page.waitForEvent('download',{timeout:190000});
+ const statusWait=page.waitForFunction(()=>document.querySelector('#protectStatus').classList.contains('error'),null,{timeout:190000}).then(async()=>{throw Error('Protection UI: '+await id('protectStatus').textContent())});
+ await id('protectRun').click();
+ const download=await Promise.race([downloadWait,statusWait]);
  const locked=resolve(dir,'locked.pdf');await download.saveAs(locked);
  assert.match(download.suggestedFilename(),/_protetto\.pdf$/);
  assert.match(await id('protectStatus').textContent(),/AES-256 R6/);
@@ -55,8 +59,9 @@ try{
  execFileSync('pdftoppm',['-r','96','-upw',user,locked,resolve(dir,'after')]);
  assert.deepEqual(await readFile(resolve(dir,'before-1.ppm')),await readFile(resolve(dir,'after-1.ppm')));
  // Owner-only mode and granular level.
- const second=await page.evaluate(async ({bytes,owner})=>Array.from(await protectPdf(new Uint8Array(bytes),{user:'',owner,print:'low',modify:'form',extract:true})),{bytes,owner});
- const ownerOnly=resolve(dir,'owner-only.pdf');await writeFile(ownerOnly,Buffer.from(second));const info=inspect(ownerOnly,'');
+ const second=await page.evaluate(async ({bytes,owner})=>{try{return {bytes:Array.from(await protectPdf(new Uint8Array(bytes),{user:'',owner,print:'low',modify:'form',extract:true}))}}catch(e){return {error:e.diagnostic||e.message}}},{bytes,owner});
+ assert.ok(!second.error,'Owner-only protection failed: '+second.error);
+ const ownerOnly=resolve(dir,'owner-only.pdf');await writeFile(ownerOnly,Buffer.from(second.bytes));const info=inspect(ownerOnly,'');
  assert.equal(info.encrypt.encrypted,true);assert.equal(info.encrypt.capabilities.printlow,true);assert.equal(info.encrypt.capabilities.printhigh,false);assert.equal(info.encrypt.capabilities.modifyforms,true);assert.equal(info.encrypt.capabilities.modifyannotations,false);assert.equal(info.encrypt.capabilities.extract,true);
  await page.evaluate(async({bytes,owner})=>{const SavedWorker=window.Worker;try{window.Worker=function(){throw Error('blocked')};let failed=false;try{await protectPdf(new Uint8Array(bytes),{user:'',owner,print:'full',modify:'none',extract:false})}catch(e){failed=true}if(!failed)throw Error('blocked worker accepted')}finally{window.Worker=SavedWorker}},{bytes,owner});
  await id('pdfClose').click();await id('pdfFile').setInputFiles({name:'Locked.pdf',mimeType:'application/pdf',buffer:await readFile(locked)});

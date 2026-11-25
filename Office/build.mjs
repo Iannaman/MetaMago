@@ -30,7 +30,7 @@ if(qpdfWasm.length<8||qpdfWasm.readUInt32LE(0)!==0x6d736100)throw Error('Invalid
 // Emscripten's ES module is embedded as inert JSON, instantiated only inside a dedicated worker.
 const exportPattern=/\bexport\s+default\s+([A-Za-z_$][\w$]*)\s*;?\s*$/;
 if(!exportPattern.test(qpdfGlue))throw Error('Unexpected QPDF Emscripten module export');
-const glue=qpdfGlue.replace(exportPattern,'const createQpdf=$1;');
+const glue=qpdfGlue.replace(exportPattern,'const MetaMagoQpdfFactory=$1;');
 const safeJSON=v=>JSON.stringify(v).replace(/</g,'\\u003c').replace(/\u2028/g,'\\u2028').replace(/\u2029/g,'\\u2029');
 const qpdfBundle='const QPDF_GLUE='+safeJSON(glue)+';\nconst QPDF_WASM='+safeJSON(qpdfWasm.toString('base64'))+';\n';
 const qpdfDigest=createHash('sha256').update(qpdfWasm).digest('hex');
