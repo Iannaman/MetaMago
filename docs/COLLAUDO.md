@@ -2,7 +2,15 @@
 
 Usare esclusivamente documenti sintetici o copie autorizzate.
 
-## Office Edition 1.7.0 — Experience
+## Office Edition 1.8.0 — Inspector
+- [ ] Analizzare Word, Excel, PowerPoint senza aprire l’editor, verificare proprietà e punteggio confrontandoli con Office.
+- [ ] Verificare documenti sintetici con revisioni e commenti Word, fogli hidden/veryHidden, slide nascoste, note, link esterni, oggetti incorporati, indicatori VBA e proprietà personalizzate.
+- [ ] Verificare esiti non applicabili, parziali e non conclusivi; nessuna garanzia di assenza di dati personali o malware.
+- [ ] Analizzare l'originale durante una modifica non salvata; tornare all'editor e verificare la bozza e l'assenza di download.
+- [ ] Verificare file danneggiati, limiti, chiusura analisi, lingua e layout a 375 px e tema scuro.
+- [ ] Confrontare il rilevamento con Ispeziona documento di Office 365 su copie sintetiche autorizzate. Test manuale non ancora eseguito.
+
+### Regressione 1.7.0 — Experience
 - [ ] Verificare Home e viste separate, navigazione da tastiera, tema chiaro/scuro/sistema, lingua e layout mobile.
 - [ ] Completare la guida, aprire file singolo e più file dalla Home; verificare che le modifiche non vadano perse passando a Rubrica o Impostazioni.
 - [ ] Verificare blocco della navigazione durante elaborazione, focus dopo cambio vista, pulsante installazione e assenza di link HTML.

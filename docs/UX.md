@@ -24,3 +24,6 @@ Test osservato con almeno 5 utenti non tecnici: aprire un DOCX e salvare copia; 
 
 ## Roadmap
 1.7 Experience: navigazione e guida; 1.8 Inspector: analisi in sola lettura; 1.9 Automation: regole e modelli; 1.10 Audit: confronto e report; 1.11 Performance: benchmark e worker; 2.0 Professional: consolidamento dopo collaudo. Nessuna voce vuota per funzionalità future.
+
+## Estensione v1.8.0
+Home → Analizza documento → scelta file oppure originale aperto → punteggio e proprietà originali → segnalazioni Privacy Inspector → chiudi analisi oppure torna all'editor. Nessuna modifica o download automatico. Test osservato: verificare che l’utente distingua completezza dei metadati da privacy e non interpreti il mancato rilevamento come certificazione.

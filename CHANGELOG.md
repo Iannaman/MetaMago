@@ -1,5 +1,12 @@
 # Changelog
 
+## Office Edition 1.8.0 — Inspector Edition (candidato)
+- Nuova vista di analisi in sola lettura, indipendente dall’editor; accessibile anche dall’originale aperto.
+- Punteggio trasparente di completezza, cinque controlli a peso uguale, proprietà originali e stato MetaMago Mark.
+- Privacy Inspector: indicatori di autori, proprietà personalizzate, commenti, revisioni Word, fogli nascosti, slide nascoste, note relatore, link esterni, oggetti incorporati e VBA.
+- Controlli XML con limiti espliciti, esito parziale/non conclusivo e nessuna rimozione automatica; nessuna connessione agli URL rilevati.
+- Interfaccia italiana/inglese, temi, scorciatoia Alt+Maiusc+7; test sintetici per i tre formati e conservazione del lavoro in corso. Motore di modifica e Desktop invariati, deploy manuale.
+
 ## Office Edition 1.7.0 — Experience Edition (candidato)
 - Home per attività, navigazione laterale responsive, viste separate e mantenimento del lavoro in corso durante la navigazione.
 - Apertura e drag-and-drop dalla Home; passaggio automatico alla modifica singola o batch.
