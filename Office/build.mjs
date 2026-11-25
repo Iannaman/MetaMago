@@ -22,7 +22,7 @@ for(const name of ['pdf-lib','@pdf-lib/standard-fonts','@pdf-lib/upng','pako','t
 }
 const notice='/*\n'+notices.join('\n\n').replace(/\*\//g,'* /').replace(/<\/script/gi,'< /script')+'\n*/\n';
 if(/<\/script/i.test(pdfVendor))throw Error('PDF vendor contains script closing tag');
-const app=notice+pdfVendor+';\n'+modules.join('').replace(/@@VERSION@@/g,version);
+const app=(notice+pdfVendor+';\n'+modules.join('').replace(/@@VERSION@@/g,version)).replace(/\r\n?/g,'\n');
 const hashes=[vendor,app].map(s=>"'sha256-"+createHash('sha256').update(s,'utf8').digest('base64')+"'").join(' ');
 const tokens={VERSION:version,SCRIPT_HASHES:hashes,STYLE:style,VENDOR:vendor,APP:app};
 const html=template.replace(/@@([A-Z_]+)@@/g,(m,k)=>{if(!Object.hasOwn(tokens,k))throw Error('Unknown token '+k);return tokens[k]});
