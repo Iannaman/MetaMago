@@ -33,7 +33,7 @@ try {
   await page.goto(pathToFileURL(resolve(root,'Office','MetaMago-Office.html')).href);
   assert.equal(await id('editorSection').isVisible(),false);
   assert.equal(await id('persist').isChecked(),false);
-  await id('rubricPanel').locator('summary').first().click();
+  await id('navRubric').click();
   await id('contactName').fill('Ada Test');
   await id('addContact').click();
   await id('contactSearch').fill('ada');
@@ -43,7 +43,7 @@ try {
   await id('jsonfile').setInputFiles({name:'rubrica.json',mimeType:'application/json',buffer:Buffer.from(JSON.stringify({version:1,contacts:['Bruno Test'],profiles:[{name:'Team Test',authors:['Ada Test','Bruno Test'],lastAuthor:'Bruno Test',company:'Example',manager:''}]}))});
   await wait(()=>document.querySelector('#rubricstatus').textContent==='Rubrica e profili importati.');
   assert.match(await id('rubricCount').textContent(),/2 nominativi, 1 profili/);
-  await id('rubricPanel').locator('summary').first().click();
+  await id('navEdit').click();
   for(const ext of ['docx','xlsx','pptx']){
     await open(ext);
     assert.equal(await id('advancedFields').isVisible(),false);

@@ -38,6 +38,8 @@ jobs:
         run: node Office/tests/global.mjs
       - name: Test quality
         run: node Office/tests/quality.mjs
+      - name: Test experience
+        run: node Office/tests/experience.mjs
       - uses: actions/configure-pages@v5
       - uses: actions/upload-pages-artifact@v3
         with:

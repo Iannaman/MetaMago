@@ -17,7 +17,7 @@ const fixture=ext=>resolve(root,'Test','Prova.'+ext);
 const filePayload=(name,buffer)=>({name,mimeType:'application/octet-stream',buffer});
 try{
  await page.goto(pathToFileURL(resolve(root,'Office','MetaMago-Office.html')).href);
- await id('rubricPanel').locator('summary').first().click();
+ await id('navRubric').click();
  await id('csvFile').setInputFiles(filePayload('rubrica.csv',Buffer.from('\uFEFFNome;Cognome\r\nAda;Test\r\nBruno;Test\r\nAda;Test\r\n')));
  await wait(()=>document.querySelector('#rubricstatus').textContent.includes('CSV importato: 2'));
  assert.match(await id('rubricCount').textContent(),/2 nominativi/);
@@ -40,7 +40,7 @@ try{
  assert.match(await id('groupCount').textContent(),/\(0\)/);
  await id('jsonfile').setInputFiles(rubricPath);
  await wait(()=>document.querySelector('#groupCount').textContent==='(1)');
- await id('rubricPanel').locator('summary').first().click();
+ await id('navEdit').click();
  await id('file').setInputFiles(fixture('docx'));
  await wait(()=>!document.querySelector('#editor').disabled);
  await id('quickGroup').selectOption('Team Test');
@@ -50,7 +50,7 @@ try{
  assert.deepEqual(await page.evaluate(()=>authors),['Ada Test','Bruno Test']);
  const raw=await readFile(fixture('docx'));
  const conform=Buffer.from(await page.evaluate(async bytes=>{const p=await inspect(new Uint8Array(bytes),'docx');return Array.from(await rewrite(new Uint8Array(bytes),'docx',{author:'Ada Test; Bruno Test'},p.final))},Array.from(raw)));
- await id('batchPanel').locator('summary').click();
+ await id('navBatch').click();
  await id('batchFiles').setInputFiles([filePayload('Same.docx',raw),filePayload('Same.docx',raw),filePayload('Prova.xlsx',await readFile(fixture('xlsx'))),filePayload('Prova.pptx',await readFile(fixture('pptx'))),filePayload('bad.docx',Buffer.from('invalid')),filePayload('unchanged.docx',conform)]);
  await id('batchGroup').selectOption('Team Test');
  await id('batchUseGroup').click();

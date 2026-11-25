@@ -47,7 +47,7 @@ try{
  assert.equal(await id('enableOffline').count(),0);
  await id('installApp').click();
  assert.match(await id('pwaStatus').textContent(),/Installa questo sito come app/);
- await id('rubricPanel').locator('summary').first().click();
+ await id('navRubric').click();
  assert.equal(await id('persistLabel').isVisible(),false);
  assert.equal(await id('persist').isDisabled(),true);
  await id('contactName').fill('Online Example');

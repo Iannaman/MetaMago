@@ -49,7 +49,7 @@ try{
  assert.equal(await page.evaluate(()=>state===null&&lastResult===null),true);
  assert.equal(await id('title').inputValue(),'');
  assert.equal(await page.evaluate(()=>document.activeElement.id),'open');
- await id('batchPanel').locator('summary').click();
+ await id('navBatch').click();
  await id('batchFiles').setInputFiles(fixture);
  await id('batchAuthorMode').selectOption('replace');await id('batchAuthors').fill('Quality Test');
  // Delay only in this test so cancellation can be exercised deterministically.

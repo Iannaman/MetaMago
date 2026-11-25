@@ -33,6 +33,7 @@ try{
  await id('completion').waitFor({state:'visible'});
  assert.match(await id('completionText').textContent(),/Copy generated and verified/);
  assert.deepEqual(await page.evaluate(()=>parseCsv('First name;Last name\nAlex;Smith\n')),['Alex Smith']);
+ await id('navSettings').click();
  await id('uiLanguage').selectOption('it');
  await page.waitForFunction(()=>document.documentElement.lang==='it');
  assert.equal(await id('open').textContent(),'Scegli documento');

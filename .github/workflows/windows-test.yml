@@ -51,3 +51,5 @@ jobs:
         run: node Office/tests/global.mjs
       - name: Test quality
         run: node Office/tests/quality.mjs
+      - name: Test experience
+        run: node Office/tests/experience.mjs

@@ -2,7 +2,13 @@
 
 Usare esclusivamente documenti sintetici o copie autorizzate.
 
-## Office Edition 1.6.1 — Installazione
+## Office Edition 1.7.0 — Experience
+- [ ] Verificare Home e viste separate, navigazione da tastiera, tema chiaro/scuro/sistema, lingua e layout mobile.
+- [ ] Completare la guida, aprire file singolo e più file dalla Home; verificare che le modifiche non vadano perse passando a Rubrica o Impostazioni.
+- [ ] Verificare blocco della navigazione durante elaborazione, focus dopo cambio vista, pulsante installazione e assenza di link HTML.
+- [ ] Eseguire un test osservato con almeno cinque utenti non tecnici e misurare esito, tempo, errori e richieste di aiuto. Non ancora effettuato.
+
+### Regressione 1.6.1 — Installazione
 - [ ] Verificare che il sito mostri soltanto Installa applicazione, senza link di download HTML o comando cache.
 - [ ] Installare da Edge o Chrome se consentito, aprire la finestra dedicata e verificare che il comando non appaia in modalità standalone.
 - [ ] Verificare guida alternativa quando il prompt non è disponibile, senza aggirare le policy.

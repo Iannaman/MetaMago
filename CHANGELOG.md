@@ -1,5 +1,12 @@
 # Changelog
 
+## Office Edition 1.7.0 — Experience Edition (candidato)
+- Home per attività, navigazione laterale responsive, viste separate e mantenimento del lavoro in corso durante la navigazione.
+- Apertura e drag-and-drop dalla Home; passaggio automatico alla modifica singola o batch.
+- Guida interattiva ripetibile in tre passaggi, scorciatoie da tastiera e stato del documento nella navigazione.
+- Tema chiaro/scuro/sistema per sessione senza nuove scritture nello storage; italiano e inglese.
+- Studio UX e test automatici di navigazione, guida, temi e mantenimento delle modifiche. Motore Open XML e Desktop invariati; deploy manuale.
+
 ## Office Edition 1.6.1 — Quality Edition
 - Interfaccia web unificata: rimosse le scelte di download HTML e attivazione cache; unico comando Installa applicazione con guida al menu del browser.
 - Cache PWA tecnica automatica limitata alle risorse pubbliche; finestra standalone; nessuna persistenza dei nominativi online.
