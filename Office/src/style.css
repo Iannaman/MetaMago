@@ -64,3 +64,6 @@ main{max-width:1220px}.workspace{display:grid;grid-template-columns:210px minmax
 .pdf-hash{font-family:monospace;overflow-wrap:anywhere}#pdfInspectFilename,#pdfInspectProperties td,#pdfInspectAttachmentNames li{overflow-wrap:anywhere}#pdfInspectPasswordPanel input{max-width:420px}#pdfInspectPasswordPanel button{margin-top:8px}#pdfInspectProperties td{white-space:pre-wrap}
 
 #publicationSection fieldset{min-width:0}#publicationSection .grid>div{min-width:0}#publicationSection input[type=number]{width:100%}#publicationSummary{white-space:pre-wrap;overflow-wrap:anywhere}
+
+/* Batch and workflow small-screen resilience. */
+#batchRows article,#complianceRows article,#workflowPanel,#batchSelection,#batchStatus{min-width:0;overflow-wrap:anywhere}#batchControls,#complianceControls{min-width:0}#batchControls input,#batchControls select,#workflowPanel input,#workflowPanel select,#complianceControls input{max-width:100%;min-width:0}#batchProgress,#inspectProgress{max-width:100%}#batchRows article,#complianceRows article{content-visibility:auto;contain-intrinsic-size:auto 100px} @media(max-width:480px){#workflowPanel .row,#compliancePanel .row{flex-wrap:wrap}#workflowPanel .row button,#compliancePanel .row button{flex:1 1 120px}}

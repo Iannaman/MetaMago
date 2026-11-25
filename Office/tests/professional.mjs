@@ -12,7 +12,7 @@ const id=x=>page.locator('#'+x);
 const payload=data=>({name:'configuration.json',mimeType:'application/json',buffer:Buffer.from(JSON.stringify(data))});
 try{
  await page.goto(pathToFileURL(resolve(root,'Office','MetaMago-Office.html')).href);
- assert.match(await id('editionTag').textContent(),/2\.8\.0/);
+ assert.ok((await id('editionTag').textContent()).includes((await readFile(resolve(root,'Office','VERSION'),'utf8')).trim()));
  assert.equal(await id('resumeEditor').isVisible(),false);
  await id('navRubric').click();await id('contactName').fill('Ada Test');await id('addContact').click();
  await page.evaluate(()=>{groups=[{name:'Example group',members:['Ada Test']}];profiles=[{name:'Example profile',authors:['Ada Test'],lastAuthor:'Ada Test',company:'Example',manager:''}];refreshContacts();customModels=[{...validatedModel({name:'Example template',format:'all',rules:[{field:'title',op:'present',value:''}],dates:false,privacy:[],pattern:'title'}),id:'custom-'+(++modelSeq)}];refreshModels()});

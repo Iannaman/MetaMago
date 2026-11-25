@@ -1,5 +1,10 @@
 # Changelog
 
+## Office Edition 2.9.0 — Optimization Edition (candidato)
+- ZIP batch in Blob con avanzamento e annullamento; limite aggregato copie 150 MiB.
+- Cessione del controllo al browser tra documenti, miglioramenti CSS mobile e test dinamico versione.
+- Nessuna modifica ai controlli di integrità.
+
 ## Office Edition 2.8.0 — Workflow Edition (candidato)
 - Configurazioni batch riutilizzabili, import/export JSON senza credenziali.
 - Pulizia identificativi Office/PDF integrata nella sequenza batch.
