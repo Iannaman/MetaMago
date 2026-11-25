@@ -22,5 +22,16 @@ try{
  const data=Array.from(await readFile(await download.path()));
  const result=await page.evaluate(async a=>{const z=await JSZip.loadAsync(new Uint8Array(a));return Promise.all(Object.values(z.files).map(async f=>{const m=await inspectPdf(await f.async('uint8array'));return {author:m.fields.find(x=>x.key==='Author').value,title:m.fields.find(x=>x.key==='Title').value,pages:m.pages}}))},data);
  assert.equal(result.length,2);for(const r of result)assert.deepEqual(r,{author:'New Author',title:'New title',pages:1});assert.deepEqual(errors,[]);
+ // Exercise the real publication and encryption chain via a second batch.
+ await page.locator('#batchFiles').setInputFiles({name:'protected.pdf',mimeType:'application/pdf',buffer:Buffer.from(bytes)});
+ await page.locator('#batchWatermarkOn').check();await page.locator('#batchWatermarkText').fill('INTERNAL');
+ await page.locator('#batchProtectOn').check();await page.locator('#batchOwner').fill('Owner-test-12345');await page.locator('#batchOwnerConfirm').fill('Owner-test-12345');
+ await page.locator('#batchUser').fill('Reader-test-12345');await page.locator('#batchUserConfirm').fill('Reader-test-12345');
+ await page.locator('#batchPreview').click();await page.waitForFunction(()=>!document.querySelector('#batchRun').disabled);
+ assert.equal(await page.evaluate(()=>JSON.stringify(batchPlan.config).includes('Owner-test-12345')),false);
+ const p2=page.waitForEvent('download',{timeout:240000});await page.locator('#batchRun').click();const d2=await p2;
+ const zipped=Array.from(await readFile(await d2.path()));
+ const encrypted=await page.evaluate(async a=>{const z=await JSZip.loadAsync(new Uint8Array(a));const f=Object.values(z.files)[0];const b=await f.async('uint8array');const doc=await PDFLib.PDFDocument.load(b,{ignoreEncryption:true,updateMetadata:false});return doc.isEncrypted},zipped);
+ assert.equal(encrypted,true);assert.equal(await page.locator('#batchOwner').inputValue(),'');assert.equal(await page.locator('#batchUser').inputValue(),'');assert.deepEqual(errors,[]);
  console.log('PASS PDF batch: duplicate names, malformed PDF exclusion, verified ZIP');
 }finally{await browser.close()}
