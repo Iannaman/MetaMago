@@ -36,3 +36,9 @@ Desktop.ini
 node_modules/
 playwright-report/
 test-results/
+
+# Generated from pinned local build dependencies
+/Office/MetaMago-Office.html
+*.pdf
+*configurazione*.json
+*modelli*.json

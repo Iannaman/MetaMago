@@ -1,0 +1,16 @@
+# MetaMago 2.1.0 — PDF Edition
+
+## Flusso
+Home → scegli un PDF, oppure Metadati PDF → seleziona proprietà → salva una nuova copia → verifica nel lettore. L'editor PDF mantiene una bozza indipendente da Office. Le date usano ISO 8601 con secondi e fuso orario (normalizzate UTC a secondi). Titolo, autore, oggetto, parole chiave, creatore, produttore e date sono mostrati in Info e XMP. Solo le proprietà selezionate sono modificate; se il campo è vuoto viene rimosso nella rappresentazione supportata. I nominativi separati da punto e virgola diventano una sequenza RDF. Le proprietà Info personalizzate testuali con nomi semplici sono editabili; gli altri schemi XMP restano intatti. Non è un anonimizzatore: dati in contenuti, allegati, proprietà indirette o metadati non supportati possono rimanere.
+
+## XMP e Mark
+Campi RDF canonici: dc:title e dc:description (Alt con solo x-default), dc:creator (Seq), pdf:Keywords, pdf:Producer, xmp:CreatorTool, xmp:CreateDate, xmp:ModifyDate. Campi complessi, duplicati, qualificati o multilingue non vengono riscritti; la relativa modifica è disabilitata. XMP assente viene creato quando si modifica una proprietà standard o il Mark. XMP UTF-8/UTF-16 con BOM, non compresso o Flate semplice; massimo 1 MiB. XML con DTD, entità dichiarate, struttura non supportata o PDF/A dichiarato viene rifiutato. Mark opzionale Info e namespace XMP MetaMago: Editor, Version, Edition=PDF; conflitti preservati. Non è una firma.
+
+## Limiti e sicurezza
+20 MiB, 2000 pagine e 25000 oggetti dopo parsing; PDF-lib può dover espandere stream durante il parsing e questi limiti non sono una garanzia di memoria. Usare solo documenti autorizzati e attendibili. Cifratura, firme/campi firma, restrizioni e XFA rilevati causano rifiuto; non è un validatore di firma o un rilevatore esaustivo di protezioni. PDF/A dichiarato non riscritto. Nessuna esecuzione di JavaScript PDF, apertura di link o invio a server. Nessuna password o restrizione nuova: previsto in 2.2.0. Il modulo non rende né visualizza le pagine all'interno dell'app. Controllo della copia tramite riapertura, confronto oggetti/stream originali salvo Info, XMP e strutture di serializzazione, verifica dei campi modificati e Mark. Il confronto è conservativo e può rifiutare PDF validi. Test di resa con Poppler su fixture sintetiche; non prova equivalenza visiva universale. Non garantisce conformità, assenza di informazioni personali o integrità di una firma.
+
+## Build e collaudo
+Node 22, `npm ci --prefix Office/pdf-deps --ignore-scripts --no-audit --no-fund`, `node Office/build.mjs`, `node Office/build.mjs --check --pages`. PDF-lib 1.17.1 e dipendenze pin/integrity nel lockfile; licenze incluse nella build. Nessun CDN in esecuzione. HTML prodotto non versionato. Test `node Office/tests/pdf.mjs` con Playwright Chromium e pdftoppm; gli originali e le copie sintetiche vengono renderizzati e confrontati. Prima di dichiarare stabile verificare su Edge e Acrobat/lettori reali.
+
+## Roadmap
+2.2 Protection (cifratura e permessi, con motore verificato); 2.3 PDF Inspector; 2.4 Publication; 2.5 PDF Automation (batch, modelli, Audit); 2.6 Document Tools; 3.0 Universal. Il batch, Inspector e Audit esistenti restano per Office.

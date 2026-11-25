@@ -1,4 +1,4 @@
-# MetaMago Professional Edition 2.0.1 — Manuale utente
+# MetaMago PDF Edition 2.1.0 — Manuale utente
 
 MetaMago modifica proprietà dichiarative dei documenti Office autorizzati, non il contenuto, le firme, i registri ufficiali o l'identità verificata. L'edizione web elabora i file nel browser e produce nuove copie. Questa versione è candidata alla stabilità; verificare autorizzazione IT e collaudo su Office.
 
@@ -27,3 +27,6 @@ Impostazioni → Prestazioni permette il Worker o il motore compatibile. Il Work
 Inspector e report non certificano conformità o assenza di dati sensibili. Usa anche Ispeziona documento in Office prima della diffusione. Report e backup vanno gestiti come documenti potenzialmente riservati. Segnala errori con versione, browser, passaggi, testo errore e file sintetico; non pubblicare documenti reali, rubriche o nominativi su GitHub. [Issues](https://github.com/Iannaman/MetaMago/issues).
 
 Approfondimenti: [Inspector](INSPECTOR.md), [Automation](AUTOMATION.md), [Audit](AUDIT.md), [Performance](PERFORMANCE.md), [collaudo](COLLAUDO.md).
+
+## PDF
+Dalla Home apri un PDF oppure scegli Metadati PDF. I valori Info e XMP sono affiancati; modifica solo i campi interessati. I campi selezionati e vuoti rimuovono le proprietà supportate, non tutti i dati identificativi. I PDF protetti, con firme/campi firma o PDF/A dichiarato non sono riscritti. Controlla sempre la copia nel lettore. Vedi [guida PDF](PDF.md).

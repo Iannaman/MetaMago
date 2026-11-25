@@ -1,5 +1,11 @@
 # Changelog
 
+## Office Edition 2.1.0 — PDF Edition (candidato)
+- Modulo PDF separato, riconoscimento da Home e apertura singola, proprietà Info e XMP a confronto, modifica selettiva dei campi standard e proprietà Info testuali, Mark PDF facoltativo.
+- Rifiuto conservativo di cifratura, firme/campi firma, restrizioni rilevate, PDF/A dichiarato e XMP non supportato. Nessuna rimozione di protezioni.
+- Verifica strutturale della copia e confronto renderizzato di fixture sintetiche nei test. PDF-lib 1.17.1 e dipendenze bloccate via npm lockfile e incorporate nell'HTML, non da CDN. HTML generato escluso dal versionamento; CI genera e verifica build ripetuta.
+- Max 20 MiB PDF; protezione, Inspector, batch e confronto PDF rinviati alle release successive. Desktop engine invariato, deploy manuale.
+
 ## Office Edition 2.0.1 — Update Fix
 - Avviso di nuova versione PWA e comando Aggiorna applicazione con conferma di perdita dei dati in memoria; nessuna ricarica automatica delle altre finestre.
 - Verifica manuale in Impostazioni, controllo al ritorno in primo piano e registrazione senza cache HTTP del Worker; controllo della coerenza HTML/versione prima dell'attivazione.
