@@ -1,5 +1,10 @@
 # Changelog
 
+## Office Edition 2.6.0 — Privacy Edition (candidato)
+- Pulizia selettiva metadati Office con consenso, verifica della copia e analisi degli elementi residui.
+- Test di conservazione delle parti di contenuto Word, Excel e PowerPoint.
+- Nessuna rimozione automatica di commenti, revisioni o macro; nessuna certificazione di anonimizzazione.
+
 ## Office Edition 2.5.0 — PDF Batch Edition (candidato)
 - Batch misto per autori, Mark e titolo PDF; verifica SHA-256 tra anteprima e salvataggio e controllo QPDF della copia.
 - Esclusione esplicita di PDF incompatibili e proprietà solo Office; report e ZIP comuni.
