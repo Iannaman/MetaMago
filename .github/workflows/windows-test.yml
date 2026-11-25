@@ -61,3 +61,5 @@ jobs:
         run: node Office/tests/audit.mjs
       - name: Test performance and benchmark
         run: node Office/tests/performance.mjs
+      - name: Test professional
+        run: node Office/tests/professional.mjs

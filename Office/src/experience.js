@@ -15,7 +15,7 @@ function goView(key,{focus=true}={}){
  if(key==='rubric')$('rubricPanel').open=true;
  if(key==='batch')$('batchPanel').open=true;
  updateWorkspaceStatus();
- if(focus){const title=document.querySelector('[data-view="'+key+'"] .view-title');title?.focus();window.scrollTo(0,0)}
+ if(typeof syncProfessionalControls==='function')syncProfessionalControls();if(focus){const title=document.querySelector('[data-view="'+key+'"] .view-title');title?.focus();window.scrollTo(0,0)}
 }
 for(const button of document.querySelectorAll('[data-view-target]'))button.addEventListener('click',()=>goView(button.dataset.viewTarget));
 $('homeOpen').onclick=()=>{if(busy)return;goView('edit',{focus:false});$('file').click()};

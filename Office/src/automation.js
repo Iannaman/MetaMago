@@ -18,6 +18,7 @@ function validatedModel(m){
  if(!rules.length&&!m.dates&&!m.privacy.length)throw Error(tr('Aggiungi almeno un controllo.'));
  return {name:m.name.trim(),format:m.format,rules,dates:m.dates,privacy:[...new Set(m.privacy)],pattern:m.pattern};
 }
+function isReservedModelName(name){return ['Documento istituzionale','Documento di gruppo','Pubblicazione esterna','Institutional document','Team document','External publication'].includes(name)}
 function getModels(){return [...builtinModels,...customModels]}
 function getNamingModel(id){return getModels().find(m=>m.id===id)||null}
 function modelOption(id,items,emptyLabel){
@@ -27,7 +28,7 @@ function modelOption(id,items,emptyLabel){
 }
 function refreshModels(){
  const items=getModels();modelOption('modelSelect',items,null);modelOption('inspectModel',items,tr('Nessun modello'));modelOption('renameModel',items,tr('Nome originale + metadati'));modelOption('batchRename',items,tr('Nome originale + metadati'));
- batchInvalidate();renderModelEvaluation();
+ batchInvalidate();renderModelEvaluation();if(typeof syncProfessionalControls==='function')syncProfessionalControls();
 }
 function modelRow(rule={field:'title',op:'present',value:''}){
  const row=document.createElement('div');row.className='model-rule';
@@ -52,7 +53,7 @@ $('modelNew').onclick=()=>{loadModel(null);modelRow();$('modelName').focus()};
 $('modelAddRule').onclick=()=>{if($('modelRules').children.length<30)modelRow();else msg('modelStatus',tr('Massimo 30 regole.'),'error')};
 $('modelSave').onclick=()=>{try{
  const m=validatedModel({name:$('modelName').value,format:$('modelFormat').value,rules:[...$('modelRules').children].map(row=>{const [field,op,value]=row.children;return {field:field.value,op:op.value,value:value.value}}),dates:$('modelDates').checked,privacy:[...$('modelPrivacy').querySelectorAll('input:checked')].map(x=>x.value),pattern:$('modelPattern').value});
- if(builtinModels.some(x=>x.name===m.name)||customModels.some(x=>x.name===m.name&&x.id!==modelEditing))throw Error(tr('Scegli un nome modello univoco.'));
+ if(isReservedModelName(m.name)||customModels.some(x=>x.name===m.name&&x.id!==modelEditing))throw Error(tr('Scegli un nome modello univoco.'));
  if(!modelEditing&&customModels.length>=50)throw Error(tr('Massimo 50 modelli personalizzati.'));
  const id=modelEditing||'custom-'+(++modelSeq);customModels=[...customModels.filter(x=>x.id!==id),{...m,id}];refreshModels();$('modelSelect').value=id;loadModel(getNamingModel(id));msg('modelStatus',tr('Modello salvato.'),'ok')
  }catch(e){msg('modelStatus',e.message,'error')}};
@@ -61,7 +62,7 @@ $('modelExport').onclick=()=>download(JSON.stringify({version:1,models:customMod
 $('modelImport').onclick=()=>$('modelFile').click();$('modelFile').onchange=async e=>{try{
  const file=e.target.files[0];if(!file)return;if(file.size>1024*1024)throw Error(tr('File modelli troppo grande.'));const data=JSON.parse(await file.text());if(!data||data.version!==1||!Array.isArray(data.models)||data.models.length>50)throw Error(tr('Formato modelli non valido.'));
  const incoming=data.models.map(validatedModel),map=new Map(customModels.map(m=>[m.name,m]));
- if(new Set(incoming.map(m=>m.name)).size!==incoming.length||incoming.some(m=>builtinModels.some(b=>b.name===m.name)))throw Error(tr('Nomi modelli duplicati o riservati.'));
+ if(new Set(incoming.map(m=>m.name)).size!==incoming.length||incoming.some(m=>isReservedModelName(m.name)))throw Error(tr('Nomi modelli duplicati o riservati.'));
  if(new Set([...map.keys(),...incoming.map(m=>m.name)]).size>50)throw Error(tr('Massimo 50 modelli personalizzati.'));
  if(!confirm(tr('Importare i modelli? I personalizzati omonimi verranno sostituiti.')))return;
  for(const m of incoming)map.set(m.name,{...m,id:map.get(m.name)?.id||'custom-'+(++modelSeq)});

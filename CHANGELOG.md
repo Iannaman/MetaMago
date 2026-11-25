@@ -1,5 +1,13 @@
 # Changelog
 
+## Office Edition 2.0.0 — Professional Edition (candidato al rilascio stabile)
+- Home consolidata con stato dell'area di lavoro, ripresa modifica e accesso a Inspector, confronto, modelli, batch e rubrica.
+- Guida per attività in italiano e inglese, miglioramenti di focus e layout.
+- Backup configurazione JSON unico: rubrica, gruppi, profili, modelli e preferenze; import validato con conferma e annullamento dell'anteprima batch, documento corrente invariato.
+- Fine sessione esplicita e avvisi di ricarica coerenti; nessuna cancellazione dei file scaricati o promessa di cancellazione sicura della memoria.
+- Mark riconosciuto solo quando tutte e tre le proprietà rispettano il formato previsto; conflitti preservati. Nomi dei modelli predefiniti riservati in entrambe le lingue.
+- Manuale, checklist di rilascio e test di regressione di configurazione/sessione; Desktop invariato, deploy manuale. Adozione stabile subordinata al collaudo reale.
+
 ## Office Edition 1.11.0 — Performance Edition (candidato)
 - Generazione ZIP e verifica delle parti non modificate in Web Worker locale temporaneo; fallback compatibile se non disponibile, errore senza download se il Worker fallisce durante il lavoro.
 - Verifica di uguaglianza delle parti compresse, con CRC e dimensione effettiva verificati una volta; confronto byte per byte quando differiscono. Buffer preallocati, niente duplicazione dell'output per il percorso identico.

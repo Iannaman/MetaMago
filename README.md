@@ -3,7 +3,7 @@
 # MetaMago 🪄
 **Le proprietà cambiano, il contenuto no.**
 
-Editor locale dei metadati di Microsoft Word, Excel e PowerPoint. Sviluppato da [Iannaman](https://github.com/Iannaman). Entrambe le edizioni sono in beta.
+Editor locale dei metadati di Microsoft Word, Excel e PowerPoint. Sviluppato da [Iannaman](https://github.com/Iannaman). Office Edition 2.0.0 è candidata al rilascio stabile; Desktop Edition resta beta. Il collaudo manuale su Office ed Edge aziendale è necessario prima di adottarla.
 
 ## Scegli l'edizione
 
@@ -12,7 +12,7 @@ Editor locale dei metadati di Microsoft Word, Excel e PowerPoint. Sviluppato da 
 | Avvio | Sito web o app installata (PWA) | BAT + PowerShell 5.1 / Windows Forms |
 | Installazione | Facoltativa, dal browser | Nessuna |
 | Modifica autori, date, proprietà | Sì | Sì |
-| Rubrica locale | Sì, import/export JSON e import CSV | Sì |
+| Rubrica locale | Sì, JSON, CSV e XLSX | Sì |
 | Gruppi di autori e modifica massiva | Sì | No |
 | Profili riutilizzabili | Sì | Non ancora |
 | Salvataggio su copia | Sì, unica modalità | Sì, predefinito |
@@ -21,11 +21,13 @@ Editor locale dei metadati di Microsoft Word, Excel e PowerPoint. Sviluppato da 
 | MetaMago Mark e ispettore proprietà personalizzate | Sì, facoltativo | Non ancora |
 | Sola lettura Windows | No | Sì |
 
-### Office Edition — v1.11.0 · Performance Edition
+### Office Edition — v2.0.0 · Professional Edition
 
 [**Avvia MetaMago**](https://iannaman.github.io/MetaMago/). Per aprirlo in una finestra dedicata, premi **Installa applicazione** o usa il comando App di Edge, se consentito. Seleziona un documento, modifica le proprietà e salva una copia. Verifica il risultato in Office > File > Informazioni.
 
-La modalità Semplice è predefinita; Avanzata mostra altre proprietà e protezione. Puoi gestire la rubrica anche senza aprire un documento, richiamare un profilo dal menu rapido, selezionare l'ultimo autore con un clic e confermare i nomi digitati anche al salvataggio. La schermata di completamento permette di scaricare di nuovo la copia o aprire un altro documento. Il confronto mostra le date in italiano.
+La modalità Semplice è predefinita; Avanzata mostra altre proprietà e protezione. Puoi gestire la rubrica anche senza aprire un documento, richiamare un profilo dal menu rapido, selezionare l'ultimo autore con un clic e confermare i nomi digitati anche al salvataggio. La schermata di completamento permette di scaricare di nuovo la copia o aprire un altro documento. Le date visualizzate seguono la lingua selezionata; il confronto Audit usa valori originali.
+
+**Professional Edition:** Home con stato area di lavoro e accesso a tutte le attività principali, guida contestuale per attività, esportazione/importazione unificata di configurazione (rubrica, gruppi, profili, modelli, tema e modalità di elaborazione), chiusura esplicita della sessione dopo conferma. Nessun documento, report o cronologia viene incluso nel backup. Riconoscimento conservativo dei Mark incompleti o non validi. Vedi il [manuale utente](docs/MANUALE.md) e la [checklist di rilascio](docs/RELEASE.md).
 
 **Performance Edition:** generazione ZIP e verifica binaria in un Web Worker locale temporaneo, con motore compatibile se il Worker non può avviarsi. Analisi e serializzazione XML restano sul thread principale. Le parti compresse identiche sono verificate con una sola decompressione e CRC, senza accumulare l'output decompresso; per parti diverse resta il confronto byte per byte. Buffer preallocati per le letture, limiti invariati. Impostazioni mostra modalità, durata dell'ultima fase ZIP e conteggi di parti, solo per sessione. Benchmark sintetico riproducibile, non una promessa di velocità o memoria complessiva. Vedi [guida Performance](docs/PERFORMANCE.md).
 
@@ -37,7 +39,7 @@ La modalità Semplice è predefinita; Avanzata mostra altre proprietà e protezi
 
 **Experience Edition:** Home orientata alle attività, navigazione laterale (adattiva su schermi piccoli), sezioni dedicate alla modifica singola, batch, rubrica e profili, impostazioni e guida. Cambiare sezione non scarta il documento corrente. Tema chiaro, scuro o di sistema per la sessione; guida interattiva in tre passaggi e scorciatoie Alt+Maiusc+1–9. L’installazione dell’app resta in Home. Il motore di elaborazione non cambia. Vedi [studio UX](docs/UX.md).
 
-**Quality Edition:** controlli ZIP prima della decompressione (directory, nomi duplicati, percorsi, dimensioni, intestazioni e intervalli), limite effettivo di decompressione e controllo CRC delle parti lette, verifica dei tipi di contenuto Open XML. I formati ZIP64, multidisco, archivi con nomi non UTF-8 e strutture anomale non sono supportati. Il CRC rileva corruzione, non certifica autenticità. Chiudi documento libera i riferimenti applicativi alla copia corrente; non è una cancellazione sicura della memoria. Il batch può essere interrotto fra documenti: nessuno ZIP viene scaricato se annullato. Migliorata la visualizzazione su schermi piccoli. Nessun Web Worker o benchmark prestazionale introdotto.
+**Quality Edition:** controlli ZIP prima della decompressione (directory, nomi duplicati, percorsi, dimensioni, intestazioni e intervalli), limite effettivo di decompressione e controllo CRC delle parti lette, verifica dei tipi di contenuto Open XML. I formati ZIP64, multidisco, archivi con nomi non UTF-8 e strutture anomale non sono supportati. Il CRC rileva corruzione, non certifica autenticità. Chiudi documento libera i riferimenti applicativi alla copia corrente; non è una cancellazione sicura della memoria. Il batch può essere interrotto fra documenti: nessuno ZIP viene scaricato se annullato. Migliorata la visualizzazione su schermi piccoli.
 
 **Global Edition:** italiano e inglese selezionati dalla lingua del browser, con selettore manuale. Cambiare lingua ricarica la pagina dopo conferma; salva le copie ed esporta la rubrica prima di cambiare. L’installazione PWA è facoltativa, tramite un browser compatibile e nel rispetto delle policy aziendali. La cache tecnica contiene esclusivamente risorse pubbliche statiche, non documenti o contatti. Migliorati focus da tastiera, collegamento di salto al contenuto e rendering delle righe batch fuori schermo. Non costituisce certificazione WCAG né garanzia di installabilità su ogni dispositivo.
 
@@ -45,7 +47,7 @@ La modalità Semplice è predefinita; Avanzata mostra altre proprietà e protezi
 
 Per la modifica massiva apri **Modifica più documenti**, oppure trascina più file nella zona iniziale. Seleziona fino a 20 file, 100 MiB complessivi (50 MiB ciascuno). Scegli se aggiungere o sostituire autori, impostare esplicitamente ultimo autore, società, responsabile o MetaMago Mark. I campi non selezionati, date, titoli e stato finale restano invariati. Caricare un gruppo precompila la modalità aggiunta; caricare un profilo precompila solo i suoi valori non vuoti (autori in sostituzione). Controlla l'anteprima per ogni documento, poi conferma. Il risultato è uno ZIP con le sole copie modificate e verificate; errori, file invariati e file esclusi sono elencati nella pagina. Nessuna sovrascrittura, nessun invio al server.
 
-**MetaMago Mark:** in modalità Avanzata puoi scegliere di aggiungere, aggiornare o rimuovere il contrassegno applicativo. La scelta predefinita mantiene lo stato originale: nessun contrassegno viene aggiunto in automatico. Le tre proprietà testuali personalizzate sono `MetaMago.Editor` (`Edited with MetaMago`), `MetaMago.Version` (`1.11.0`) e `MetaMago.Edition` (`Office`). L'app rileva i contrassegni presenti e mostra le proprietà personalizzate originali in un ispettore di sola lettura. Nomi riservati non riconosciuti o duplicati vengono preservati; non vengono sovrascritti. Nessun dato personale, timestamp o identificativo del dispositivo viene aggiunto. Il contrassegno non è una firma digitale né prova di provenienza, può essere modificato o rimosso da Office e da altri programmi.
+**MetaMago Mark:** in modalità Avanzata puoi scegliere di aggiungere, aggiornare o rimuovere il contrassegno applicativo. La scelta predefinita mantiene lo stato originale: nessun contrassegno viene aggiunto in automatico. Le tre proprietà testuali personalizzate sono `MetaMago.Editor` (`Edited with MetaMago`), `MetaMago.Version` (`2.0.0`) e `MetaMago.Edition` (`Office`). L'app rileva i contrassegni presenti e mostra le proprietà personalizzate originali in un ispettore di sola lettura. Nomi riservati non riconosciuti o duplicati vengono preservati; non vengono sovrascritti. Nessun dato personale, timestamp o identificativo del dispositivo viene aggiunto. Il contrassegno non è una firma digitale né prova di provenienza, può essere modificato o rimosso da Office e da altri programmi.
 
 Il file è autonomo, contiene il motore ZIP e non richiede server, macro, PowerShell o connessione di rete durante l'elaborazione. Nella versione web e installata la memorizzazione permanente dei nominativi è disabilitata per evitare la condivisione dello storage tra progetti dello stesso dominio. Usa import/export JSON. La visita al sito può generare normali log del servizio di hosting. Non distribuire rubriche personali tramite il repository.
 

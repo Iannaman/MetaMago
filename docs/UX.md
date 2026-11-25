@@ -33,3 +33,6 @@ Modelli documentali → scegli un modello o crea regole → salva → Inspector 
 
 ## Estensione v1.10.0
 Confronta documenti → scegli A e B oppure usa originale/copia aperti → confronto → filtro differenze → report facoltativo. Inspector, copia verificata e batch → report con conferma di riservatezza. Distinguere report di anteprima da report di esito e spiegare che non costituiscono una certificazione o un registro immodificabile.
+
+## Consolidamento 2.0.0
+Home → riprendi modifica o scegli attività → guida per attività; Impostazioni → esporta configurazione (solo dati di configurazione) → importa con conferma; Termina sessione → conferma → nuova area di lavoro. Validare con utenti reali che distinguano salvataggio delle copie, report e backup, e comprendano l'avviso prima della chiusura.

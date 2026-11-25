@@ -8,7 +8,7 @@ function getMarker(part){
   if(Object.hasOwn(values,key)||n.namespaceURI!==NS.custom||n.localName!=='property'||children.length!==1||val.namespaceURI!==NS.vt||!['lpwstr','lpstr'].includes(val.localName)||elems(val).length)return {status:'conflict',values:{}};
   values[key]=val.textContent;
  }
- return {status:values['MetaMago.Editor']===MARK_FIELDS['MetaMago.Editor']?'present':'conflict',values};
+ return {status:MARK_KEYS.every(k=>Object.hasOwn(values,k))&&values['MetaMago.Editor']===MARK_FIELDS['MetaMago.Editor']&&values['MetaMago.Edition']==='Office'&&/^\d+\.\d+\.\d+(?:-[0-9A-Za-z.-]+)?$/.test(values['MetaMago.Version'])?'present':'conflict',values};
 }
 function markChanges(marker,action){
  if(action==='keep')return false;
