@@ -20,11 +20,13 @@ Editor locale dei metadati di Microsoft Word, Excel e PowerPoint. Sviluppato da 
 | Stato finale | Imposta/rimuovi | Imposta/mantieni |
 | Sola lettura Windows | No | Sì |
 
-### Office Edition
+### Office Edition — v1.1.0 · Simple Magic
 1. Scarica [MetaMago-Office.html](Office/MetaMago-Office.html) (usa Download raw file nella pagina del file), oppure il file HTML dagli artifact di [Actions](https://github.com/Iannaman/MetaMago/actions) o dalle [Release](https://github.com/Iannaman/MetaMago/releases) quando disponibili.
 2. Aprilo con Microsoft Edge da una cartella autorizzata.
 3. Seleziona o trascina un documento, modifica le proprietà e salva una copia.
 4. Verifica il risultato in Office > File > Informazioni.
+
+La modalità Semplice è predefinita; Avanzata mostra altre proprietà e protezione. Puoi gestire la rubrica anche senza aprire un documento, richiamare un profilo dal menu rapido, selezionare l'ultimo autore con un clic e confermare i nomi digitati anche al salvataggio. La schermata di completamento permette di scaricare di nuovo la copia o aprire un altro documento. Il confronto mostra le date in italiano.
 
 Il file è autonomo, contiene il motore ZIP e non richiede server, macro, PowerShell o connessione di rete durante l'elaborazione. Il salvataggio della rubrica/profili nel browser è facoltativo; su computer condivisi preferire il solo uso temporaneo. Non distribuire rubriche personali tramite il repository.
 
@@ -50,7 +52,7 @@ I file con macro non vengono eseguiti. Non supportati: DOC, XLS, PPT, XLSB, file
 `MetaMago.ps1` e `Metadata-Core.ps1`: interfaccia e motore Desktop.
 `Test/` e `Test-OfficeMetadata.ps1`: fixture sintetiche e test automatici Desktop.
 `Build-Release.ps1`: genera esclusivamente ZIP Desktop, HTML Office e SHA256 in `dist/`.
-La CI Windows verifica sintassi e test Desktop, poi crea gli artifact di entrambe le edizioni; per HTML il controllo di build è statico. Vedi [collaudo manuale](docs/COLLAUDO.md). La pubblicazione di release resta manuale tramite GitHub.
+La CI Windows verifica sintassi e test Desktop, poi crea gli artifact di entrambe le edizioni. Il job Office Browser usa Chromium e Playwright per verificare il file HTML locale e i flussi principali. I test di entrambe le edizioni devono superarsi prima di una release. Vedi [collaudo manuale](docs/COLLAUDO.md). La pubblicazione di release resta manuale tramite GitHub.
 
 ## Licenza e supporto
 Licenza [MIT](LICENSE), progetto indipendente non affiliato a Microsoft. [Issues](https://github.com/Iannaman/MetaMago/issues) per segnalazioni con dati fittizi. [Changelog](CHANGELOG.md).

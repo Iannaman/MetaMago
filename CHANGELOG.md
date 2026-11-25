@@ -1,5 +1,15 @@
 # Changelog
 
+## Office Edition 1.1.0 — Simple Magic (candidato)
+- Modalità Semplice predefinita e Avanzata; indicatore del tipo di documento.
+- Rubrica indipendente con ricerca, inserimento e rimozione contatti, cancellazione esplicita e importazione/export JSON validati; memoria facoltativa.
+- Profili rapidi; ultimo autore selezionabile dagli autori; autocompletamento e conferma dei nomi digitati al salvataggio.
+- Date nel confronto in formato italiano, scorciatoia per copiare la creazione e avviso su date incoerenti.
+- Schermata di completamento con download ripetibile e apertura del documento successivo; avvisi solo per modifiche non salvate.
+- Errore di apertura esplicito sul documento precedente rimasto attivo; ripristino campi e controlli nome copia.
+- Test browser Chromium offline sui tre formati e sui principali flussi utente.
+- Motore Open XML invariato. Desktop resta 1.0.0-beta. MetaMago Mark e GitHub Pages non ancora implementati.
+
 ## Non rilasciato — Office Edition 1.0 Beta e pulizia
 - Aggiunta Office Edition: singolo HTML offline con JSZip incluso, autori, date, profili, rubrica importabile/esportabile, confronto e salvataggio su copia.
 - Office Edition: stato finale reversibile, verifica delle parti non modificate e rifiuto dei file non supportati.

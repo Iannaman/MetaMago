@@ -2,7 +2,13 @@
 
 Usare esclusivamente documenti sintetici o copie autorizzate.
 
-## Office Edition
+## Office Edition 1.1.0
+- [ ] Prima di aprire un documento, aggiungere un contatto, cercarlo, esportare e importare la rubrica.
+- [ ] Aprire un documento: solo i campi essenziali devono essere visibili; passare ad Avanzata e tornare a Semplice senza perdere le modifiche.
+- [ ] Inserire un autore senza premere Aggiungi: verificare il confronto e salvare direttamente.
+- [ ] Provare profilo rapido, scelta ultimo autore, copia data e avviso cronologia.
+- [ ] Verificare schermata Copia pronta, nuovo download, apertura altro documento senza conferma se le modifiche sono già state scaricate.
+- [ ] Provare apertura fallita con un documento già attivo: il nome del precedente deve essere esplicito.
 - [ ] Aprire `Office/MetaMago-Office.html` in Edge da una cartella locale autorizzata, anche offline.
 - [ ] Provare selezione e trascinamento dei tre file di `Test/`.
 - [ ] Aggiungere e rimuovere più autori; impostare ultimo autore, date e titolo.
@@ -25,4 +31,4 @@ Usare esclusivamente documenti sintetici o copie autorizzate.
 - [ ] Provare template e macro autorizzati; verificare assenza di riparazioni.
 - [ ] Verificare rifiuto di file cifrati/firmati e visualizzazione a 100%, 125%, 150% DPI.
 
-La CI esegue i test PowerShell e produce entrambi i file di distribuzione con checksum. Il controllo HTML in build è statico, non sostituisce un test nel browser. Pubblicare le release manualmente dopo il collaudo.
+La CI esegue i test PowerShell e produce entrambi i file di distribuzione con checksum. Il job Office Browser testa Chromium con file HTML locale e connessione offline; non sostituisce la prova Edge/Office 365 nell'ambiente aziendale. Pubblicare le release manualmente dopo il collaudo.
