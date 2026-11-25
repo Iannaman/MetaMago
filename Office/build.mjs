@@ -1,0 +1,34 @@
+// Build the single-file app and the minimal GitHub Pages site from the same sources.
+import { readFile, writeFile, mkdir, rm, readdir } from 'node:fs/promises';
+import { resolve, dirname } from 'node:path';
+import { fileURLToPath } from 'node:url';
+import { createHash } from 'node:crypto';
+
+const office=dirname(fileURLToPath(import.meta.url)), root=resolve(office,'..');
+const read=async name=>(await readFile(resolve(office,name),'utf8')).replace(/\r\n/g,'\n');
+const version=(await read('VERSION')).trim();
+if(!/^\d+\.\d+\.\d+$/.test(version))throw Error('Invalid version');
+const [template,style,vendor,...modules]=await Promise.all(['src/index.html','src/style.css','vendor/jszip.min.js','src/metadata.js','src/marker.js','src/rubrica.js','src/app.js'].map(read));
+const app=modules.join('').replace(/@@VERSION@@/g,version);
+const hashes=[vendor,app].map(s=>"'sha256-"+createHash('sha256').update(s,'utf8').digest('base64')+"'").join(' ');
+const tokens={VERSION:version,SCRIPT_HASHES:hashes,STYLE:style,VENDOR:vendor,APP:app};
+const html=template.replace(/@@([A-Z_]+)@@/g,(m,k)=>{if(!Object.hasOwn(tokens,k))throw Error('Unknown token '+k);return tokens[k]});
+if(/@@[A-Z_]+@@/.test(html))throw Error('Unexpanded build token');
+const standalone=resolve(office,'MetaMago-Office.html');
+const args=process.argv.slice(2);
+if(args.some(x=>!['--check','--pages'].includes(x)))throw Error('Usage: node Office/build.mjs [--check] [--pages]');
+if(args.includes('--check')||args.includes('--pages')){
+ if((await readFile(standalone,'utf8'))!==html)throw Error('Standalone HTML out of date: run node Office/build.mjs and commit the generated file');
+ console.log('PASS: deterministic HTML matches committed file');
+}else{await writeFile(standalone,html,'utf8');console.log('Built '+standalone)}
+if(args.includes('--pages')){
+ const dir=resolve(root,'dist','pages');
+ await rm(dir,{recursive:true,force:true});await mkdir(dir,{recursive:true});
+ for(const name of ['index.html','MetaMago-Office.html'])await writeFile(resolve(dir,name),html,'utf8');
+ const hash=createHash('sha256').update(html,'utf8').digest('hex');
+ await writeFile(resolve(dir,'SHA256SUMS.txt'),hash+'  MetaMago-Office.html\n','utf8');
+ await writeFile(resolve(dir,'LICENSE.txt'),await readFile(resolve(root,'LICENSE')));
+ const expected=['LICENSE.txt','MetaMago-Office.html','SHA256SUMS.txt','index.html'];
+ if(JSON.stringify((await readdir(dir)).sort())!==JSON.stringify(expected))throw Error('Unexpected Pages files');
+ console.log('Built minimal Pages site: '+dir);
+}

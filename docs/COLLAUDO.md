@@ -2,7 +2,14 @@
 
 Usare esclusivamente documenti sintetici o copie autorizzate.
 
-## Office Edition 1.2.0
+## Office Edition 1.3.0 — Web
+- [ ] Aprire il sito Pages su Edge e verificare versione ONLINE, pagina iniziale e link Scarica versione offline.
+- [ ] Scaricare l'HTML, verificare SHA256 e aprirlo localmente: versione OFFLINE e nessuna installazione.
+- [ ] Online la rubrica deve rimanere in memoria; esportare/importare JSON e verificare che un ricaricamento non ripristini i nominativi.
+- [ ] Controllare nella scheda Network del browser che l'elaborazione non invii documenti o dati a server.
+- [ ] Eseguire una modifica per ciascun formato e controllare il risultato in Office; verificare policy aziendali prima di usare documenti di lavoro.
+
+### Regressione 1.2.0
 - [ ] Senza selezionare alcuna azione Mark, modificare un metadato e verificare che non siano aggiunte proprietà MetaMago.
 - [ ] In Avanzata scegliere Aggiungi / aggiorna; controllare il confronto e salvare una copia anche senza altri cambiamenti.
 - [ ] In Office, File > Informazioni > Proprietà > Proprietà avanzate > Personalizza, verificare Editor, Version ed Edition, senza alterazioni visibili del contenuto.

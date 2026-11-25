@@ -1,0 +1,51 @@
+name: Deploy MetaMago Web
+on:
+  workflow_dispatch:
+permissions:
+  contents: read
+concurrency:
+  group: metamago-pages
+  cancel-in-progress: false
+jobs:
+  build-test:
+    if: github.ref == 'refs/heads/main'
+    runs-on: ubuntu-24.04
+    permissions:
+      contents: read
+      pages: read
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          persist-credentials: false
+      - uses: actions/setup-node@v4
+        with:
+          node-version: '22'
+      - name: Build only the public web files
+        run: node Office/build.mjs --check --pages
+      - name: Install browser test dependency
+        run: npm install --no-save --no-package-lock playwright@1.56.1
+      - name: Install Chromium
+        run: npx playwright install --with-deps chromium
+      - name: Test both editions of the Office web app
+        run: |
+          node Office/tests/smoke.mjs
+          node Office/tests/mark.mjs
+          node Office/tests/web.mjs
+      - uses: actions/configure-pages@v5
+      - uses: actions/upload-pages-artifact@v3
+        with:
+          path: dist/pages
+  deploy:
+    needs: build-test
+    if: github.ref == 'refs/heads/main'
+    runs-on: ubuntu-24.04
+    permissions:
+      pages: write
+      id-token: write
+    environment:
+      name: github-pages
+      url: ${{ steps.deployment.outputs.page_url }}
+    steps:
+      - name: Publish tested website
+        id: deployment
+        uses: actions/deploy-pages@v4

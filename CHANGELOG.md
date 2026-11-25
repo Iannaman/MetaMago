@@ -1,6 +1,15 @@
 # Changelog
 
-## Office Edition 1.2.0 — MetaMago Mark (candidato)
+## Office Edition 1.3.0 — MetaMago Web (candidato)
+- Sorgenti modulari con versione centralizzata; build Node senza dipendenze, riproducibile e controllata in CI.
+- HTML offline e pagina web identici, con riconoscimento del contesto di esecuzione e download della copia autonoma dal sito.
+- Versione web senza persistenza dei nominativi nel browser; import/export JSON invariati. Nessun upload di documenti, analytics o richieste applicative di rete.
+- CSP con hash SHA-256 dei due script incorporati, blocco delle connessioni e delle risorse esterne; policy no-referrer.
+- Test browser aggiuntivi via HTTP sotto percorso /MetaMago/, controllo richieste, storage e download identico all'HTML offline.
+- Workflow manuale GitHub Pages con test obbligatori, artifact selettivo (index, HTML offline, checksum e licenza), nessun deploy automatico a ogni push.
+- Desktop invariato. Attivazione Pages e primo deploy richiesti; collaudo Edge/Office 365 ancora necessario.
+
+## Office Edition 1.2.0 — MetaMago Mark
 - Contrassegno applicativo facoltativo con tre proprietà personalizzate standard: Editor, Version, Edition; nessuna informazione personale o timestamp aggiunto.
 - Azioni esplicite per mantenere, aggiungere/aggiornare o rimuovere il contrassegno, incluse nel confronto prima del salvataggio. Stato originale mantenuto di default.
 - Rilevamento all'apertura, segnalazione dei conflitti, ispettore di sola lettura delle proprietà personalizzate.
