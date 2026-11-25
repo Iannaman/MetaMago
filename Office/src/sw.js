@@ -1,7 +1,7 @@
 'use strict';
 // Only the application shell is cached. Never cache user files, blobs, queries or POSTs.
 const scope=self.registration.scope, prefix='MetaMago-shell:'+scope+':', cacheName=prefix+'@@VERSION@@';
-const names=['index.html','MetaMago-Office.html','SHA256SUMS.txt','LICENSE.txt','manifest.webmanifest','icon-192.png','icon-512.png'];
+const names=['index.html','LICENSE.txt','manifest.webmanifest','icon-192.png','icon-512.png'];
 const allowed=new Set(names.map(n=>new URL(n,scope).href));
 self.addEventListener('install',event=>event.waitUntil((async()=>{
  const cache=await caches.open(cacheName);

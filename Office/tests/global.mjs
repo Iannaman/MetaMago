@@ -38,9 +38,11 @@ try{
  assert.equal(await id('open').textContent(),'Scegli documento');
  await page.goto(url);
  assert.equal(await page.locator('html').getAttribute('lang'),'en');
- await id('enableOffline').click();
+ assert.equal(await id('installApp').isVisible(),true);
+ assert.equal(await id('enableOffline').count(),0);
  await page.waitForFunction(()=>!!navigator.serviceWorker.controller,{},{timeout:30000});
- assert.match(await id('pwaStatus').textContent(),/ready for offline use/);
+ assert.equal(await page.evaluate(()=>document.querySelector('link[rel=manifest]').getAttribute('href')),'./manifest.webmanifest');
+ const manifest=JSON.parse(await readFile(resolve(site,'manifest.webmanifest'),'utf8'));assert.equal(manifest.display,'standalone');
  const keys=await page.evaluate(async()=>{const names=(await caches.keys()).filter(n=>n.startsWith('MetaMago-shell:'));return (await Promise.all(names.map(async n=>(await (await caches.open(n)).keys()).map(r=>new URL(r.url).pathname.split('/').pop())))).flat().sort()});
  assert.deepEqual(keys,assets.filter(n=>n!=='sw.js').sort());
  await ctx.setOffline(true);

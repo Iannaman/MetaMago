@@ -1,5 +1,10 @@
 # Changelog
 
+## Office Edition 1.6.1 — Quality Edition
+- Interfaccia web unificata: rimosse le scelte di download HTML e attivazione cache; unico comando Installa applicazione con guida al menu del browser.
+- Cache PWA tecnica automatica limitata alle risorse pubbliche; finestra standalone; nessuna persistenza dei nominativi online.
+- Pages pubblica solo pagina, licenza, manifest, service worker e icone. Il file HTML generato resta nel repository per sviluppo e collaudo. Desktop invariato.
+
 ## Office Edition 1.6.0 — Quality Edition (candidato)
 - Corrette collisioni tra la funzione di traduzione e variabili locali nell'ispezione XML e nella tabella delle proprietà.
 - Validazione preventiva della directory ZIP, nomi duplicati, percorsi, header e intervalli; esclusione ZIP64/multidisco; decompressione a dimensione controllata e CRC delle parti lette.

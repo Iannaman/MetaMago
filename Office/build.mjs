@@ -25,12 +25,10 @@ if(args.includes('--check')||args.includes('--pages')){
 if(args.includes('--pages')){
  const dir=resolve(root,'dist','pages');
  await rm(dir,{recursive:true,force:true});await mkdir(dir,{recursive:true});
- for(const name of ['index.html','MetaMago-Office.html'])await writeFile(resolve(dir,name),html,'utf8');
- const hash=createHash('sha256').update(html,'utf8').digest('hex');
- await writeFile(resolve(dir,'SHA256SUMS.txt'),hash+'  MetaMago-Office.html\n','utf8');
+ await writeFile(resolve(dir,'index.html'),html,'utf8');
  await writeFile(resolve(dir,'LICENSE.txt'),await readFile(resolve(root,'LICENSE')));
  await buildPwa(dir,version);
- const expected=['LICENSE.txt','MetaMago-Office.html','SHA256SUMS.txt','icon-192.png','icon-512.png','index.html','manifest.webmanifest','sw.js'];
+ const expected=['LICENSE.txt','icon-192.png','icon-512.png','index.html','manifest.webmanifest','sw.js'];
  if(JSON.stringify((await readdir(dir)).sort())!==JSON.stringify(expected))throw Error('Unexpected Pages files');
  console.log('Built minimal Pages site: '+dir);
 }

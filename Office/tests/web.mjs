@@ -9,13 +9,11 @@ import { chromium } from 'playwright';
 
 const root=resolve(dirname(fileURLToPath(import.meta.url)),'../..'), site=resolve(root,'dist','pages');
 const version=(await readFile(resolve(root,'Office','VERSION'),'utf8')).trim();
-const expected=['LICENSE.txt','MetaMago-Office.html','SHA256SUMS.txt','icon-192.png','icon-512.png','index.html','manifest.webmanifest','sw.js'];
+const expected=['LICENSE.txt','icon-192.png','icon-512.png','index.html','manifest.webmanifest','sw.js'];
 assert.deepEqual((await readdir(site)).sort(),expected);
 const html=await readFile(resolve(site,'index.html'));
-assert.deepEqual(html,await readFile(resolve(site,'MetaMago-Office.html')));
 assert.deepEqual(html,await readFile(resolve(root,'Office','MetaMago-Office.html')));
-assert.equal((await readFile(resolve(site,'SHA256SUMS.txt'),'utf8')).trim(),createHash('sha256').update(html).digest('hex')+'  MetaMago-Office.html');
-const paths={'/MetaMago/':'index.html','/MetaMago/MetaMago-Office.html':'MetaMago-Office.html','/MetaMago/SHA256SUMS.txt':'SHA256SUMS.txt','/MetaMago/LICENSE.txt':'LICENSE.txt'};
+const paths={'/MetaMago/':'index.html'};
 for(const name of expected)paths['/MetaMago/'+name]=name;
 const httpRequests=[];
 const server=createServer(async (req,res)=>{
@@ -42,8 +40,13 @@ await page.addInitScript(()=>{
 const id=x=>page.locator('#'+x);
 try{
  await page.goto(origin+'/MetaMago/');
- assert.match(await id('editionTag').textContent(),new RegExp('ONLINE · '+version.replaceAll('.','\\.')));
+ assert.match(await id('editionTag').textContent(),new RegExp('v'+version.replaceAll('.','\\.')));
  assert.equal(await id('webTools').isVisible(),true);
+ assert.equal(await id('installApp').isVisible(),true);
+ assert.equal(await id('downloadOffline').count(),0);
+ assert.equal(await id('enableOffline').count(),0);
+ await id('installApp').click();
+ assert.match(await id('pwaStatus').textContent(),/Installa questo sito come app/);
  await id('rubricPanel').locator('summary').first().click();
  assert.equal(await id('persistLabel').isVisible(),false);
  assert.equal(await id('persist').isDisabled(),true);
@@ -73,14 +76,10 @@ try{
  assert.equal(await page.evaluate(()=>window.storageTouches),0);
  assert.deepEqual(await page.evaluate(()=>window.cspViolations),[]);
  await ctx.setOffline(false);
- const [d]=await Promise.all([page.waitForEvent('download'),id('downloadOffline').click()]);
- assert.equal(d.suggestedFilename(),'MetaMago-Office.html');
- const path=resolve(dir,'MetaMago-Office.html');await d.saveAs(path);
- assert.deepEqual(await readFile(path),html);
  await page.reload();
  assert.match(await id('rubricCount').textContent(),/0 nominativi, 0 profili/);
  assert.equal(await page.evaluate(()=>window.storageTouches),0);
  assert.deepEqual(errors,[]);
  assert.ok(httpRequests.every(([method,url])=>method==='GET'&&Object.hasOwn(paths,url)));
- console.log('PASS web subpath, offline processing in three formats, no network/storage access, identical offline download');
+ console.log('PASS web subpath, offline processing in three formats, no network/storage access, installation guidance');
 }finally{await browser.close();await new Promise(r=>server.close(r));await rm(dir,{recursive:true,force:true})}

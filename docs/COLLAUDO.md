@@ -2,7 +2,12 @@
 
 Usare esclusivamente documenti sintetici o copie autorizzate.
 
-## Office Edition 1.6.0 — Quality
+## Office Edition 1.6.1 — Installazione
+- [ ] Verificare che il sito mostri soltanto Installa applicazione, senza link di download HTML o comando cache.
+- [ ] Installare da Edge o Chrome se consentito, aprire la finestra dedicata e verificare che il comando non appaia in modalità standalone.
+- [ ] Verificare guida alternativa quando il prompt non è disponibile, senza aggirare le policy.
+
+### Regressione 1.6.0 — Quality
 - [ ] Aprire e salvare copie autorizzate di Word/Excel/PowerPoint, anche con template, macro non eseguite e proprietà personalizzate.
 - [ ] Verificare rifiuto di ZIP troncati, duplicati, contenuto non coerente con estensione e CRC alterati; originali invariati.
 - [ ] Chiudere documento dopo salvataggio e con modifiche non salvate; verificare conferma, reset campi e focus.

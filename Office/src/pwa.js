@@ -1,15 +1,24 @@
 
 let installEvent=null;
-if(WEB_MODE&&window.isSecureContext&&'serviceWorker' in navigator){
- $('enableOffline').hidden=false;
- const manifest=document.createElement('link');manifest.rel='manifest';manifest.href='./manifest.webmanifest';document.head.append(manifest);
- window.addEventListener('beforeinstallprompt',e=>{e.preventDefault();installEvent=e;$('installApp').hidden=false});
- window.addEventListener('appinstalled',()=>{installEvent=null;$('installApp').hidden=true});
- function pwaReady(){if(navigator.serviceWorker.controller){msg('pwaStatus',tr('Sito pronto per uso offline. Puoi installarlo dal menu del browser se disponibile.'),'ok');$('enableOffline').hidden=true}}
- navigator.serviceWorker.addEventListener('controllerchange',pwaReady);pwaReady();
- $('enableOffline').onclick=async()=>{if(busy)return;$('enableOffline').disabled=true;msg('pwaStatus',tr('Preparazione della cache locale…'));try{
- const reg=await navigator.serviceWorker.register('./sw.js',{scope:'./'});
- if(reg.active)pwaReady();else{const worker=reg.installing||reg.waiting;if(worker)worker.addEventListener('statechange',()=>{if(worker.state==='redundant'){msg('pwaStatus',tr('Cache offline non disponibile: ')+'service worker','error');$('enableOffline').disabled=false}})}
- }catch(e){msg('pwaStatus',tr('Cache offline non disponibile: ')+e.message,'error');$('enableOffline').disabled=false}};
- $('installApp').onclick=async()=>{if(!installEvent)return;try{const e=installEvent;installEvent=null;$('installApp').hidden=true;await e.prompt();await e.userChoice}catch(e){msg('pwaStatus',tr('Installazione annullata o non disponibile.'),'error')}};
+if(WEB_MODE){
+ const panel=$('webTools'),button=$('installApp');
+ const standalone=window.matchMedia('(display-mode: standalone)');
+ const isInstalled=()=>standalone.matches||navigator.standalone===true;
+ function syncInstall(){panel.hidden=isInstalled()}
+ syncInstall();standalone.addEventListener?.('change',syncInstall);
+ window.addEventListener('beforeinstallprompt',e=>{e.preventDefault();installEvent=e;syncInstall()});
+ window.addEventListener('appinstalled',()=>{installEvent=null;panel.hidden=true});
+ if(window.isSecureContext){
+  const manifest=document.createElement('link');manifest.rel='manifest';manifest.href='./manifest.webmanifest';document.head.append(manifest);
+  // Prepare only public application resources, without a separate user-facing mode.
+  if('serviceWorker' in navigator)navigator.serviceWorker.register('./sw.js',{scope:'./'}).catch(()=>{});
+ }
+ button.onclick=async()=>{
+  if(busy||isInstalled())return;
+  if(!installEvent){msg('pwaStatus',tr('In Edge: menu ⋯ → App → Installa questo sito come app. In Chrome: menu ⋮ → Trasmetti, salva e condividi → Installa pagina come app (se disponibile). Se non trovi il comando, il browser o le policy aziendali potrebbero non consentire l’installazione.'));return}
+  const e=installEvent;installEvent=null;button.disabled=true;
+  try{await e.prompt();const choice=await e.userChoice;if(choice.outcome==='accepted'){msg('pwaStatus',tr('Richiesta di installazione accettata.'));}else msg('pwaStatus',tr('Installazione annullata. Puoi riprovare dal menu del browser.'))}
+  catch(err){msg('pwaStatus',tr('Installazione non disponibile. Usa il menu del browser, se consentito.'))}
+  finally{button.disabled=false}
+ };
 }

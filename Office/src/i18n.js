@@ -3,17 +3,12 @@ const UI_LANG=location.hash==='#en'?'en':location.hash==='#it'?'it':/^it\b/i.tes
 const EN=Object.freeze({
   "Office Edition · Le proprietà cambiano, il contenuto no.": "Office Edition · Change the properties, not the content.",
   "Modifica le proprietà descrittive di documenti Word, Excel e PowerPoint autorizzati. Il file originale non viene modificato. I documenti e i nominativi vengono elaborati nel browser e non vengono inviati a server.": "Edit descriptive properties of authorised Word, Excel and PowerPoint documents. Originals are unchanged. Documents and names are processed in your browser and never uploaded.",
-  "Versione online · elaborazione locale": "Online edition · local processing",
-  "La connessione serve per caricare l'applicazione, non per elaborare i documenti. La visita al sito può generare i normali log del servizio di hosting. Rubrica e profili restano in memoria fino alla chiusura: esportali se vuoi conservarli.": "The connection loads the app, not your documents. Hosting may log ordinary visits. Contacts and profiles stay in memory until you close the page: export them to keep them.",
-  "Scarica versione offline": "Download offline edition",
   "Rubrica e profili del gruppo": "Contacts and team profiles",
-  "Gestisci i nominativi anche senza aprire un documento. Nella versione offline la memoria permanente è facoltativa; non usarla su PC condivisi.": "Manage contacts without opening a document. Offline storage is optional; avoid it on shared computers.",
   "Nuovo nominativo": "New contact",
   "Aggiungi alla rubrica": "Add to contacts",
   "Cerca nella rubrica": "Search contacts",
   "Rimuovi nominativo": "Remove contact",
   "Ricorda rubrica e profili in questo browser": "Remember contacts and profiles in this browser",
-  "Online, rubrica e profili non vengono memorizzati nel browser. Usa Importa / Esporta JSON per conservarli in una cartella autorizzata.": "Online contacts and profiles are not stored in the browser. Import/export JSON to keep them in an authorised folder.",
   "Importa JSON": "Import JSON",
   "Importa CSV": "Import CSV",
   "Modello CSV": "CSV template",
@@ -290,12 +285,7 @@ const EN=Object.freeze({
   "Rubrica memorizzata non disponibile o non valida.": "Stored contacts unavailable or invalid.",
   "Errore: ": "Error: ",
   "Cambia lingua? La pagina verrà ricaricata. Esporta prima la rubrica e salva i documenti se necessario.": "Change language? The page will reload. Export contacts and save documents first if needed.",
-  "Abilita uso offline del sito": "Enable offline website",
   "Installa applicazione": "Install app",
-  "Preparazione della cache locale…": "Preparing local cache…",
-  "Sito pronto per uso offline. Puoi installarlo dal menu del browser se disponibile.": "Website ready for offline use. Install from your browser menu if available.",
-  "Cache offline non disponibile: ": "Offline cache unavailable: ",
-  "Installazione annullata o non disponibile.": "Installation cancelled or unavailable.",
   "Apri il contenuto principale": "Skip to main content",
   "Lingua dell’interfaccia": "Interface language",
   " nominativi, ": " contacts, ",
@@ -319,7 +309,15 @@ const EN=Object.freeze({
   "Operazione interrotta: nessuno ZIP scaricato.": "Operation cancelled: no ZIP downloaded.",
   "Elenco autori": "Author list",
   "Nome del profilo": "Profile name",
-  "Limiti: 50 MiB di file, 150 MiB di dati decompressi. Archivi ZIP64, multidisco o con nomi non UTF-8 non supportati.": "Limits: 50 MiB file, 150 MiB expanded data. ZIP64, multi-disk or non-UTF-8 names are unsupported."
+  "Limiti: 50 MiB di file, 150 MiB di dati decompressi. Archivi ZIP64, multidisco o con nomi non UTF-8 non supportati.": "Limits: 50 MiB file, 150 MiB expanded data. ZIP64, multi-disk or non-UTF-8 names are unsupported.",
+  "MetaMago come applicazione": "MetaMago as an app",
+  "Apri MetaMago in una finestra dedicata, direttamente dal desktop o dal menu Start.": "Open MetaMago in a dedicated window, directly from the desktop or Start menu.",
+  "Gestisci i nominativi anche senza aprire un documento.": "Manage contacts without opening a document.",
+  "Rubrica e profili non vengono memorizzati nel browser. Usa Importa / Esporta JSON per conservarli in una cartella autorizzata.": "Contacts and profiles are not stored in the browser. Import/export JSON to keep them in an authorised folder.",
+  "In Edge: menu ⋯ → App → Installa questo sito come app. In Chrome: menu ⋮ → Trasmetti, salva e condividi → Installa pagina come app (se disponibile). Se non trovi il comando, il browser o le policy aziendali potrebbero non consentire l’installazione.": "In Edge: menu ⋯ → Apps → Install this site as an app. In Chrome: menu ⋮ → Cast, save and share → Install page as app (if available). If the command is missing, your browser or organisation may restrict installation.",
+  "Richiesta di installazione accettata.": "Installation request accepted.",
+  "Installazione annullata. Puoi riprovare dal menu del browser.": "Installation cancelled. Try again from the browser menu.",
+  "Installazione non disponibile. Usa il menu del browser, se consentito.": "Installation unavailable. Use the browser menu if permitted."
 });
 function tr(s){return UI_LANG==='en'&&Object.hasOwn(EN,s)?EN[s]:s}
 document.documentElement.lang=UI_LANG;
