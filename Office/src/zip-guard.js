@@ -40,16 +40,16 @@ function preflightZip(bytes){
 }
 const CRC_TABLE=Uint32Array.from({length:256},(_,n)=>{for(let k=0;k<8;k++)n=(n>>>1)^((n&1)?0xedb88320:0);return n>>>0});
 // Bound actual decompression, not just the advertised size. CRC is corruption detection, not authentication.
-function checkedEntry(entry,limit=MAXEXP){
+function checkedEntry(entry,limit=MAXEXP,collect=true){
  const size=entry._data.uncompressedSize,expected=entry._data.crc32>>>0;
  if(!Number.isSafeInteger(size)||size<0||size>limit)return Promise.reject(Error(tr('Dimensione ZIP non valida.')));
  return new Promise((resolve,reject)=>{
-  const chunks=[];let total=0,crc=0xffffffff,failed=false;
+  const out=collect?new Uint8Array(size):null;let total=0,crc=0xffffffff,failed=false;
   const stream=entry.internalStream('uint8array');
-  const fail=err=>{if(failed)return;failed=true;stream.pause();chunks.length=0;reject(err)};
-  stream.on('data',chunk=>{if(failed)return;total+=chunk.length;if(total>size||total>limit){fail(Error(tr('Decompressione oltre il limite dichiarato.')));return}for(const x of chunk)crc=(crc>>>8)^CRC_TABLE[(crc^x)&255];chunks.push(chunk)});
+  const fail=err=>{if(failed)return;failed=true;stream.pause();reject(err)};
+  stream.on('data',chunk=>{if(failed)return;total+=chunk.length;if(total>size||total>limit){fail(Error(tr('Decompressione oltre il limite dichiarato.')));return}for(let i=0;i<chunk.length;i++)crc=(crc>>>8)^CRC_TABLE[(crc^chunk[i])&255];if(out)out.set(chunk,total-chunk.length)});
   stream.on('error',fail);
-  stream.on('end',()=>{if(failed)return;if(total!==size||((crc^0xffffffff)>>>0)!==expected){fail(Error(tr('Controllo CRC o dimensione ZIP non riuscito.')));return}const out=new Uint8Array(total);let at=0;for(const c of chunks){out.set(c,at);at+=c.length}resolve(out)});
+  stream.on('end',()=>{if(failed)return;if(total!==size||((crc^0xffffffff)>>>0)!==expected){fail(Error(tr('Controllo CRC o dimensione ZIP non riuscito.')));return}resolve(out)});
   stream.resume();
  });
 }

@@ -550,7 +550,18 @@ const EN=Object.freeze({
   "Report esito batch": "Batch result report",
   "Proposta": "Proposed",
   "Anteprima: modifiche proposte, non eseguite.": "Preview: proposed changes, not executed.",
-  "Esito elaborazione: controlla i singoli stati.": "Processing result: check individual statuses."
+  "Esito elaborazione: controlla i singoli stati.": "Processing result: check individual statuses.",
+  "Prestazioni": "Performance",
+  "Elabora in background quando disponibile": "Process in background when available",
+  "Il Web Worker esegue le operazioni ZIP più pesanti in un processo di lavoro separato. Se il browser non lo consente, viene usato il motore compatibile. Nessun documento viene inviato in rete.": "The Web Worker runs heavier ZIP operations on a separate worker thread. If the browser does not allow it, the compatibility engine is used. No documents are sent over the network.",
+  "Nessuna elaborazione misurata in questa sessione.": "No processing measured in this session.",
+  "Elaborazione in background interrotta.": "Background processing interrupted.",
+  "Tempo massimo di elaborazione in background superato.": "Background processing time limit exceeded.",
+  "Ultima elaborazione ZIP: ": "Last ZIP processing: ",
+  "Motore compatibile (Worker non disponibile)": "Compatibility engine (Worker unavailable)",
+  "Motore compatibile": "Compatibility engine",
+  "parti verificate senza doppia decompressione": "parts verified without double decompression",
+  "parti confrontate dopo decompressione": "parts compared after decompression"
 });
 function tr(s){return UI_LANG==='en'&&Object.hasOwn(EN,s)?EN[s]:s}
 document.documentElement.lang=UI_LANG;

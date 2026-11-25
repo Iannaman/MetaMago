@@ -2,7 +2,13 @@
 
 Usare esclusivamente documenti sintetici o copie autorizzate.
 
-## Office Edition 1.10.0 — Audit
+## Office Edition 1.11.0 — Performance
+- [ ] Verificare generazione copie via Worker e motore compatibile per Word/Excel/PowerPoint, anche in PWA e con rete disattivata.
+- [ ] Verificare che le parti immutate siano identiche, che un CRC corrotto venga respinto, che un errore del Worker non produca download e che la modalità compatibile funzioni.
+- [ ] Eseguire benchmark sintetico e registrare tempi, ritardo del timer e conteggi parti; non interpretare il ritardo come misurazione completa della memoria o della UX.
+- [ ] Collaudare su Edge aziendale e hardware reale, con documenti autorizzati di dimensioni differenti. Nessun aumento dei limiti prima delle misure.
+
+### Regressione 1.10.0 — Audit
 - [ ] Confrontare due file, anche di formati diversi, originali e copie, filtro differenze e valori identici.
 - [ ] Esportare report CSV e HTML, verificare corrispondenza dei valori, escaping, celle formula e stampa.
 - [ ] Esportare report Inspector con modello selezionato e analisi parziale, verificare esiti non conclusivi.

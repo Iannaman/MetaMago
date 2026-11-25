@@ -27,9 +27,9 @@ const browser=await chromium.launch({headless:true});
 const ctx=await browser.newContext({locale:'it-IT',acceptDownloads:true,serviceWorkers:'block'});
 const dir=await mkdtemp(resolve(tmpdir(),'metamago-web-'));
 const requests=[],errors=[],violations=[];
-await ctx.route('**/*',route=>route.request().url().startsWith(origin+'/')?route.continue():route.abort());
+await ctx.route('**/*',route=>(route.request().url().startsWith(origin+'/')||route.request().url().startsWith('blob:'))?route.continue():route.abort());
 const page=await ctx.newPage();
-page.on('request',r=>requests.push(r.url()));
+page.on('request',r=>{if(!r.url().startsWith('blob:'))requests.push(r.url())});
 page.on('pageerror',e=>{errors.push(e.message);console.error('PAGE ERROR:',e.message)});
 page.on('dialog',d=>d.accept());
 await page.addInitScript(()=>{
@@ -70,6 +70,7 @@ try{
   assert.equal(meta.title,'Web test '+ext);
   assert.equal(meta.marker,'absent');
   await id('completion').waitFor({state:'visible'});
+  assert.equal(await page.evaluate(()=>lastPerformance?.mode),'worker','web mode must use worker in Chromium');
  }
  assert.equal(requests.length,baseline,'processing requested network');
  assert.equal(httpRequests.length,httpBaseline,'processing contacted server');

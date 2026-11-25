@@ -1,5 +1,11 @@
 # Changelog
 
+## Office Edition 1.11.0 — Performance Edition (candidato)
+- Generazione ZIP e verifica delle parti non modificate in Web Worker locale temporaneo; fallback compatibile se non disponibile, errore senza download se il Worker fallisce durante il lavoro.
+- Verifica di uguaglianza delle parti compresse, con CRC e dimensione effettiva verificati una volta; confronto byte per byte quando differiscono. Buffer preallocati, niente duplicazione dell'output per il percorso identico.
+- Analisi XML e verifica delle proprietà ancora sul thread principale; limiti 50/150 MiB e batch invariati. Nessuna nuova dipendenza, richiesta di rete o persistenza.
+- Impostazione di compatibilità, indicatori locali di durata ZIP e conteggi; benchmark sintetico e test di equivalenza e corruzione. Desktop invariato, deploy manuale.
+
 ## Office Edition 1.10.0 — Audit Edition (candidato)
 - Confronto in sola lettura di due documenti, anche di formati differenti; riuso originale e ultima copia verificata, filtro differenze, valori originali delle proprietà standard, stato finale e Mark.
 - Report CSV UTF-8 e HTML stampabile per confronto, Inspector e modello selezionato, copia verificata e anteprima/esito batch.
