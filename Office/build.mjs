@@ -33,7 +33,9 @@ if(!exportPattern.test(qpdfGlue))throw Error('Unexpected QPDF Emscripten module 
 const glue=qpdfGlue.replace(exportPattern,'const createQpdf=$1;');
 const safeJSON=v=>JSON.stringify(v).replace(/</g,'\\u003c').replace(/\u2028/g,'\\u2028').replace(/\u2029/g,'\\u2029');
 const qpdfBundle='const QPDF_GLUE='+safeJSON(glue)+';\nconst QPDF_WASM='+safeJSON(qpdfWasm.toString('base64'))+';\n';
-console.log('QPDF WASM sha256 '+createHash('sha256').update(qpdfWasm).digest('hex'));
+const qpdfDigest=createHash('sha256').update(qpdfWasm).digest('hex');
+if(qpdfDigest!=='843495f51c8249f49863649a5e2e719e76709aa05f871e56d080e032fac45508')throw Error('Unexpected QPDF WASM digest');
+console.log('QPDF WASM sha256 '+qpdfDigest);
 const notice='/*\n'+notices.join('\n\n').replace(/\*\//g,'* /').replace(/<\/script/gi,'< /script')+'\n*/\n';
 if(/<\/script/i.test(pdfVendor))throw Error('PDF vendor contains script closing tag');
 const app=(notice+pdfVendor+';\n'+qpdfBundle+modules.join('').replace(/@@VERSION@@/g,version)).replace(/\r\n?/g,'\n');
