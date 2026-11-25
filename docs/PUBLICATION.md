@@ -13,4 +13,4 @@ Appiattimento conservativo: solo campi di testo AcroForm semplici, un widget int
 ## Verifica
 Input come PDF Edition (20 MiB, non cifrato, non firmato, no PDF/A dichiarato). QPDF in Worker locale verifica struttura prima/dopo; rifiuta risultati parziali, warning o errori. Controlla geometria e numero pagine; verifica campi rimossi e assenza di widget dopo appiattimento. Nessuna copia in caso di verifica fallita. Output entro limite PDF esistente. Il motore non certifica integrità delle firme, assenza di dati personali o sicurezza. Nessuna nuova dipendenza, nessun invio dei documenti. Test sintetici con qpdf, pdftotext e pdftoppm, non un collaudo universale. Collaudo manuale Edge/Acrobat necessario. Deploy manuale.
 
-Prossima release 2.5.0 PDF Automation (batch, modelli, report e confronto).
+Dalla 2.5.0: [PDF Automation](PDF-AUTOMATION.md), batch metadati e filigrana centrale; appiattimento e protezione rimangono singoli.

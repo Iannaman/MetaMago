@@ -58,7 +58,7 @@ function renderAudit(){
 }
 $('auditOnlyDiff').onchange=renderAudit;
 $('auditRun').onclick=async()=>{if(busy||!auditInputs.A||!auditInputs.B)return;invalidateAudit();setBusy(true);msg('auditStatus',tr('Confronto in corso…'));try{
- const a=auditInputs.A,b=auditInputs.B,first=await readAuditInput(a),second=await readAuditInput(b);auditResult={a:a.name,b:b.name,rows:compareAudit(first,second)};renderAudit();msg('auditStatus',tr('Confronto completato. Nessun documento modificato.'),'ok')
+ const a=auditInputs.A,b=auditInputs.B;let rows;if(/\.pdf$/i.test(a.name)||/\.pdf$/i.test(b.name))rows=await comparePdfOfficeInputs(a,b);else{const first=await readAuditInput(a),second=await readAuditInput(b);rows=compareAudit(first,second)}auditResult={a:a.name,b:b.name,rows};renderAudit();msg('auditStatus',tr('Confronto completato. Nessun documento modificato.'),'ok')
  }catch(e){msg('auditStatus',e.message,'error')}finally{setBusy(false)}};
 function comparisonReport(){if(!auditResult)return null;return {title:tr('Report confronto'),rows:[[tr('Documento'),tr('Nome'),auditResult.a,auditResult.b,''],...auditResult.rows.map(r=>[tr('Confronto'),r.label,r.before,r.after,tr(r.unknown?'Non conclusivo':r.different?'Differente':'Uguale')])]}};
 function clearAuditInspection(){inspectionAudit=null}
