@@ -24,7 +24,7 @@ try{
  const [downloaded]=await Promise.all([page.waitForEvent('download'),id('configExport').click()]);
  assert.equal(downloaded.suggestedFilename(),'MetaMago-configurazione.json');
  const path=resolve(dir,'config.json');await downloaded.saveAs(path);const data=JSON.parse(await readFile(path,'utf8'));
- assert.deepEqual(Object.keys(data).sort(),['kind','models','preferences','rubric','version']);
+ assert.deepEqual(Object.keys(data).sort(),['kind','models','preferences','rubric','version','workflows']);
  assert.equal(data.kind,'MetaMago.Configuration');assert.deepEqual(data.rubric.contacts,['Ada Test']);assert.equal(data.rubric.groups.length,1);assert.equal(data.rubric.profiles.length,1);assert.equal(data.models.length,1);assert.deepEqual(data.preferences,{theme:'dark',background:false});
  assert.ok(!JSON.stringify(data).includes('Unsaved professional draft'));
  const invalid={...data,models:[{...data.models[0],name:'Institutional document'}]};
