@@ -3,7 +3,7 @@
 # MetaMago 🪄
 **Le proprietà cambiano, il contenuto no.**
 
-Editor locale dei metadati di Microsoft Word, Excel e PowerPoint. Sviluppato da [Iannaman](https://github.com/Iannaman). Office Edition 2.2.0 è candidata al rilascio stabile; Desktop Edition resta beta. Il collaudo manuale su Office ed Edge aziendale è necessario prima di adottarla.
+Editor locale dei metadati di Microsoft Word, Excel e PowerPoint. Sviluppato da [Iannaman](https://github.com/Iannaman). Office Edition 2.3.0 è candidata al rilascio stabile; Desktop Edition resta beta. Il collaudo manuale su Office ed Edge aziendale è necessario prima di adottarla.
 
 ## Scegli l'edizione
 
@@ -21,15 +21,17 @@ Editor locale dei metadati di Microsoft Word, Excel e PowerPoint. Sviluppato da 
 | MetaMago Mark e ispettore proprietà personalizzate | Sì, facoltativo | Non ancora |
 | Sola lettura Windows | No | Sì |
 
-### Office Edition — v2.2.0 · Protection Edition
+### Office Edition — v2.3.0 · PDF Inspector Edition
 
 [**Avvia MetaMago**](https://iannaman.github.io/MetaMago/). Per aprirlo in una finestra dedicata, premi **Installa applicazione** o usa il comando App di Edge, se consentito. Seleziona un documento, modifica le proprietà e salva una copia. Verifica il risultato in Office > File > Informazioni.
 
 La modalità Semplice è predefinita; Avanzata mostra altre proprietà e protezione. Puoi gestire la rubrica anche senza aprire un documento, richiamare un profilo dal menu rapido, selezionare l'ultimo autore con un clic e confermare i nomi digitati anche al salvataggio. La schermata di completamento permette di scaricare di nuovo la copia o aprire un altro documento. Le date visualizzate seguono la lingua selezionata; il confronto Audit usa valori originali.
 
+**PDF Inspector Edition (2.3.0):** Inspector unificato Office/PDF in sola lettura, QPDF structural check, SHA-256 dell'originale, indicatori privacy, firme/campi firma, annotazioni nascoste, allegati (soli nomi), JavaScript, azioni, riferimenti esterni, moduli, livelli e contenuti multimediali; PDF cifrati con password autorizzata e permessi. Nessuna rimozione di protezioni, verifica crittografica delle firme o certificazione PDF/A; XMP cifrato non letto. [Guida PDF Inspector](docs/PDF-INSPECTOR.md).
+
 **Protection Edition (2.2.0):** cifratura PDF AES-256 R6 con QPDF 12.2.0 in Worker WebAssembly, password proprietario obbligatoria, password di apertura facoltativa, permessi stampa/modifica/copia, verifica dell'output prima del download. Le restrizioni non sono un blocco assoluto; nessuna rimozione di protezioni esistenti. Dipendenza QPDF WASM 0.1.0 a versione esatta, licenze incluse, checksum WASM registrato nella build; integrity npm fissata nel lockfile e SHA256 WASM verificato dalla build. Vedi [guida Protection](docs/PROTECTION.md).
 
-**PDF Edition (2.1.0):** modulo dedicato per PDF non cifrati e senza firme/campi firma, massimo 20 MiB. Confronto Info/XMP e modifica selettiva dei campi standard con sincronizzazione delle rappresentazioni XMP supportate. Proprietà Info testuali personalizzate e Mark PDF facoltativo; conservazione dei campi non selezionati, controllo delle parti originali e test di rendering. PDF/A dichiarato e XMP non supportato esclusi. Nessuna rimozione sicura dei dati o certificazione PDF/A. Il batch, Inspector e Audit Office non includono ancora PDF. Vedi [guida PDF](docs/PDF.md).
+**PDF Edition (2.1.0):** modulo dedicato per PDF non cifrati e senza firme/campi firma, massimo 20 MiB. Confronto Info/XMP e modifica selettiva dei campi standard con sincronizzazione delle rappresentazioni XMP supportate. Proprietà Info testuali personalizzate e Mark PDF facoltativo; conservazione dei campi non selezionati, controllo delle parti originali e test di rendering. PDF/A dichiarato e XMP non supportato esclusi. Nessuna rimozione sicura dei dati o certificazione PDF/A. Il batch e Audit Office non includono ancora PDF; dalla 2.3.0 Inspector supporta PDF. Vedi [guida PDF](docs/PDF.md).
 
 **Update Fix (2.0.1):** aggiornamenti PWA rilevati dal browser, avviso e pulsante di aggiornamento con conferma, verifica manuale in Impostazioni. Nessuna ricarica automatica delle finestre aperte, blocco durante l'elaborazione, eliminazione delle sole cache obsolete di MetaMago dopo l'attivazione. Il passaggio dalle versioni precedenti può richiedere una chiusura di tutte le finestre o la disattivazione del vecchio Service Worker. Vedi [GitHub Pages](docs/PAGES.md).
 
@@ -53,7 +55,7 @@ La modalità Semplice è predefinita; Avanzata mostra altre proprietà e protezi
 
 Per la modifica massiva apri **Modifica più documenti**, oppure trascina più file nella zona iniziale. Seleziona fino a 20 file, 100 MiB complessivi (50 MiB ciascuno). Scegli se aggiungere o sostituire autori, impostare esplicitamente ultimo autore, società, responsabile o MetaMago Mark. I campi non selezionati, date, titoli e stato finale restano invariati. Caricare un gruppo precompila la modalità aggiunta; caricare un profilo precompila solo i suoi valori non vuoti (autori in sostituzione). Controlla l'anteprima per ogni documento, poi conferma. Il risultato è uno ZIP con le sole copie modificate e verificate; errori, file invariati e file esclusi sono elencati nella pagina. Nessuna sovrascrittura, nessun invio al server.
 
-**MetaMago Mark:** in modalità Avanzata puoi scegliere di aggiungere, aggiornare o rimuovere il contrassegno applicativo. La scelta predefinita mantiene lo stato originale: nessun contrassegno viene aggiunto in automatico. Le tre proprietà testuali personalizzate sono `MetaMago.Editor` (`Edited with MetaMago`), `MetaMago.Version` (`2.2.0`) e `MetaMago.Edition` (`Office`). L'app rileva i contrassegni presenti e mostra le proprietà personalizzate originali in un ispettore di sola lettura. Nomi riservati non riconosciuti o duplicati vengono preservati; non vengono sovrascritti. Nessun dato personale, timestamp o identificativo del dispositivo viene aggiunto. Il contrassegno non è una firma digitale né prova di provenienza, può essere modificato o rimosso da Office e da altri programmi.
+**MetaMago Mark:** in modalità Avanzata puoi scegliere di aggiungere, aggiornare o rimuovere il contrassegno applicativo. La scelta predefinita mantiene lo stato originale: nessun contrassegno viene aggiunto in automatico. Le tre proprietà testuali personalizzate sono `MetaMago.Editor` (`Edited with MetaMago`), `MetaMago.Version` (`2.3.0`) e `MetaMago.Edition` (`Office`). L'app rileva i contrassegni presenti e mostra le proprietà personalizzate originali in un ispettore di sola lettura. Nomi riservati non riconosciuti o duplicati vengono preservati; non vengono sovrascritti. Nessun dato personale, timestamp o identificativo del dispositivo viene aggiunto. Il contrassegno non è una firma digitale né prova di provenienza, può essere modificato o rimosso da Office e da altri programmi.
 
 Il file è autonomo, contiene il motore ZIP e non richiede server, macro, PowerShell o connessione di rete durante l'elaborazione. Nella versione web e installata la memorizzazione permanente dei nominativi è disabilitata per evitare la condivisione dello storage tra progetti dello stesso dominio. Usa import/export JSON. La visita al sito può generare normali log del servizio di hosting. Non distribuire rubriche personali tramite il repository.
 
