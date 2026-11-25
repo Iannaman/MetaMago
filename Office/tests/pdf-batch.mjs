@@ -24,6 +24,7 @@ try{
  assert.equal(result.length,2);for(const r of result)assert.deepEqual(r,{author:'New Author',title:'New title',pages:1});assert.deepEqual(errors,[]);
  // Exercise the real publication and encryption chain via a second batch.
  await page.locator('#batchFiles').setInputFiles({name:'protected.pdf',mimeType:'application/pdf',buffer:Buffer.from(bytes)});
+ await page.locator('#batchPanel details > summary').filter({hasText:'Pubblicazione e protezione PDF'}).click();
  await page.locator('#batchWatermarkOn').check();await page.locator('#batchWatermarkText').fill('INTERNAL');
  await page.locator('#batchProtectOn').check();await page.locator('#batchOwner').fill('Owner-test-12345');await page.locator('#batchOwnerConfirm').fill('Owner-test-12345');
  await page.locator('#batchUser').fill('Reader-test-12345');await page.locator('#batchUserConfirm').fill('Reader-test-12345');
