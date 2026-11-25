@@ -1,4 +1,4 @@
-# MetaMago PDF Edition 2.1.0 — Manuale utente
+# MetaMago Protection Edition 2.2.0 — Manuale utente
 
 MetaMago modifica proprietà dichiarative dei documenti Office autorizzati, non il contenuto, le firme, i registri ufficiali o l'identità verificata. L'edizione web elabora i file nel browser e produce nuove copie. Questa versione è candidata alla stabilità; verificare autorizzazione IT e collaudo su Office.
 
@@ -30,3 +30,6 @@ Approfondimenti: [Inspector](INSPECTOR.md), [Automation](AUTOMATION.md), [Audit]
 
 ## PDF
 Dalla Home apri un PDF oppure scegli Metadati PDF. I valori Info e XMP sono affiancati; modifica solo i campi interessati. I campi selezionati e vuoti rimuovono le proprietà supportate, non tutti i dati identificativi. I PDF protetti, con firme/campi firma o PDF/A dichiarato non sono riscritti. Controlla sempre la copia nel lettore. Vedi [guida PDF](PDF.md).
+
+## Protezione PDF
+Apri un PDF accettato dall'editor; salva o ripristina eventuali modifiche ai metadati, scegli originale o ultima copia verificata. Imposta password proprietario, eventuale password di apertura e autorizzazioni. Conserva le password, conferma, scarica una nuova copia _protetto.pdf e provala nel lettore. Senza password di apertura il documento è leggibile da chiunque; le restrizioni non sono assolute. Non rimuove protezioni esistenti. Vedi [guida Protection](PROTECTION.md).

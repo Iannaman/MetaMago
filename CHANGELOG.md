@@ -1,5 +1,11 @@
 # Changelog
 
+## Office Edition 2.2.0 — Protection Edition (candidato)
+- Protezione PDF originale o copia metadati verificata, AES-256 R6, password proprietario obbligatoria e apertura facoltativa, stampa/modifica/copia configurabili.
+- QPDF 12.2.0 WebAssembly in Worker temporaneo, risorse incorporate nell'HTML e nessuna richiesta di rete durante il trattamento; CSP autorizza solo compilazione WASM oltre agli script con hash.
+- Verifica permessi, password, pagine e struttura prima del download, nessun fallback non cifrato. Password non memorizzate da MetaMago. Nessuna rimozione delle protezioni esistenti.
+- Test browser e QPDF nativo indipendente, confronto rendering. Candidato, deploy manuale.
+
 ## Office Edition 2.1.0 — PDF Edition (candidato)
 - Modulo PDF separato, riconoscimento da Home e apertura singola, proprietà Info e XMP a confronto, modifica selettiva dei campi standard e proprietà Info testuali, Mark PDF facoltativo.
 - Rifiuto conservativo di cifratura, firme/campi firma, restrizioni rilevate, PDF/A dichiarato e XMP non supportato. Nessuna rimozione di protezioni.

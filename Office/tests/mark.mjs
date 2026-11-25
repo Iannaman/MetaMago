@@ -54,7 +54,7 @@ try {
    const unique=elems(m.parts.custom.doc.documentElement).map(n=>n.getAttribute('pid'));
    check(new Set(unique).size===unique.length,'duplicate pid');
    const kept=await inspect(await rewrite(marked,ext,{title:'Keep mark'},false),ext);
-   check(kept.marker.values['MetaMago.Version']==='2.1.0'&&!kept.final,'keep/final interaction');
+   check(kept.marker.values['MetaMago.Version']==='2.2.0'&&!kept.final,'keep/final interaction');
    const old=await inspect(marked,ext);
    const vn=elems(old.parts.custom.doc.documentElement).find(n=>propName(n)==='metamago.version');
    elems(vn)[0].textContent='0.9.0';
@@ -62,7 +62,7 @@ try {
    const legacyKept=await inspect(await rewrite(legacy,ext,{title:'Keep old'},true),ext);
    check(legacyKept.marker.values['MetaMago.Version']==='0.9.0','implicit version update');
    const upgraded=await rewrite(legacy,ext,{},true,'add'),u=await inspect(upgraded,ext);
-   check(u.marker.values['MetaMago.Version']==='2.1.0','upgrade failed');
+   check(u.marker.values['MetaMago.Version']==='2.2.0','upgrade failed');
    check(elems(u.parts.custom.doc.documentElement).filter(isMark).length===3,'duplicate marker');
    const removed=await inspect(await rewrite(upgraded,ext,{},true,'remove'),ext);
    check(removed.marker.status==='absent'&&removed.final,'remove affected final');
@@ -80,7 +80,7 @@ try {
    check(customSnapshot(before.parts.custom,true,false)===customSnapshot(preserved.parts.custom,true,false),'conflict changed');
    return {status:m.marker.status,version:u.marker.values['MetaMago.Version']};
   },{bytes,ext});
-  assert.deepEqual(result,{status:'present',version:'2.1.0'});
+  assert.deepEqual(result,{status:'present',version:'2.2.0'});
   console.log('PASS marker engine',ext);
  }
  await open('Prova.docx',resolve(root,'Test','Prova.docx'));
@@ -96,7 +96,7 @@ try {
  assert.equal(await id('markAction').inputValue(),'keep');
  await id('inspector').locator('summary').click();
  assert.match(await id('customTable').textContent(),/MetaMago.Editor.*Edited with MetaMago/s);
- assert.match(await id('customTable').textContent(),/MetaMago.Version.*2.1.0/s);
+ assert.match(await id('customTable').textContent(),/MetaMago.Version.*2.2.0/s);
  await id('markAction').selectOption('remove');
  assert.match(await id('diff').textContent(),/rimuovi contrassegno/);
  const unmarked=await downloadCopy('Prova_metadati_metadati.docx');

@@ -2,7 +2,13 @@
 
 Usare esclusivamente documenti sintetici o copie autorizzate.
 
-## Office Edition 2.1.0 — PDF
+## Office Edition 2.2.0 — Protection
+- [ ] Proteggere PDF originale e copia metadati; provare password errata, corretta e proprietario; verificare AES-256 R6 e permessi con un lettore indipendente.
+- [ ] Verificare sola limitazione modifiche senza password di apertura, stampa completa/bassa/nessuna, copia, organizzazione, moduli, commenti.
+- [ ] Verificare rifiuto dei PDF già protetti, firmati o PDF/A dichiarati, e nessun download in caso di errore, timeout o policy WASM bloccata.
+- [ ] Verificare password svuotate, nessuna inclusione nei backup/report, nessuna richiesta di rete durante elaborazione, confronto rendering.
+
+### Regressione 2.1.0 — PDF
 - [ ] Modifica selettiva dei campi PDF Info e XMP; proprietà personalizzate e Mark; copia e originale invariato.
 - [ ] Confrontare Info/XMP in Acrobat/Edge, renderizzare originale e copia; verificare resa grafica, moduli e annotazioni su fixture autorizzate.
 - [ ] Verificare rifiuto PDF cifrati, firme/campi firma, PDF/A dichiarato, XML ambiguo e file troppo grandi. Verificare nessuna rimozione automatica di protezioni.
