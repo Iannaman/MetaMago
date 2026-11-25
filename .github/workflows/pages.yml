@@ -70,6 +70,8 @@ jobs:
         run: node Office/tests/publication.mjs
       - name: Test PDF Batch
         run: node Office/tests/pdf-batch.mjs
+      - name: Test Office Privacy
+        run: node Office/tests/privacy.mjs
       - uses: actions/configure-pages@v5
       - uses: actions/upload-pages-artifact@v3
         with:
