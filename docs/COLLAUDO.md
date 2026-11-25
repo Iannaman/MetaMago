@@ -2,7 +2,15 @@
 
 Usare esclusivamente documenti sintetici o copie autorizzate.
 
-## Office Edition 1.3.0 — Web
+## Office Edition 1.4.0 — Team
+- [ ] Creare, modificare ed eliminare gruppi senza documento; importare/esportare JSON con gruppi e un JSON precedente.
+- [ ] Importare CSV UTF-8 Nome/Cognome e Nominativo con virgole e punto e virgola; verificare il rifiuto di righe non valide.
+- [ ] Aggiungere un gruppo agli autori esistenti e sostituirli esplicitamente.
+- [ ] Selezionare DOCX, XLSX, PPTX, un file non valido, un file già conforme e due nomi uguali; controllare anteprima e ZIP.
+- [ ] Cambiare una regola dopo l'anteprima: deve essere richiesta una nuova verifica. Verificare limiti, nomi univoci e campi non selezionati.
+- [ ] Aprire ogni copia in Office e controllare gli originali, il download ripetuto e nessun salvataggio permanente online.
+
+### Regressione 1.3.0 — Web
 - [ ] Aprire il sito Pages su Edge e verificare versione ONLINE, pagina iniziale e link Scarica versione offline.
 - [ ] Scaricare l'HTML, verificare SHA256 e aprirlo localmente: versione OFFLINE e nessuna installazione.
 - [ ] Online la rubrica deve rimanere in memoria; esportare/importare JSON e verificare che un ricaricamento non ripristini i nominativi.

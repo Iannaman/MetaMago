@@ -44,3 +44,4 @@ jobs:
           node Office/tests/smoke.mjs
           node Office/tests/mark.mjs
           node Office/tests/web.mjs
+          node Office/tests/team.mjs

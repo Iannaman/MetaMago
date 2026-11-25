@@ -14,3 +14,5 @@
 #markStatus{margin:10px 0 0}.mark-panel{padding:12px;border:1px solid #d9d5ef;border-radius:10px;background:#f8f7ff;margin-top:12px}
 .inspect-scroll{max-height:360px;overflow:auto;border:1px solid var(--border);border-radius:8px;margin-top:10px}
 .inspect-table{width:100%;border-collapse:collapse;font-size:14px;table-layout:fixed}.inspect-table th,.inspect-table td{padding:9px;text-align:left;vertical-align:top;overflow-wrap:anywhere;white-space:pre-wrap;border-bottom:1px solid var(--border)}.inspect-table th{background:#edf0f6;position:sticky;top:0}.inspect-table th:first-child{width:34%}.inspect-table th:nth-child(2){width:18%}
+
+.batch-panel{background:white;border:1px solid var(--border);border-radius:14px;padding:14px 20px;margin:15px 0}.batch-panel summary{font-size:18px}#groupPanel{margin:12px 0}#groupPanel label{margin-top:8px}#batchProgress{width:100%}#batchRows article{border:1px solid var(--border);border-radius:8px;padding:10px;margin:8px 0;overflow-wrap:anywhere}#batchRows article strong{display:block}#batchRows ul{padding-left:24px;margin:6px 0}#batchRows li{white-space:pre-wrap}#batchRows .bad{color:#9e2424}#batchRows .good{color:#176438}

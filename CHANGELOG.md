@@ -1,6 +1,15 @@
 # Changelog
 
-## Office Edition 1.3.0 — MetaMago Web (candidato)
+## Office Edition 1.4.0 — Team Edition (candidato)
+- Gruppi di autori indipendenti dai profili, creazione/modifica/eliminazione, aggiunta o sostituzione autori nel singolo documento.
+- Import CSV UTF-8 con intestazione Nominativo oppure Nome/Cognome, separatore virgola o punto e virgola, modello scaricabile e conferma.
+- Gruppi inclusi nella rubrica JSON, compatibilità con file precedenti e persistenza solo facoltativa offline.
+- Batch misto Word/Excel/PowerPoint: massimo 20 file e 100 MiB complessivi, regole esplicite, anteprima per file, conferma e unico ZIP delle copie verificate.
+- Esclusione di file non supportati/danneggiati/invariati, stato per file, nomi univoci, download ripetibile.
+- Date, titoli, stato finale e proprietà non selezionate preservati; MetaMago Mark resta esplicito. Motore Open XML invariato.
+- Test browser dedicati nella CI e nel deploy manuale Pages. Desktop invariato.
+
+## Office Edition 1.3.0 — MetaMago Web
 - Sorgenti modulari con versione centralizzata; build Node senza dipendenze, riproducibile e controllata in CI.
 - HTML offline e pagina web identici, con riconoscimento del contesto di esecuzione e download della copia autonoma dal sito.
 - Versione web senza persistenza dei nominativi nel browser; import/export JSON invariati. Nessun upload di documenti, analytics o richieste applicative di rete.

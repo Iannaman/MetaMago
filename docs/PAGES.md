@@ -27,5 +27,6 @@ npx playwright install chromium
 node Office/tests/smoke.mjs
 node Office/tests/mark.mjs
 node Office/tests/web.mjs
+node Office/tests/team.mjs
 ```
 Node 22 è necessario solo per sviluppare e collaudare, non per utilizzare l'HTML. Non committare `dist/` o `node_modules/`. La PWA non è ancora implementata: se vuoi aprire l'applicazione senza connessione, scarica l'HTML.
