@@ -18,4 +18,4 @@ Versione candidata alla stabilità. Non segnare come superato un controllo senza
 ## Pubblicazione
 Dopo i gate, avvia manualmente Deploy MetaMago Web su main, verifica job verde e versione effettiva nel browser (verifica l'avviso di aggiornamento e la ricarica consensuale; per il passaggio da versioni precedenti, chiudi e riapri tutte le finestre PWA). Crea release manuale con tag v2.2.0 sul commit collaudato. Mantieni pre-release finché i gate manuali non sono soddisfatti. La Desktop Edition resta 1.0.0-beta. Non promuovere in produzione se un test essenziale fallisce. Per rollback, predisporre un commit/revert verificato e nuovo deploy manuale; non riscrivere la cronologia.
 
-Gate Protection aggiuntivo: verificare licenze e fissare nel lockfile l'integrity npm del pacchetto WASM confrontata con il registro; verificare policy aziendale per WebAssembly e compatibilità lettori.
+Gate Protection aggiuntivo: verificare licenze, integrity npm del lockfile e SHA256 WASM; verificare policy aziendale per WebAssembly e compatibilità lettori.
