@@ -103,3 +103,5 @@ jobs:
         run: node Office/tests/workflow.mjs
       - name: Test Optimization
         run: node Office/tests/optimization.mjs
+      - name: Test Unified
+        run: node Office/tests/unified.mjs

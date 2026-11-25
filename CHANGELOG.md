@@ -1,5 +1,10 @@
 # Changelog
 
+## Office Edition 3.0.0 — Unified Professional Edition (candidato)
+- Percorso guidato per obiettivo e ripresa della sessione PDF.
+- Backup configurazione v2 con workflow, compatibile con import v1; nessuna password.
+- Verifica facoltativa delle copie batch prima della cifratura, esclusione se esito non superato.
+
 ## Office Edition 2.9.0 — Optimization Edition (candidato)
 - ZIP batch in Blob con avanzamento e annullamento; limite aggregato copie 150 MiB.
 - Cessione del controllo al browser tra documenti, miglioramenti CSS mobile e test dinamico versione.
