@@ -6,3 +6,4 @@
 *.pptx binary
 *.ico binary
 *.png binary
+*.html text eol=lf

@@ -1,4 +1,4 @@
-METAMAGO 1.0.0 BETA
+METAMAGO DESKTOP 1.0.0 BETA
 =========================
 
 AVVIO
@@ -33,8 +33,8 @@ salvati in dc:creator nel formato convenzionale di Office (es. Mario Rossi;
 Anna Verdi). Il campo ultima modifica da contiene normalmente una persona.
 La rubrica locale permette di aggiungere, selezionare, riutilizzare e rimuovere
 contatti e di importare in rubrica gli autori del documento aperto.
-Per impostazione predefinita gli autori salvati vengono memorizzati nella
-rubrica locale; deselezionare la relativa casella per disabilitarlo.
+La memorizzazione automatica degli autori in rubrica e disattivata per
+impostazione predefinita; selezionare la relativa casella per abilitarla.
 File rubrica: %LOCALAPPDATA%\OfficeMetadataEditor\rubrica.json
 Non crea contatti nella rubrica aziendale Microsoft 365 / Outlook, non attribuisce
 identita verificate, non modifica i coautori online. Il riconoscimento delle

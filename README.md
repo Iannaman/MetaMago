@@ -3,35 +3,54 @@
 # MetaMago 🪄
 **Le proprietà cambiano, il contenuto no.**
 
-Editor locale e portable dei metadati di Microsoft Word, Excel e PowerPoint per Windows 10/11. Sviluppato da [Iannaman](https://github.com/Iannaman). Versione **1.0.0-beta**: da collaudare su Office 365 prima dell'uso operativo.
+Editor locale dei metadati di Microsoft Word, Excel e PowerPoint. Sviluppato da [Iannaman](https://github.com/Iannaman). Entrambe le edizioni sono in beta.
 
-## Download e avvio
-Scarica `MetaMago-v1.0.0-beta-portable.zip` dalle [Release](https://github.com/Iannaman/MetaMago/releases), estrai tutta la cartella e avvia `Avvia-MetaMago.bat`. In alternativa, scarica il codice sorgente. Non serve installare moduli, Python o Office COM. Richiede Windows PowerShell 5.1, Windows Forms e .NET Framework. Office è utile per verificare il risultato. Non eseguire script se vietato dalle policy del proprio ente.
+## Scegli l'edizione
 
-## Funzionalità
-- Autori multipli, ultimo autore, date di creazione/modifica/stampa, titolo, oggetto, società, responsabile, categoria, parole chiave, commenti descrittivi, stato, revisione, versione, lingua e identificativo.
-- Rubrica locale persistente, selezione multipla, aggiunta e rimozione contatti.
-- Salvataggio su copia per default; sovrascrittura facoltativa con backup univoco.
-- Contrassegna come finale (avviso reversibile) e sola lettura Windows (flag rimovibile).
-- Verifica dei campi dopo la scrittura. Elaborazione offline; le macro non vengono eseguite.
-- Link al profilo dello sviluppatore, repository e release nell'interfaccia.
+| | Office Edition (consigliata per semplicità) | Desktop Edition |
+|---|---|---|
+| Avvio | Un file HTML in Edge/Chromium | BAT + PowerShell 5.1 / Windows Forms |
+| Installazione | Nessuna | Nessuna |
+| Funzionamento offline | Sì | Sì |
+| Modifica autori, date, proprietà | Sì | Sì |
+| Rubrica locale | Sì, import/export JSON | Sì |
+| Profili riutilizzabili | Sì | Non ancora |
+| Salvataggio su copia | Sì, unica modalità | Sì, predefinito |
+| Sovrascrittura con backup | No | Sì |
+| Stato finale | Imposta/rimuovi | Imposta/mantieni |
+| Sola lettura Windows | No | Sì |
 
+### Office Edition
+1. Scarica [MetaMago-Office.html](Office/MetaMago-Office.html) (usa Download raw file nella pagina del file), oppure il file HTML dagli artifact di [Actions](https://github.com/Iannaman/MetaMago/actions) o dalle [Release](https://github.com/Iannaman/MetaMago/releases) quando disponibili.
+2. Aprilo con Microsoft Edge da una cartella autorizzata.
+3. Seleziona o trascina un documento, modifica le proprietà e salva una copia.
+4. Verifica il risultato in Office > File > Informazioni.
+
+Il file è autonomo, contiene il motore ZIP e non richiede server, macro, PowerShell o connessione di rete durante l'elaborazione. Il salvataggio della rubrica/profili nel browser è facoltativo; su computer condivisi preferire il solo uso temporaneo. Non distribuire rubriche personali tramite il repository.
+
+### Desktop Edition
+Scarica il pacchetto portable dagli artifact di Actions o dalle Release quando disponibili. Estrai tutto e avvia `Avvia-MetaMago.bat`. In alternativa, scarica il sorgente e avvia lo stesso file dalla root. Richiede Windows 10/11, Windows PowerShell 5.1, Windows Forms e .NET Framework; non usa Office COM. L'avviatore usa ExecutionPolicy Bypass a livello di processo: non usarlo se non autorizzato dalle policy locali. Vedi [guida Desktop](LEGGIMI.txt).
+
+## Formati
 | Word | Excel | PowerPoint |
 |---|---|---|
 | DOCX, DOCM, DOTX, DOTM | XLSX, XLSM, XLTX, XLTM | PPTX, PPTM, POTX, POTM, PPSX, PPSM |
 
-## Come si usa
-1. Chiudi il documento in Office e aprilo in MetaMago.
-2. Modifica i campi, separa gli autori con `;`, o selezionali in rubrica.
-3. Inserisci le date locali nel formato `AAAA-MM-GG HH:mm:ss` (o ISO con offset).
-4. Scegli copia oppure originale con backup; conferma il salvataggio.
-5. Controlla in Office > File > Informazioni > Proprietà, senza risalvare il file se vuoi conservare i metadati appena impostati.
+I file con macro non vengono eseguiti. Non supportati: DOC, XLS, PPT, XLSB, file cifrati, file firmati digitalmente, varianti Strict non riconosciute. Protezioni IRM e password non sono gestite.
 
-## Limiti e uso responsabile
-MetaMago modifica le proprietà dichiarative Open XML, non la cronologia, le firme, l'identità verificata o i log di Microsoft 365. Le date interne non sono le date del filesystem. Office può aggiornare automaticamente ultimo autore e data di modifica a un nuovo salvataggio. La rubrica è locale (`%LOCALAPPDATA%/OfficeMetadataEditor/rubrica.json`), non quella Outlook aziendale. I flag di protezione non impediscono modifiche intenzionali; non è possibile bloccare solo l'autore. Non supporta DOC/XLS/PPT, XLSB, file cifrati, IRM o firmati digitalmente; varianti Strict non supportate. Usare soltanto su documenti di cui si è autorizzati a modificare i metadati, senza attribuzioni ingannevoli. Nessuna telemetria; il browser si apre solo quando si seleziona un link.
+## Limiti e sicurezza
+- Si modificano solo proprietà dichiarative Open XML, non l'identità verificata, il protocollo, i log, le firme o la cronologia Microsoft 365. Utilizzare su documenti autorizzati con attribuzioni corrette.
+- Le date interne sono diverse dalle date Windows; Office può aggiornare ultimo autore e data a un nuovo salvataggio. Gli autori multipli sono memorizzati con punto e virgola; verificarne la resa nella propria versione Office.
+- Contrassegna come finale e sola lettura sono reversibili, non sono password e non bloccano il singolo campo Autore.
+- Nessuna telemetria prevista. I link GitHub aprono siti esterni solo su richiesta. Il funzionamento offline non garantisce l'autorizzazione da parte dei controlli aziendali: rispettare le policy.
+- La rubrica non è quella Microsoft 365/Outlook. Non inserire documenti, nominativi o profili reali nelle segnalazioni.
 
-## Sviluppo e test
-`MetaMago.ps1`: GUI Windows Forms; `Metadata-Core.ps1`: motore Open XML; `Test-OfficeMetadata.ps1`: test di integrazione. Avvia `Esegui-Test.bat` per verificare i tre file sintetici inclusi. Il test confronta i campi, gli hash delle parti non modificabili, copie e backup. La CI esegue il test su Windows; non verifica l'interfaccia grafica né la resa in Office. Vedi [collaudo manuale](docs/COLLAUDO.md). Il pacchetto iniziale non è stato eseguito in Windows nell'ambiente di preparazione.
+## Sviluppo e distribuzione
+`Office/MetaMago-Office.html`: versione autonoma HTML, CSS, JavaScript, JSZip 3.10.1 (MIT), con avvisi di licenza inclusi nel file.
+`MetaMago.ps1` e `Metadata-Core.ps1`: interfaccia e motore Desktop.
+`Test/` e `Test-OfficeMetadata.ps1`: fixture sintetiche e test automatici Desktop.
+`Build-Release.ps1`: genera esclusivamente ZIP Desktop, HTML Office e SHA256 in `dist/`.
+La CI Windows verifica sintassi e test Desktop, poi crea gli artifact di entrambe le edizioni; per HTML il controllo di build è statico. Vedi [collaudo manuale](docs/COLLAUDO.md). La pubblicazione di release resta manuale tramite GitHub.
 
-## Supporto e licenza
-Segnala problemi nelle [Issues](https://github.com/Iannaman/MetaMago/issues) usando solo file fittizi, senza dati riservati. Licenza MIT (vedi `LICENSE`). Progetto indipendente, non affiliato a Microsoft.
+## Licenza e supporto
+Licenza [MIT](LICENSE), progetto indipendente non affiliato a Microsoft. [Issues](https://github.com/Iannaman/MetaMago/issues) per segnalazioni con dati fittizi. [Changelog](CHANGELOG.md).

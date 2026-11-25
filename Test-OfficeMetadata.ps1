@@ -14,6 +14,9 @@ try{
   $r=Write-Metadata $source $dest $changes $true $false;$actual=Read-Metadata $dest
   foreach($key in $changes.Keys){if($actual.Fields[$key] -cne $changes[$key]){throw "Campo non corrispondente: $key"}}
   if(!$actual.Final){throw 'Flag finale mancante'};if((Get-FileHash -LiteralPath $source).Hash -ne $oldHash){throw 'Originale modificato'}
+  $destHash=(Get-FileHash -LiteralPath $dest).Hash
+  $rejected=$false;try{[void](Write-Metadata $source $dest ([ordered]@{Title='Non sovrascrivere'}))}catch{$rejected=$true}
+  if(!$rejected -or (Get-FileHash -LiteralPath $dest).Hash -ne $destHash){throw 'Copia gia esistente non protetta'}
   $newParts=Hash-Parts $dest;if($oldParts.Count -ne $newParts.Count){throw 'Numero parti diverso'};foreach($k in $oldParts.Keys){if($oldParts[$k] -ne $newParts[$k]){throw "Contenuto alterato: $k"}}
   $r=Write-Metadata $source $source ([ordered]@{Title='Sovrascrittura';Author='Autore test'}) $false $false
   if(!(Test-Path -LiteralPath $r.Backup) -or (Get-FileHash -LiteralPath $r.Backup).Hash -ne $oldHash){throw 'Backup non corrispondente'}

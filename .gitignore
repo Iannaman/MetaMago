@@ -6,3 +6,29 @@ rubrica.json
 Thumbs.db
 Desktop.ini
 ~$*
+# Documenti locali: versionare solo fixture sintetiche esplicite
+*.docx
+*.docm
+*.dotx
+*.dotm
+*.xlsx
+*.xlsm
+*.xltx
+*.xltm
+*.pptx
+*.pptm
+*.potx
+*.potm
+*.ppsx
+*.ppsm
+*.doc
+*.xls
+*.ppt
+*.xlsb
+!Test/Prova.docx
+!Test/Prova.xlsx
+!Test/Prova.pptx
+# Rubriche e profili esportati (non pubblicare dati personali)
+*rubrica*.json
+*profili*.json
+*contacts*.json
