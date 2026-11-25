@@ -23,6 +23,7 @@ jobs:
       - name: Build only the public web files
         run: |
           npm ci --prefix Office/pdf-deps --ignore-scripts --no-audit --no-fund
+          npm view @arshad-shah/qpdf-wasm@0.1.0 dist.integrity
           node Office/build.mjs
           node Office/build.mjs --check --pages
       - name: Install browser test dependency
@@ -59,6 +60,10 @@ jobs:
         run: command -v pdftoppm || (sudo apt-get update && sudo apt-get install -y poppler-utils)
       - name: Test PDF metadata and rendering
         run: node Office/tests/pdf.mjs
+      - name: Install independent PDF verifier
+        run: command -v qpdf || (sudo apt-get update && sudo apt-get install -y qpdf)
+      - name: Test PDF protection
+        run: node Office/tests/protection.mjs
       - uses: actions/configure-pages@v5
       - uses: actions/upload-pages-artifact@v3
         with:

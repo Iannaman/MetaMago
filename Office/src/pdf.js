@@ -196,7 +196,7 @@ function pdfPending(){if(!pdfSession)return false;try{const c=pdfChanges();if(!O
 function syncPdfControls(){
  if(!$('pdfSave'))return;
  $('pdfChoose').disabled=busy;$('pdfClose').disabled=busy;$('pdfControls').disabled=busy;
- $('pdfSave').disabled=busy||!pdfPending();$('pdfAgain').hidden=!pdfLast||pdfPending();
+ $('pdfSave').disabled=busy||!pdfPending();$('pdfAgain').hidden=!pdfLast||pdfPending();if(typeof syncProtectionControls==='function')syncProtectionControls();
 }
 function pdfRefresh(){syncPdfControls();if(typeof updateWorkspaceStatus==='function')updateWorkspaceStatus();if(typeof syncProfessionalControls==='function')syncProfessionalControls()}
 function pdfCustomRow(key='',value='',editable=true){
@@ -207,6 +207,7 @@ function pdfCustomRow(key='',value='',editable=true){
  for(const el of [k,v])el.addEventListener('input',()=>{if(editable)check.checked=true;pdfRefresh()});check.onchange=pdfRefresh;
 }
 function showPdf(){
+ if(typeof clearProtection==='function')clearProtection();
  const {meta,file}=pdfSession;
  $('pdfFilename').textContent=file.name;$('pdfSummary').textContent=meta.pages+' '+tr('pagine')+' · '+tr(meta.xmp?'XMP presente':'Nessun XMP');
  $('pdfRows').replaceChildren();$('pdfCustomRows').replaceChildren();
@@ -231,7 +232,7 @@ async function openPdf(file){
  }catch(e){msg('pdfStatus',tr('Impossibile aprire PDF: ')+e.message,'error')}finally{$('pdfFile').value='';setBusy(false);pdfRefresh()}
 }
 $('pdfChoose').onclick=()=>$('pdfFile').click();$('pdfFile').onchange=e=>openPdf(e.target.files[0]);
-$('pdfClose').onclick=()=>{if(busy||pdfPending()&&!confirm(tr('Abbandonare le modifiche PDF non salvate?')))return;pdfSession=null;pdfLast=null;$('pdfRows').replaceChildren();$('pdfCustomRows').replaceChildren();$('pdfFilename').textContent='';$('pdfSummary').textContent='';$('pdfOut').value='';$('pdfEditor').hidden=true;$('pdfClose').hidden=true;msg('pdfStatus','');msg('pdfSaveStatus','');pdfRefresh()};
+$('pdfClose').onclick=()=>{if(busy||pdfPending()&&!confirm(tr('Abbandonare le modifiche PDF non salvate?')))return;pdfSession=null;pdfLast=null;if(typeof clearProtection==='function')clearProtection();$('pdfRows').replaceChildren();$('pdfCustomRows').replaceChildren();$('pdfFilename').textContent='';$('pdfSummary').textContent='';$('pdfOut').value='';$('pdfEditor').hidden=true;$('pdfClose').hidden=true;msg('pdfStatus','');msg('pdfSaveStatus','');pdfRefresh()};
 $('pdfReset').onclick=()=>{if(!busy&&pdfSession&&(!pdfPending()||confirm(tr('Abbandonare le modifiche PDF non salvate?')))){pdfLast=null;showPdf()}};
 $('pdfAddCustom').onclick=()=>{if(!busy&&$('pdfCustomRows').children.length<100)pdfCustomRow()};
 $('pdfMark').onchange=pdfRefresh;$('pdfOut').oninput=pdfRefresh;
