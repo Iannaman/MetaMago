@@ -2,7 +2,14 @@
 
 Usare esclusivamente documenti sintetici o copie autorizzate.
 
-## Office Edition 1.8.0 — Inspector
+## Office Edition 1.9.0 — Automation
+- [ ] Creare, modificare, esportare e importare un modello con regole di presenza, assenza, uguaglianza, date e privacy; verificare formato non applicabile e analisi parziali.
+- [ ] Confrontare la verifica del modello nell'Inspector con le proprietà originali; nessuna modifica automatica.
+- [ ] Suggerire nomi da titolo/data, controllare estensione, caratteri non ammessi, collisioni batch e titolo assente; confermare prima di salvare copie.
+- [ ] Importare XLSX da fogli visibili, con stringhe condivise o inline; verificare duplicati, intestazioni, formule non ammesse, anteprima e annullamento.
+- [ ] Verificare italiano/inglese, tema e layout mobile; collaudare con Excel e Office reali. Non ancora eseguito manualmente.
+
+### Regressione 1.8.0 — Inspector
 - [ ] Analizzare Word, Excel, PowerPoint senza aprire l’editor, verificare proprietà e punteggio confrontandoli con Office.
 - [ ] Verificare documenti sintetici con revisioni e commenti Word, fogli hidden/veryHidden, slide nascoste, note, link esterni, oggetti incorporati, indicatori VBA e proprietà personalizzate.
 - [ ] Verificare esiti non applicabili, parziali e non conclusivi; nessuna garanzia di assenza di dati personali o malware.

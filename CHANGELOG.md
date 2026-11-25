@@ -1,5 +1,12 @@
 # Changelog
 
+## Office Edition 1.9.0 — Automation Edition (candidato)
+- Vista Modelli documentali: tre modelli predefiniti, regole presenza/assenza/uguaglianza, formato, date e indicatori privacy, import/export JSON dei personalizzati.
+- Verifica dei modelli in Inspector, separata dal punteggio di completezza e senza modifiche automatiche.
+- Suggerimenti nome copia in editor e batch, usando titolo/data/nome originale, estensione preservata e collisioni batch evitate. Modelli non applicabili ignorati nel batch per la sola rinomina.
+- Import XLSX in rubrica: selezione foglio visibile, intestazioni italiane/inglesi, anteprima e conferma, deduplicazione, rifiuto formule nelle celle dei nominativi.
+- Test dedicati, traduzioni e navigazione Alt+Maiusc+8; motore di riscrittura e Desktop invariati, deploy manuale.
+
 ## Office Edition 1.8.0 — Inspector Edition (candidato)
 - Nuova vista di analisi in sola lettura, indipendente dall’editor; accessibile anche dall’originale aperto.
 - Punteggio trasparente di completezza, cinque controlli a peso uguale, proprietà originali e stato MetaMago Mark.

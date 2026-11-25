@@ -42,6 +42,8 @@ jobs:
         run: node Office/tests/experience.mjs
       - name: Test inspector
         run: node Office/tests/inspector.mjs
+      - name: Test automation
+        run: node Office/tests/automation.mjs
       - uses: actions/configure-pages@v5
       - uses: actions/upload-pages-artifact@v3
         with:

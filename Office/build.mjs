@@ -9,7 +9,7 @@ const office=dirname(fileURLToPath(import.meta.url)), root=resolve(office,'..');
 const read=async name=>(await readFile(resolve(office,name),'utf8')).replace(/\r\n/g,'\n');
 const version=(await read('VERSION')).trim();
 if(!/^\d+\.\d+\.\d+$/.test(version))throw Error('Invalid version');
-const [template,style,vendor,...modules]=await Promise.all(['src/index.html','src/style.css','vendor/jszip.min.js','src/i18n.js','src/metadata.js','src/zip-guard.js','src/marker.js','src/rubrica.js','src/app.js','src/team.js','src/batch.js','src/pwa.js','src/experience.js','src/inspector.js'].map(read));
+const [template,style,vendor,...modules]=await Promise.all(['src/index.html','src/style.css','vendor/jszip.min.js','src/i18n.js','src/metadata.js','src/zip-guard.js','src/marker.js','src/rubrica.js','src/app.js','src/team.js','src/batch.js','src/pwa.js','src/experience.js','src/inspector.js','src/automation.js','src/xlsx-contacts.js'].map(read));
 const app=modules.join('').replace(/@@VERSION@@/g,version);
 const hashes=[vendor,app].map(s=>"'sha256-"+createHash('sha256').update(s,'utf8').digest('base64')+"'").join(' ');
 const tokens={VERSION:version,SCRIPT_HASHES:hashes,STYLE:style,VENDOR:vendor,APP:app};

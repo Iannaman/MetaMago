@@ -27,3 +27,6 @@ Test osservato con almeno 5 utenti non tecnici: aprire un DOCX e salvare copia; 
 
 ## Estensione v1.8.0
 Home → Analizza documento → scelta file oppure originale aperto → punteggio e proprietà originali → segnalazioni Privacy Inspector → chiudi analisi oppure torna all'editor. Nessuna modifica o download automatico. Test osservato: verificare che l’utente distingua completezza dei metadati da privacy e non interpreti il mancato rilevamento come certificazione.
+
+## Estensione v1.9.0
+Modelli documentali → scegli un modello o crea regole → salva → Inspector → seleziona modello → verifica; nessuna correzione automatica. Editor → suggerisci nome → controlla → salva copia; batch → schema nome → anteprima → conferma ZIP. Rubrica → import XLSX → foglio visibile → anteprima → conferma. Testare la distinzione tra profilo di modifica e modello di verifica.

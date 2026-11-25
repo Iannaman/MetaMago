@@ -55,3 +55,5 @@ jobs:
         run: node Office/tests/experience.mjs
       - name: Test inspector
         run: node Office/tests/inspector.mjs
+      - name: Test automation
+        run: node Office/tests/automation.mjs
