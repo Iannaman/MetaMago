@@ -3,7 +3,7 @@
 # MetaMago 🪄
 **Le proprietà cambiano, il contenuto no.**
 
-Editor locale dei metadati di Microsoft Word, Excel e PowerPoint. Sviluppato da [Iannaman](https://github.com/Iannaman). Office Edition 2.0.1 è candidata al rilascio stabile; Desktop Edition resta beta. Il collaudo manuale su Office ed Edge aziendale è necessario prima di adottarla.
+Editor locale dei metadati di Microsoft Word, Excel e PowerPoint. Sviluppato da [Iannaman](https://github.com/Iannaman). Office Edition 2.1.0 è candidata al rilascio stabile; Desktop Edition resta beta. Il collaudo manuale su Office ed Edge aziendale è necessario prima di adottarla.
 
 ## Scegli l'edizione
 
@@ -21,11 +21,13 @@ Editor locale dei metadati di Microsoft Word, Excel e PowerPoint. Sviluppato da 
 | MetaMago Mark e ispettore proprietà personalizzate | Sì, facoltativo | Non ancora |
 | Sola lettura Windows | No | Sì |
 
-### Office Edition — v2.0.1 · Professional Edition
+### Office Edition — v2.1.0 · PDF Edition
 
 [**Avvia MetaMago**](https://iannaman.github.io/MetaMago/). Per aprirlo in una finestra dedicata, premi **Installa applicazione** o usa il comando App di Edge, se consentito. Seleziona un documento, modifica le proprietà e salva una copia. Verifica il risultato in Office > File > Informazioni.
 
 La modalità Semplice è predefinita; Avanzata mostra altre proprietà e protezione. Puoi gestire la rubrica anche senza aprire un documento, richiamare un profilo dal menu rapido, selezionare l'ultimo autore con un clic e confermare i nomi digitati anche al salvataggio. La schermata di completamento permette di scaricare di nuovo la copia o aprire un altro documento. Le date visualizzate seguono la lingua selezionata; il confronto Audit usa valori originali.
+
+**PDF Edition (2.1.0):** modulo dedicato per PDF non cifrati e senza firme/campi firma, massimo 20 MiB. Confronto Info/XMP e modifica selettiva dei campi standard con sincronizzazione delle rappresentazioni XMP supportate. Proprietà Info testuali personalizzate e Mark PDF facoltativo; conservazione dei campi non selezionati, controllo delle parti originali e test di rendering. PDF/A dichiarato e XMP non supportato esclusi. Nessuna protezione con password, rimozione sicura dei dati o certificazione PDF/A. Il batch, Inspector e Audit Office non includono ancora PDF. Vedi [guida PDF](docs/PDF.md).
 
 **Update Fix (2.0.1):** aggiornamenti PWA rilevati dal browser, avviso e pulsante di aggiornamento con conferma, verifica manuale in Impostazioni. Nessuna ricarica automatica delle finestre aperte, blocco durante l'elaborazione, eliminazione delle sole cache obsolete di MetaMago dopo l'attivazione. Il passaggio dalle versioni precedenti può richiedere una chiusura di tutte le finestre o la disattivazione del vecchio Service Worker. Vedi [GitHub Pages](docs/PAGES.md).
 
@@ -49,7 +51,7 @@ La modalità Semplice è predefinita; Avanzata mostra altre proprietà e protezi
 
 Per la modifica massiva apri **Modifica più documenti**, oppure trascina più file nella zona iniziale. Seleziona fino a 20 file, 100 MiB complessivi (50 MiB ciascuno). Scegli se aggiungere o sostituire autori, impostare esplicitamente ultimo autore, società, responsabile o MetaMago Mark. I campi non selezionati, date, titoli e stato finale restano invariati. Caricare un gruppo precompila la modalità aggiunta; caricare un profilo precompila solo i suoi valori non vuoti (autori in sostituzione). Controlla l'anteprima per ogni documento, poi conferma. Il risultato è uno ZIP con le sole copie modificate e verificate; errori, file invariati e file esclusi sono elencati nella pagina. Nessuna sovrascrittura, nessun invio al server.
 
-**MetaMago Mark:** in modalità Avanzata puoi scegliere di aggiungere, aggiornare o rimuovere il contrassegno applicativo. La scelta predefinita mantiene lo stato originale: nessun contrassegno viene aggiunto in automatico. Le tre proprietà testuali personalizzate sono `MetaMago.Editor` (`Edited with MetaMago`), `MetaMago.Version` (`2.0.1`) e `MetaMago.Edition` (`Office`). L'app rileva i contrassegni presenti e mostra le proprietà personalizzate originali in un ispettore di sola lettura. Nomi riservati non riconosciuti o duplicati vengono preservati; non vengono sovrascritti. Nessun dato personale, timestamp o identificativo del dispositivo viene aggiunto. Il contrassegno non è una firma digitale né prova di provenienza, può essere modificato o rimosso da Office e da altri programmi.
+**MetaMago Mark:** in modalità Avanzata puoi scegliere di aggiungere, aggiornare o rimuovere il contrassegno applicativo. La scelta predefinita mantiene lo stato originale: nessun contrassegno viene aggiunto in automatico. Le tre proprietà testuali personalizzate sono `MetaMago.Editor` (`Edited with MetaMago`), `MetaMago.Version` (`2.1.0`) e `MetaMago.Edition` (`Office`). L'app rileva i contrassegni presenti e mostra le proprietà personalizzate originali in un ispettore di sola lettura. Nomi riservati non riconosciuti o duplicati vengono preservati; non vengono sovrascritti. Nessun dato personale, timestamp o identificativo del dispositivo viene aggiunto. Il contrassegno non è una firma digitale né prova di provenienza, può essere modificato o rimosso da Office e da altri programmi.
 
 Il file è autonomo, contiene il motore ZIP e non richiede server, macro, PowerShell o connessione di rete durante l'elaborazione. Nella versione web e installata la memorizzazione permanente dei nominativi è disabilitata per evitare la condivisione dello storage tra progetti dello stesso dominio. Usa import/export JSON. La visita al sito può generare normali log del servizio di hosting. Non distribuire rubriche personali tramite il repository.
 
@@ -72,7 +74,7 @@ I file con macro non vengono eseguiti. Non supportati: DOC, XLS, PPT, XLSB, file
 
 ## Sviluppo e distribuzione
 `Office/src/`: template, CSS e moduli JavaScript (metadati, contrassegno, rubrica, interfaccia, gruppi e batch). `Office/vendor/jszip.min.js`: JSZip 3.10.1 (MIT), con avvisi di licenza inclusi. `Office/VERSION`: versione unica.
-`Office/MetaMago-Office.html`: prodotto autonomo generato; non modificarlo direttamente. Dopo una modifica ai sorgenti, esegui `node Office/build.mjs` (Node.js 22), poi committa sorgenti e HTML. `node Office/build.mjs --check --pages` verifica la riproducibilità e genera i soli file pubblicabili in `dist/pages/`.
+`Office/MetaMago-Office.html`: prodotto generato e non più versionato. Con Node.js 22 esegui `npm ci --prefix Office/pdf-deps --ignore-scripts --no-audit --no-fund`, quindi `node Office/build.mjs` e `node Office/build.mjs --check --pages` per confrontare la build ripetuta e generare i soli file pubblicabili in `dist/pages/`. PDF-lib 1.17.1 e dipendenze sono bloccate dal lockfile; licenze incluse nell'HTML generato. Nessuna dipendenza remota durante l'uso. Il workflow Windows genera l'HTML prima del pacchetto portable.
 `MetaMago.ps1` e `Metadata-Core.ps1`: interfaccia e motore Desktop.
 `Test/` e `Test-OfficeMetadata.ps1`: fixture sintetiche e test automatici Desktop.
 `Build-Release.ps1`: genera esclusivamente ZIP Desktop, HTML Office e SHA256 in `dist/`.

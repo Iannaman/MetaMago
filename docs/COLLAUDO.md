@@ -2,7 +2,13 @@
 
 Usare esclusivamente documenti sintetici o copie autorizzate.
 
-## Office Edition 2.0.1 — Update Fix
+## Office Edition 2.1.0 — PDF
+- [ ] Modifica selettiva dei campi PDF Info e XMP; proprietà personalizzate e Mark; copia e originale invariato.
+- [ ] Confrontare Info/XMP in Acrobat/Edge, renderizzare originale e copia; verificare resa grafica, moduli e annotazioni su fixture autorizzate.
+- [ ] Verificare rifiuto PDF cifrati, firme/campi firma, PDF/A dichiarato, XML ambiguo e file troppo grandi. Verificare nessuna rimozione automatica di protezioni.
+- [ ] Verificare PWA e nuova build con dipendenze bloccate. Collaudo reale ancora da eseguire.
+
+### Regressione 2.0.1 — Update Fix
 - [ ] Verificare migrazione da una versione già in cache; versione corretta dopo attivazione, eventuale attesa CDN.
 - [ ] Verificare avviso aggiornamento, verifica manuale, annullamento e blocco durante elaborazione, altre finestre non ricaricate.
 - [ ] Verificare nuova cache coerente, vecchia cache rimossa, cache estranee preservate, comportamento senza connessione e con policy aziendali.

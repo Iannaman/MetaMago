@@ -18,6 +18,13 @@ jobs:
       - name: Integration tests
         shell: powershell
         run: .\Test-OfficeMetadata.ps1
+      - uses: actions/setup-node@v4
+        with:
+          node-version: '22'
+      - name: Generate Office HTML
+        run: |
+          npm ci --prefix Office/pdf-deps --ignore-scripts --no-audit --no-fund
+          node Office/build.mjs
       - name: Build portable archive
         shell: powershell
         run: .\Build-Release.ps1
@@ -34,7 +41,10 @@ jobs:
         with:
           node-version: '22'
       - name: Verify generated HTML and build web preview
-        run: node Office/build.mjs --check --pages
+        run: |
+          npm ci --prefix Office/pdf-deps --ignore-scripts --no-audit --no-fund
+          node Office/build.mjs
+          node Office/build.mjs --check --pages
       - name: Install browser test dependency
         run: npm install --no-save --no-package-lock playwright@1.56.1
       - name: Install Chromium
@@ -65,3 +75,7 @@ jobs:
         run: node Office/tests/professional.mjs
       - name: Test PWA updates
         run: node Office/tests/update.mjs
+      - name: Install PDF renderer
+        run: command -v pdftoppm || (sudo apt-get update && sudo apt-get install -y poppler-utils)
+      - name: Test PDF metadata and rendering
+        run: node Office/tests/pdf.mjs

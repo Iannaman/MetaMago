@@ -21,6 +21,8 @@ Il browser elabora localmente i documenti e le rubriche; nessun upload, API, ana
 ## Sviluppo
 ```sh
 node Office/build.mjs
+npm ci --prefix Office/pdf-deps --ignore-scripts --no-audit --no-fund
+node Office/build.mjs
 node Office/build.mjs --check --pages
 npm install --no-save --no-package-lock playwright@1.56.1
 npx playwright install chromium
@@ -37,5 +39,6 @@ node Office/tests/audit.mjs
 node Office/tests/performance.mjs
 node Office/tests/professional.mjs
 node Office/tests/update.mjs
+node Office/tests/pdf.mjs # richiede pdftoppm (Poppler)
 ```
 Node 22 è necessario solo per sviluppare e collaudare, non per utilizzare l'HTML. Non committare `dist/` o `node_modules/`. La PWA è facoltativa: premi Installa applicazione e conferma nel browser, se consentito. La cache tecnica è preparata automaticamente. Dalla 2.0.1 l'app mostra un avviso quando un nuovo service worker è pronto. Premi Aggiorna applicazione dopo aver salvato copie ed esportato la configurazione; conferma la ricarica. Le altre finestre ricevono un avviso senza ricaricarsi. In Impostazioni puoi usare Verifica aggiornamenti. L'HTML rimane associato alla versione attiva e il nuovo Worker controlla la versione dell'HTML prima di installarsi. Non riutilizzare lo stesso numero di versione per pubblicazioni differenti. Per il passaggio iniziale da una versione precedente, salva il lavoro e chiudi tutte le finestre, riapri e verifica; potrebbe essere necessario ripetere dopo che il Worker ha scaricato l'aggiornamento. Se il vecchio Worker resta attivo, in Edge DevTools > Application > Service Workers usa Unregister per il solo sito MetaMago e ricarica (se autorizzato). InPrivate consente di verificare il sito con cache separata. La distribuzione CDN può richiedere tempo; nessuna promessa di aggiornamento istantaneo.

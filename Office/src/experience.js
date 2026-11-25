@@ -1,9 +1,9 @@
 
 let currentView='home', tourIndex=0;
-const viewKeys=['home','edit','batch','rubric','settings','help','inspect','models','audit'];
+const viewKeys=['home','edit','batch','rubric','settings','help','inspect','models','audit','pdf'];
 function updateWorkspaceStatus(){
  const el=$('workspaceStatus');if(!el)return;$('inspectCurrent').disabled=busy||!state;
- el.textContent=busy?tr('Elaborazione in corso…'):state?(pending()?tr('Documento con modifiche non salvate'):tr('Documento aperto')):tr('Nessun documento aperto');
+ el.textContent=busy?tr('Elaborazione in corso…'):(pending()||(typeof pdfPending==='function'&&pdfPending()))?tr('Documento con modifiche non salvate'):state||(typeof pdfSession!=='undefined'&&pdfSession)?tr('Documento aperto'):tr('Nessun documento aperto');
 }
 function goView(key,{focus=true}={}){
  if(busy||!viewKeys.includes(key))return;
