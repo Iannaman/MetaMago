@@ -3,7 +3,7 @@
 ## Office Edition 2.5.0 — PDF Batch Edition (candidato)
 - Batch misto per autori, Mark e titolo PDF; verifica SHA-256 tra anteprima e salvataggio e controllo QPDF della copia.
 - Esclusione esplicita di PDF incompatibili e proprietà solo Office; report e ZIP comuni.
-- Protezione e filigrana restano operazioni individuali; collaudo richiesto.
+- Filigrana e protezione AES-256 in batch; collaudo richiesto.
 
 ## Office Edition 2.4.0 — Publication Edition (candidato)
 - Profili di pubblicazione e riepilogo con conferma, filigrana testuale su tutte le pagine con posizione/colore/opacità/dimensione, gestione rotazione e CropBox.
