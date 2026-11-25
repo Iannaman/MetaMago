@@ -11,6 +11,7 @@ const browser=await chromium.launch({headless:true});
 const context=await browser.newContext({locale:'it-IT',acceptDownloads:true,offline:true,timezoneId:'Europe/Rome'});
 const page=await context.newPage();
 const errors=[],dialogs=[];
+page.on('console',m=>{if(m.type()==='error')console.error('BROWSER CONSOLE:',m.text())});
 page.on('pageerror',e=>{errors.push(e.message);console.error('PAGE ERROR:',e.message)});
 page.on('dialog',async d=>{dialogs.push(d.message());await d.accept()});
 const id=x=>page.locator('#'+x);
@@ -32,6 +33,7 @@ const generate=async (name)=>{
 try {
   await page.goto(pathToFileURL(resolve(root,'Office','MetaMago-Office.html')).href);
   assert.equal(await id('editorSection').isVisible(),false);
+  assert.equal(await page.evaluate(()=>typeof PDFLib),'object','bundled PDF library must execute');
   assert.equal(await id('persist').isChecked(),false);
   await id('navRubric').click();
   await id('contactName').fill('Ada Test');
