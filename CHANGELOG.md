@@ -1,6 +1,14 @@
 # Changelog
 
-## Office Edition 1.1.0 — Simple Magic (candidato)
+## Office Edition 1.2.0 — MetaMago Mark (candidato)
+- Contrassegno applicativo facoltativo con tre proprietà personalizzate standard: Editor, Version, Edition; nessuna informazione personale o timestamp aggiunto.
+- Azioni esplicite per mantenere, aggiungere/aggiornare o rimuovere il contrassegno, incluse nel confronto prima del salvataggio. Stato originale mantenuto di default.
+- Rilevamento all'apertura, segnalazione dei conflitti, ispettore di sola lettura delle proprietà personalizzate.
+- Verifica strutturale delle proprietà personalizzate non modificate e assegnazione dinamica dei PID per i nuovi campi.
+- Test browser per assenza di tag di default, aggiunta, aggiornamento, rimozione, preservazione di proprietà estranee e conflitti.
+- Desktop resta 1.0.0-beta; GitHub Pages non ancora attivato.
+
+## Office Edition 1.1.0 — Simple Magic
 - Modalità Semplice predefinita e Avanzata; indicatore del tipo di documento.
 - Rubrica indipendente con ricerca, inserimento e rimozione contatti, cancellazione esplicita e importazione/export JSON validati; memoria facoltativa.
 - Profili rapidi; ultimo autore selezionabile dagli autori; autocompletamento e conferma dei nomi digitati al salvataggio.

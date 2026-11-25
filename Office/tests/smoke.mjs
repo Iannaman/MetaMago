@@ -63,7 +63,7 @@ try {
     assert.equal(await id('advancedFields').isVisible(),false);
     assert.match(await id('diff').textContent(),/Contrassegna come finale: Sì/);
     const output=await generate('Prova_metadati.'+ext);
-    const meta=await page.evaluate(async ({output,ext})=>{const m=await inspect(new Uint8Array(output),ext);return {values:m.values,final:m.final}}, {output,ext});
+    const meta=await page.evaluate(async ({output,ext})=>{const m=await inspect(new Uint8Array(output),ext);return {values:m.values,final:m.final,marker:m.marker}}, {output,ext});
     assert.equal(meta.values.author,'Ada Test; Bruno Test; Carla Test');
     assert.equal(meta.values.lastAuthor,'Ada Test');
     assert.equal(meta.values.created,'2025-01-02T09:30:00Z');
@@ -71,6 +71,7 @@ try {
     assert.equal(meta.values.title,'Example '+ext);
     assert.equal(meta.values.company,'Example Org');
     assert.equal(meta.final,true);
+    assert.equal(meta.marker.status,'absent','no marker without explicit opt-in');
     const before=dialogs.length;
     const [again]=await Promise.all([page.waitForEvent('download'),id('downloadAgain').click()]);
     const againPath=resolve(dir,'again.'+ext);await again.saveAs(againPath);

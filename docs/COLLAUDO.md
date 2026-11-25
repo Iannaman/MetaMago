@@ -2,7 +2,15 @@
 
 Usare esclusivamente documenti sintetici o copie autorizzate.
 
-## Office Edition 1.1.0
+## Office Edition 1.2.0
+- [ ] Senza selezionare alcuna azione Mark, modificare un metadato e verificare che non siano aggiunte proprietà MetaMago.
+- [ ] In Avanzata scegliere Aggiungi / aggiorna; controllare il confronto e salvare una copia anche senza altri cambiamenti.
+- [ ] In Office, File > Informazioni > Proprietà > Proprietà avanzate > Personalizza, verificare Editor, Version ed Edition, senza alterazioni visibili del contenuto.
+- [ ] Riaprire la copia in MetaMago: controllare rilevamento e ispettore, quindi rimuovere il contrassegno da un'altra copia. Verificare che proprietà estranee e stato finale restino invariati.
+- [ ] Verificare che un nuovo documento non erediti la scelta Mark precedente.
+- [ ] Verificare con l'IT che l'uso della funzione sia appropriato per documenti istituzionali.
+
+### Regressione 1.1.0
 - [ ] Prima di aprire un documento, aggiungere un contatto, cercarlo, esportare e importare la rubrica.
 - [ ] Aprire un documento: solo i campi essenziali devono essere visibili; passare ad Avanzata e tornare a Semplice senza perdere le modifiche.
 - [ ] Inserire un autore senza premere Aggiungi: verificare il confronto e salvare direttamente.

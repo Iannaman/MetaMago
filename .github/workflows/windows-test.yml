@@ -38,4 +38,6 @@ jobs:
       - name: Install Chromium
         run: npx playwright install --with-deps chromium
       - name: Test offline Office Edition
-        run: node Office/tests/smoke.mjs
+        run: |
+          node Office/tests/smoke.mjs
+          node Office/tests/mark.mjs
