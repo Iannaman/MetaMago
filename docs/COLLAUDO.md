@@ -146,3 +146,9 @@ La CI esegue i test PowerShell e produce entrambi i file di distribuzione con ch
 - [ ] Pulizia Info/XMP selettiva, custom modificabili e Mark, conservazione delle proprietà non selezionate.
 - [ ] Appiattimento di campi testuali semplici; confrontare aspetto e valori visibili; rifiutare moduli complessi o incompatibili.
 - [ ] Verificare protezione della copia pubblicazione, invalidazione sorgente, annullamento, nessuna copia in caso di errore. Controlli automatici non sostituiscono collaudo reale.
+
+## Office Edition 2.5.0 — PDF Automation
+- [ ] Batch PDF, anteprima, file validi/invariati/esclusi, nomi univoci, annullamento, limite input/output, verifica originale SHA-256.
+- [ ] Import/export modello, rifiuto regole non ammesse, invalidazione anteprima, report CSV/HTML con conferma e escaping.
+- [ ] Confronto PDF/PDF e Office/PDF, campi comuni, date, XMP non conclusivo, nessuna modifica degli originali.
+- [ ] Report Inspector PDF con e senza password, nessuna password nei report/modelli, regressioni Office/PWA. Collaudo reale ancora necessario.

@@ -1,0 +1,41 @@
+import assert from 'node:assert/strict';
+import {readFile,writeFile,mkdtemp,rm} from 'node:fs/promises';
+import {tmpdir} from 'node:os';
+import {resolve,dirname} from 'node:path';
+import {fileURLToPath,pathToFileURL} from 'node:url';
+import {chromium} from 'playwright';
+const root=resolve(dirname(fileURLToPath(import.meta.url)),'../..'),dir=await mkdtemp(resolve(tmpdir(),'metamago-pdf-auto-'));
+const browser=await chromium.launch({headless:true}),ctx=await browser.newContext({locale:'it-IT',offline:true,acceptDownloads:true});
+const page=await ctx.newPage(),errors=[],requests=[];page.on('pageerror',e=>{errors.push(e.message);console.error(e.message)});page.on('request',r=>{if(/^https?:/.test(r.url()))requests.push(r.url())});page.on('dialog',d=>d.accept());
+const id=x=>page.locator('#'+x),upload=(name,data)=>({name,mimeType:'application/pdf',buffer:Buffer.from(data)});
+const ready=()=>page.waitForFunction(()=>!document.querySelector('#pdfBatchControls').disabled,null,{timeout:180000});
+const report=async(button,name)=>{const [d]=await Promise.all([page.waitForEvent('download'),id(button).click()]);const p=resolve(dir,name);await d.saveAs(p);return readFile(p,'utf8')};
+try{
+ await page.goto(pathToFileURL(resolve(root,'Office','MetaMago-Office.html')).href);
+ const fixtures=await page.evaluate(async()=>{
+  const {PDFDocument,PDFName}=PDFLib,doc=await PDFDocument.create({updateMetadata:false});doc.addPage();doc.setAuthor('Original author');doc.setTitle('Original title');
+  const good=await doc.save({useObjectStreams:false}),same=await rewritePdf(good,{Author:'Batch Author'},{},'keep');
+  const locked=await PDFDocument.load(good,{updateMetadata:false});locked.catalog.set(PDFName.of('Perms'),locked.context.obj({}));
+  return {good:Array.from(good),same:Array.from(same),restricted:Array.from(await locked.save({useObjectStreams:false}))};
+ });
+ await id('navBatch').click();await id('pdfBatchFiles').setInputFiles([upload('Same.pdf',fixtures.good),upload('Same.pdf',fixtures.good),upload('Unchanged.pdf',fixtures.same),upload('Restricted.pdf',fixtures.restricted),upload('Broken.pdf',[1,2,3])]);
+ assert.equal(await id('pdfBatchRun').isDisabled(),true);
+ await id('pdfBatchOn-Author').check();await id('pdfBatchValue-Author').fill('Batch Author');
+ const template=JSON.parse(await report('pdfBatchExportModel','model.json'));assert.equal(template.kind,'MetaMago.PDFRecipe');assert.equal(template.fields.Author,'Batch Author');assert.equal(Object.hasOwn(template,'password'),false);
+ await id('pdfBatchValue-Author').fill('Other');await id('pdfBatchModelFile').setInputFiles({name:'model.json',mimeType:'application/json',buffer:Buffer.from(JSON.stringify(template))});await ready();assert.equal(await id('pdfBatchValue-Author').inputValue(),'Batch Author');
+ await id('pdfBatchPreview').click();await ready();assert.equal(await page.locator('#pdfBatchRows [data-status=ready]').count(),2);assert.equal(await page.locator('#pdfBatchRows [data-status=unchanged]').count(),1);assert.equal(await page.locator('#pdfBatchRows [data-status=excluded]').count(),2);
+ assert.match(await report('pdfBatchCsv','preview.csv'),/Report anteprima PDF/);
+ await id('pdfBatchValue-Author').fill('Batch Author 2');assert.equal(await id('pdfBatchRun').isDisabled(),true);await id('pdfBatchValue-Author').fill('Batch Author');
+ await id('pdfBatchPreview').click();await ready();assert.equal(await id('pdfBatchRun').isDisabled(),false);
+ const [zip]=await Promise.all([page.waitForEvent('download',{timeout:180000}),id('pdfBatchRun').click()]);const zipPath=resolve(dir,'copies.zip');await zip.saveAs(zipPath);await ready();
+ const copies=await page.evaluate(async data=>{const z=await JSZip.loadAsync(new Uint8Array(data));const names=Object.keys(z.files);const values=[];for(const name of names){const b=await z.file(name).async('uint8array'),m=await inspectPdf(b);values.push([name,m.fields.find(x=>x.key==='Author').value,m.fields.find(x=>x.key==='Author').xmp])}return values},Array.from(await readFile(zipPath)));
+ assert.equal(copies.length,2);assert.notEqual(copies[0][0].toLowerCase(),copies[1][0].toLowerCase());for(const c of copies)assert.deepEqual(c.slice(1),['Batch Author','Batch Author']);
+ assert.match(await report('pdfBatchHtml','result.html'),/Copia verificata/);
+ await id('navAudit').click();await id('auditA').setInputFiles(upload('Original.pdf',fixtures.good));await id('auditB').setInputFiles(upload('Updated.pdf',fixtures.same));await id('auditRun').click();await page.waitForFunction(()=>!document.querySelector('#auditResult').hidden&&!document.querySelector('#auditRun').disabled,null,{timeout:90000});assert.match(await id('auditRows').textContent(),/Batch Author/);assert.match(await id('auditRows').textContent(),/XMP/);
+ await id('auditB').setInputFiles(resolve(root,'Test','Prova.docx'));await id('auditRun').click();await page.waitForFunction(()=>!document.querySelector('#auditResult').hidden&&!document.querySelector('#auditRun').disabled,null,{timeout:90000});await id('auditOnlyDiff').uncheck();assert.equal(await id('auditRows').locator('tr').count(),6);
+ await id('navInspect').click();await id('inspectFile').setInputFiles(upload('Report.pdf',fixtures.good));await page.waitForFunction(()=>!document.querySelector('#pdfInspectResult').hidden&&!document.querySelector('#inspectChoose').disabled,null,{timeout:90000});const html=await report('pdfInspectHtml','inspect.html');assert.match(html,/PDF Privacy Inspector/);assert.match(html,/Original author/);assert.match(html,/SHA-256/);
+ await id('inspectClear').click();assert.equal(await id('pdfInspectCsv').isDisabled(),true);
+ await id('navBatch').click();await id('pdfBatchModelFile').setInputFiles({name:'bad.json',mimeType:'application/json',buffer:Buffer.from(JSON.stringify({...template,password:'never import'}))});await ready();assert.match(await id('pdfBatchStatus').textContent(),/non valido/);assert.equal(await id('pdfBatchValue-Author').inputValue(),'Batch Author');
+ await page.setViewportSize({width:375,height:800});assert.ok(await page.evaluate(()=>document.documentElement.scrollWidth<=innerWidth+1));assert.deepEqual(errors,[]);assert.deepEqual(requests,[]);
+ console.log('PASS PDF Automation batch, preview invalidation, excluded/unchanged, unique ZIP copies, recipe import/export, report, PDF/PDF and mixed Office comparison, Inspector report, no network');
+}finally{await browser.close();await rm(dir,{recursive:true,force:true})}

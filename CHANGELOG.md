@@ -1,5 +1,11 @@
 # Changelog
 
+## Office Edition 2.5.0 — PDF Automation Edition (candidato)
+- Batch PDF con 10 documenti/60 MiB, anteprima per file, verifica SHA-256 prima della riscrittura, esclusi/invariati separati, ZIP delle copie verificate, annullamento cooperativo.
+- Preset Bozza/Uso interno/Distribuzione esterna e modelli JSON dichiarativi riutilizzabili: proprietà standard, Mark, pulizia custom Info e filigrana centrale. Nessuna password o script; niente cifratura o appiattimento batch.
+- Report CSV/HTML anteprima/esito batch e Inspector, confronto dei sei campi comuni Office/PDF e delle proprietà Info/XMP tra PDF; valori non conclusivi espliciti.
+- Test sintetici e regressioni; deploy manuale.
+
 ## Office Edition 2.4.0 — Publication Edition (candidato)
 - Profili di pubblicazione e riepilogo con conferma, filigrana testuale su tutte le pagine con posizione/colore/opacità/dimensione, gestione rotazione e CropBox.
 - Rimozione selettiva delle proprietà standard Info/XMP supportate, delle proprietà Info custom modificabili e del Mark riconosciuto.

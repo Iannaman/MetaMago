@@ -89,3 +89,5 @@ jobs:
         run: node Office/tests/pdf-inspector.mjs
       - name: Test PDF Publication
         run: node Office/tests/publication.mjs
+      - name: Test PDF Automation
+        run: node Office/tests/pdf-automation.mjs

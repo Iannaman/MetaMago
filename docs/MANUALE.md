@@ -39,3 +39,6 @@ Analizza documento → scegli un PDF oppure Analizza PDF aperto. Leggi impronta,
 
 ## Preparazione alla pubblicazione
 Nell'editor PDF salva o ripristina eventuali modifiche, poi scegli la sorgente (originale o ultima copia metadati), il profilo e le operazioni. I profili non modificano subito il documento. Controlla il riepilogo, conferma e scarica la copia _pubblicazione.pdf. Puoi sceglierla nella sezione Proteggi documento PDF. Verifica visivamente tutte le pagine; nessuna pulizia costituisce anonimizzazione o redazione sicura. Vedi [Publication](PUBLICATION.md).
+
+## Automazione PDF
+In Più documenti apri Elabora più PDF. Seleziona fino a 10 PDF (60 MiB totali), scegli un preset o i campi, controlla l'anteprima e conferma la generazione ZIP. Puoi esportare/importare i modelli PDF in JSON; non includono password. Esporta report CSV/HTML dopo conferma. Confronta documenti accetta PDF e Office; i campi non comuni non sono confrontati. Vedi [PDF Automation](PDF-AUTOMATION.md).

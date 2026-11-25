@@ -64,3 +64,5 @@ main{max-width:1220px}.workspace{display:grid;grid-template-columns:210px minmax
 .pdf-hash{font-family:monospace;overflow-wrap:anywhere}#pdfInspectFilename,#pdfInspectProperties td,#pdfInspectAttachmentNames li{overflow-wrap:anywhere}#pdfInspectPasswordPanel input{max-width:420px}#pdfInspectPasswordPanel button{margin-top:8px}#pdfInspectProperties td{white-space:pre-wrap}
 
 #publicationSection fieldset{min-width:0}#publicationSection .grid>div{min-width:0}#publicationSection input[type=number]{width:100%}#publicationSummary{white-space:pre-wrap;overflow-wrap:anywhere}
+
+#pdfBatchControls{min-width:0}#pdfBatchRows article{padding:10px 0;border-bottom:1px solid var(--border);overflow-wrap:anywhere}#pdfBatchProgress{width:100%}#pdfBatchFields>div{min-width:0}#pdfBatchFields input:not([type=checkbox]){width:100%}

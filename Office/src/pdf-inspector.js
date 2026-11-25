@@ -109,6 +109,7 @@ async function inspectPdfReadOnly(bytes,password=''){
 }
 var pdfInspectInput=null;
 function clearPdfInspection(){
+ if(typeof clearPdfInspectionReport==='function')clearPdfInspectionReport();
  pdfInspectInput=null;$('pdfInspectPassword').value='';$('pdfInspectPasswordPanel').hidden=true;$('pdfInspectResult').hidden=true;$('pdfInspectFilename').textContent='';$('pdfInspectSummary').textContent='';$('pdfInspectHash').textContent='';$('pdfInspectCoverage').textContent='';$('pdfInspectPermissions').replaceChildren();$('pdfInspectProperties').replaceChildren();$('pdfInspectXmp').textContent='';$('pdfInspectFindings').replaceChildren();$('pdfInspectAttachmentNames').replaceChildren();$('pdfInspectAttachments').hidden=true;
 }
 function syncPdfInspectorControls(){
@@ -117,6 +118,7 @@ function syncPdfInspectorControls(){
  $('inspectPdfCurrent').disabled=busy||!available;$('pdfInspectFromEditor').disabled=busy||!available;$('pdfInspectRetry').disabled=busy||!pdfInspectInput;$('pdfInspectPassword').disabled=busy;
 }
 function renderPdfInspection(file,r){
+ if(typeof storePdfInspectionReport==='function')storePdfInspectionReport(file,r);
  $('pdfInspectFilename').textContent=file.name;$('pdfInspectSummary').textContent='PDF '+r.version+' · '+(r.locked?tr('Password richiesta o non corretta.'):r.pages+' '+tr('pagine'))+' · '+tr(r.encrypted?'PDF cifrato':'PDF non cifrato');
  $('pdfInspectHash').textContent=r.hash||tr('Impronta non disponibile');$('pdfInspectResult').hidden=false;$('inspectClear').hidden=false;
  $('pdfInspectCoverage').textContent=tr(r.locked?'Risultati non disponibili senza password corretta.':r.check===0&&!r.partial?'Controllo strutturale QPDF superato.':r.check===3||r.check===0?'Controllo strutturale QPDF con avvisi: analisi parziale.':'Controllo strutturale QPDF non superato: analisi parziale.');
