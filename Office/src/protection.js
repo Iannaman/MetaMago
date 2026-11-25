@@ -16,8 +16,9 @@ function syncProtectionControls(){
  $('protectSection').hidden=!pdfSession;
  $('protectControls').disabled=busy||!pdfSession;
  const validCopy=!!pdfLast&&!pdfPending();$('protectSource').options[1].disabled=!validCopy;
- if(!validCopy)$('protectSource').value='original';
- $('protectSourceHint').textContent=pdfPending()?tr('Salva o ripristina prima le modifiche ai metadati.'):($('protectSource').value==='copy'?pdfLast?.name:pdfSession?.file.name)||'';
+ const validPublication=typeof currentPublicationCopy==='function'&&!!currentPublicationCopy();$('protectSource').options[2].disabled=!validPublication;
+ if($('protectSource').value==='copy'&&!validCopy||$('protectSource').value==='publication'&&!validPublication)$('protectSource').value='original';
+ $('protectSourceHint').textContent=pdfPending()?tr('Salva o ripristina prima le modifiche ai metadati.'):($('protectSource').value==='publication'?currentPublicationCopy()?.name:$('protectSource').value==='copy'?pdfLast?.name:pdfSession?.file.name)||'';
  $('protectUserFields').hidden=!$('protectRequire').checked;
  $('protectRun').disabled=busy||!pdfSession||pdfPending()||!$('protectAck').checked;
 }
@@ -137,7 +138,7 @@ $('protectRun').onclick=async()=>{
  try{
   if(($('protectRequire').checked&&!user)||user!==($('protectRequire').checked?$('protectUserConfirm').value:'')||owner!==$('protectOwnerConfirm').value)throw pdfErr('Password non valida, non confermata o uguale all’altra.');
   const options=protectionOptions(user,owner,$('protectPrint').value,$('protectModify').value,$('protectExtract').checked);
-  const source=$('protectSource').value==='copy'&&pdfLast?{bytes:pdfLast.result,name:pdfLast.name}:{bytes:pdfSession.bytes,name:pdfSession.file.name};
+  const source=$('protectSource').value==='publication'?currentPublicationCopy():$('protectSource').value==='copy'&&pdfLast?{bytes:pdfLast.result,name:pdfLast.name}:{bytes:pdfSession.bytes,name:pdfSession.file.name};if(!source)throw pdfErr('Verifica della cifratura non superata. Nessun file prodotto.');
   if(!confirm(tr('Confermi la generazione di una copia cifrata? Le password saranno svuotate dopo l’operazione.')))return;
   setBusy(true);syncProtectionControls();clearPasswords();msg('protectStatus',tr('Elaborazione PDF protetto in corso…'));
   const output=await protectPdf(source.bytes,options,stage=>{msg('protectStatus',tr('Elaborazione PDF protetto in corso…')+' ['+stage+']')});

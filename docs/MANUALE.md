@@ -36,3 +36,6 @@ Apri un PDF accettato dall'editor; salva o ripristina eventuali modifiche ai met
 
 ## Inspector PDF
 Analizza documento → scegli un PDF oppure Analizza PDF aperto. Leggi impronta, versione, pagine, permessi, indizi privacy e metadati. Per un PDF cifrato inserisci solo una password autorizzata quando richiesta; non viene prodotta una copia senza protezione. Non verifica le firme né certifica PDF/A o assenza di dati sensibili. Vedi [guida](PDF-INSPECTOR.md).
+
+## Preparazione alla pubblicazione
+Nell'editor PDF salva o ripristina eventuali modifiche, poi scegli la sorgente (originale o ultima copia metadati), il profilo e le operazioni. I profili non modificano subito il documento. Controlla il riepilogo, conferma e scarica la copia _pubblicazione.pdf. Puoi sceglierla nella sezione Proteggi documento PDF. Verifica visivamente tutte le pagine; nessuna pulizia costituisce anonimizzazione o redazione sicura. Vedi [Publication](PUBLICATION.md).

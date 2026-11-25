@@ -1,5 +1,12 @@
 # Changelog
 
+## Office Edition 2.4.0 — Publication Edition (candidato)
+- Profili di pubblicazione e riepilogo con conferma, filigrana testuale su tutte le pagine con posizione/colore/opacità/dimensione, gestione rotazione e CropBox.
+- Rimozione selettiva delle proprietà standard Info/XMP supportate, delle proprietà Info custom modificabili e del Mark riconosciuto.
+- Appiattimento conservativo dei soli campi testuali AcroForm semplici con appearance esistente; rifiuto dei moduli incompatibili.
+- Copia separata, verifica strutturale QPDF prima/dopo, controllo geometria e numero pagine; integrazione sorgente con Protection. Non è redazione sicura; niente rimozione di firme o protezioni.
+- Test browser e verifiche indipendenti Poppler/QPDF; deploy manuale.
+
 ## Office Edition 2.3.0 — PDF Inspector Edition (candidato)
 - Inspector unificato Office/PDF in sola lettura, accesso da editor PDF, SHA-256 dei byte originali, versione e numero di pagine, controllo strutturale QPDF, permessi di lettura.
 - Rilevamento mirato di metadati, firme/campi firma, annotazioni e flag nascosti, allegati, JavaScript, azioni, riferimenti esterni, moduli, livelli, multimedia e restrizioni. PDF/A dichiarato (non validato) da XMP supportato.

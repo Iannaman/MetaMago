@@ -140,3 +140,9 @@ Usare esclusivamente documenti sintetici o copie autorizzate.
 - [ ] Verificare rifiuto di file cifrati/firmati e visualizzazione a 100%, 125%, 150% DPI.
 
 La CI esegue i test PowerShell e produce entrambi i file di distribuzione con checksum. Il job Office Browser testa Chromium con file HTML locale e connessione offline; non sostituisce la prova Edge/Office 365 nell'ambiente aziendale. Pubblicare le release manualmente dopo il collaudo.
+
+## Office Edition 2.4.0 — Publication
+- [ ] Filigrana con rotazioni 0/90/180/270 e CropBox, colori, posizione e opacità; controllare leggibilità su lettori reali.
+- [ ] Pulizia Info/XMP selettiva, custom modificabili e Mark, conservazione delle proprietà non selezionate.
+- [ ] Appiattimento di campi testuali semplici; confrontare aspetto e valori visibili; rifiutare moduli complessi o incompatibili.
+- [ ] Verificare protezione della copia pubblicazione, invalidazione sorgente, annullamento, nessuna copia in caso di errore. Controlli automatici non sostituiscono collaudo reale.

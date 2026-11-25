@@ -14,3 +14,5 @@ Node 22, `npm ci --prefix Office/pdf-deps --ignore-scripts --no-audit --no-fund`
 
 ## Roadmap
 2.2 Protection (cifratura e permessi); 2.3 PDF Inspector; 2.4 Publication; 2.5 PDF Automation (batch, modelli, Audit); 2.6 Document Tools; 3.0 Universal. Inspector dalla 2.3.0 supporta PDF (vedi PDF-INSPECTOR.md). Batch e Audit restano per Office.
+
+Dalla 2.4.0: [preparazione alla pubblicazione](PUBLICATION.md), filigrane, pulizia selettiva e appiattimento conservativo. Nessuna redazione sicura.
