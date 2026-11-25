@@ -6,6 +6,7 @@ import { fileURLToPath, pathToFileURL } from 'node:url';
 import { chromium } from 'playwright';
 
 const root=resolve(dirname(fileURLToPath(import.meta.url)),'../..');
+const version=(await readFile(resolve(root,'Office','VERSION'),'utf8')).trim();
 const dir=await mkdtemp(resolve(tmpdir(),'metamago-mark-'));
 const browser=await chromium.launch({headless:true});
 const context=await browser.newContext({locale:'it-IT',acceptDownloads:true,offline:true});
@@ -30,7 +31,7 @@ try {
  await page.goto(pathToFileURL(resolve(root,'Office','MetaMago-Office.html')).href);
  for(const ext of ['docx','xlsx','pptx']){
   const bytes=Array.from(await readFile(resolve(root,'Test','Prova.'+ext)));
-  const result=await page.evaluate(async ({bytes,ext})=>{
+  const result=await page.evaluate(async ({bytes,ext,version})=>{
    function check(ok,why){if(!ok)throw Error(why)}
    const original=new Uint8Array(bytes),p=await inspect(original,ext);
    check(p.marker.status==='absent','fixture unexpectedly marked');
@@ -54,7 +55,7 @@ try {
    const unique=elems(m.parts.custom.doc.documentElement).map(n=>n.getAttribute('pid'));
    check(new Set(unique).size===unique.length,'duplicate pid');
    const kept=await inspect(await rewrite(marked,ext,{title:'Keep mark'},false),ext);
-   check(kept.marker.values['MetaMago.Version']==='2.4.0'&&!kept.final,'keep/final interaction');
+   check(kept.marker.values['MetaMago.Version']===version&&!kept.final,'keep/final interaction');
    const old=await inspect(marked,ext);
    const vn=elems(old.parts.custom.doc.documentElement).find(n=>propName(n)==='metamago.version');
    elems(vn)[0].textContent='0.9.0';
@@ -62,7 +63,7 @@ try {
    const legacyKept=await inspect(await rewrite(legacy,ext,{title:'Keep old'},true),ext);
    check(legacyKept.marker.values['MetaMago.Version']==='0.9.0','implicit version update');
    const upgraded=await rewrite(legacy,ext,{},true,'add'),u=await inspect(upgraded,ext);
-   check(u.marker.values['MetaMago.Version']==='2.4.0','upgrade failed');
+   check(u.marker.values['MetaMago.Version']===version,'upgrade failed');
    check(elems(u.parts.custom.doc.documentElement).filter(isMark).length===3,'duplicate marker');
    const removed=await inspect(await rewrite(upgraded,ext,{},true,'remove'),ext);
    check(removed.marker.status==='absent'&&removed.final,'remove affected final');
@@ -79,8 +80,8 @@ try {
    const preserved=await inspect(await rewrite(conflicting,ext,{title:'Preserve conflict'},false,'keep'),ext);
    check(customSnapshot(before.parts.custom,true,false)===customSnapshot(preserved.parts.custom,true,false),'conflict changed');
    return {status:m.marker.status,version:u.marker.values['MetaMago.Version']};
-  },{bytes,ext});
-  assert.deepEqual(result,{status:'present',version:'2.4.0'});
+  },{bytes,ext,version});
+  assert.deepEqual(result,{status:'present',version});
   console.log('PASS marker engine',ext);
  }
  await open('Prova.docx',resolve(root,'Test','Prova.docx'));
@@ -96,7 +97,7 @@ try {
  assert.equal(await id('markAction').inputValue(),'keep');
  await id('inspector').locator('summary').click();
  assert.match(await id('customTable').textContent(),/MetaMago.Editor.*Edited with MetaMago/s);
- assert.match(await id('customTable').textContent(),/MetaMago.Version.*2.4.0/s);
+ assert.match(await id('customTable').textContent(),new RegExp('MetaMago\\.Version.*'+version.replaceAll('.','\\.'),'s'));
  await id('markAction').selectOption('remove');
  assert.match(await id('diff').textContent(),/rimuovi contrassegno/);
  const unmarked=await downloadCopy('Prova_metadati_metadati.docx');
