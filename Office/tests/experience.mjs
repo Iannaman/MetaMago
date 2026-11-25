@@ -37,7 +37,7 @@ try{
  await id('navEdit').click();assert.equal(await id('title').inputValue(),'Titolo di prova');
  await id('closeDocument').click();assert.match(await id('workspaceStatus').textContent(),/Nessun documento aperto/);
  await page.setViewportSize({width:375,height:800});
- for(const nav of ['navHome','navEdit','navBatch','navInspect','navRubric','navModels','navSettings','navHelp']){
+ for(const nav of ['navHome','navEdit','navBatch','navInspect','navRubric','navModels','navAudit','navSettings','navHelp']){
   await id(nav).click();assert.ok(await page.evaluate(()=>document.documentElement.scrollWidth<=innerWidth+1),'mobile overflow '+nav);
  }
  await id('navSettings').click();await id('uiLanguage').selectOption('en');

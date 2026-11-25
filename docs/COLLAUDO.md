@@ -2,7 +2,14 @@
 
 Usare esclusivamente documenti sintetici o copie autorizzate.
 
-## Office Edition 1.9.0 — Automation
+## Office Edition 1.10.0 — Audit
+- [ ] Confrontare due file, anche di formati diversi, originali e copie, filtro differenze e valori identici.
+- [ ] Esportare report CSV e HTML, verificare corrispondenza dei valori, escaping, celle formula e stampa.
+- [ ] Esportare report Inspector con modello selezionato e analisi parziale, verificare esiti non conclusivi.
+- [ ] Esportare report copia verificata, anteprima e risultato batch con file esclusi/invariati; distinguere proposte e copie elaborate.
+- [ ] Verificare annullamento export, cancellazione risultati, nessuna persistenza o invio di dati; collaudo Excel/Edge manuale ancora necessario.
+
+### Regressione 1.9.0 — Automation
 - [ ] Creare, modificare, esportare e importare un modello con regole di presenza, assenza, uguaglianza, date e privacy; verificare formato non applicabile e analisi parziali.
 - [ ] Confrontare la verifica del modello nell'Inspector con le proprietà originali; nessuna modifica automatica.
 - [ ] Suggerire nomi da titolo/data, controllare estensione, caratteri non ammessi, collisioni batch e titolo assente; confermare prima di salvare copie.

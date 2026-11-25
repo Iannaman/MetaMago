@@ -90,7 +90,7 @@ async function inspectPrivacy(meta,ext,onProgress=()=>{}){
 }
 function inspectCell(text){const td=document.createElement('td');td.textContent=String(text);return td}
 function clearInspection(){
- if(typeof clearModelInspection==='function')clearModelInspection();
+ if(typeof clearModelInspection==='function')clearModelInspection();if(typeof clearAuditInspection==='function')clearAuditInspection();
  $('inspectResult').hidden=true;$('inspectClear').hidden=true;$('inspectFilename').textContent='';$('inspectFiletype').textContent='';$('inspectScore').textContent='';$('inspectMeter').value=0;$('inspectChecks').replaceChildren();$('inspectProperties').replaceChildren();$('inspectFindings').replaceChildren();$('inspectCoverage').textContent='';$('inspectMarker').textContent='';msg('inspectStatus','');
 }
 function renderInspection(file,ext,meta,privacy){
@@ -108,7 +108,7 @@ function renderInspection(file,ext,meta,privacy){
   title.textContent=item.label;status.className='finding-state';status.textContent=item.status==='present'?tr('Da verificare')+' ('+item.count+' '+tr('indizi')+')':item.status==='na'?tr('Non applicabile'):item.status==='unknown'?tr('Non conclusivo'):tr('Non rilevato nei controlli eseguiti');
   desc.className='muted';desc.textContent=item.description;card.append(title,status,desc);$('inspectFindings').append(card)
  }
- $('inspectResult').hidden=false;$('inspectClear').hidden=false;if(typeof storeModelInspection==='function')storeModelInspection(ext,meta.values,privacy);
+ $('inspectResult').hidden=false;$('inspectClear').hidden=false;if(typeof storeModelInspection==='function')storeModelInspection(ext,meta.values,privacy);if(typeof storeAuditInspection==='function')storeAuditInspection(file,ext,meta,privacy);
 }
 async function runInspection(file,originalBytes=null){
  if(!file||busy)return;goView('inspect',{focus:false});clearInspection();setBusy(true);$('inspectProgress').hidden=false;$('inspectProgress').removeAttribute('value');msg('inspectStatus',tr('Analisi in corso…'));

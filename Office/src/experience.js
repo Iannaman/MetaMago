@@ -1,6 +1,6 @@
 
 let currentView='home', tourIndex=0;
-const viewKeys=['home','edit','batch','rubric','settings','help','inspect','models'];
+const viewKeys=['home','edit','batch','rubric','settings','help','inspect','models','audit'];
 function updateWorkspaceStatus(){
  const el=$('workspaceStatus');if(!el)return;$('inspectCurrent').disabled=busy||!state;
  el.textContent=busy?tr('Elaborazione in corso…'):state?(pending()?tr('Documento con modifiche non salvate'):tr('Documento aperto')):tr('Nessun documento aperto');
@@ -34,5 +34,5 @@ function renderTour(){const [title,body]=tour[tourIndex];$('tourStep').textConte
 function startTour(){goView('home');tourIndex=0;$('tourBox').hidden=false;$('startTour').hidden=true;renderTour();$('tourNext').focus()}
 function closeTour(){$('tourBox').hidden=true;$('startTour').hidden=false;$('startTour').focus()}
 $('startTour').onclick=startTour;$('helpTour').onclick=startTour;$('tourClose').onclick=closeTour;$('tourPrev').onclick=()=>{if(tourIndex>0){tourIndex--;renderTour()}};$('tourNext').onclick=()=>{if(tourIndex<tour.length-1){tourIndex++;renderTour()}else{closeTour();goView('edit')}};
-document.addEventListener('keydown',e=>{if(busy||e.defaultPrevented||!e.altKey||!e.shiftKey||e.ctrlKey||e.metaKey||e.target.closest('input,textarea,select,[contenteditable]'))return;const m=/^Digit([1-8])$/.exec(e.code);if(m){e.preventDefault();goView(viewKeys[Number(m[1])-1])}});
+document.addEventListener('keydown',e=>{if(busy||e.defaultPrevented||!e.altKey||!e.shiftKey||e.ctrlKey||e.metaKey||e.target.closest('input,textarea,select,[contenteditable]'))return;const m=/^Digit([1-9])$/.exec(e.code);if(m){e.preventDefault();goView(viewKeys[Number(m[1])-1])}});
 goView('home',{focus:false});

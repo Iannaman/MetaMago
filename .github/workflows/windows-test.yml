@@ -57,3 +57,5 @@ jobs:
         run: node Office/tests/inspector.mjs
       - name: Test automation
         run: node Office/tests/automation.mjs
+      - name: Test audit
+        run: node Office/tests/audit.mjs

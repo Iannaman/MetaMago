@@ -30,3 +30,6 @@ Home → Analizza documento → scelta file oppure originale aperto → punteggi
 
 ## Estensione v1.9.0
 Modelli documentali → scegli un modello o crea regole → salva → Inspector → seleziona modello → verifica; nessuna correzione automatica. Editor → suggerisci nome → controlla → salva copia; batch → schema nome → anteprima → conferma ZIP. Rubrica → import XLSX → foglio visibile → anteprima → conferma. Testare la distinzione tra profilo di modifica e modello di verifica.
+
+## Estensione v1.10.0
+Confronta documenti → scegli A e B oppure usa originale/copia aperti → confronto → filtro differenze → report facoltativo. Inspector, copia verificata e batch → report con conferma di riservatezza. Distinguere report di anteprima da report di esito e spiegare che non costituiscono una certificazione o un registro immodificabile.

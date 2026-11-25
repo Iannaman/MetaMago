@@ -1,5 +1,11 @@
 # Changelog
 
+## Office Edition 1.10.0 — Audit Edition (candidato)
+- Confronto in sola lettura di due documenti, anche di formati differenti; riuso originale e ultima copia verificata, filtro differenze, valori originali delle proprietà standard, stato finale e Mark.
+- Report CSV UTF-8 e HTML stampabile per confronto, Inspector e modello selezionato, copia verificata e anteprima/esito batch.
+- Conferma esplicita e avviso riservatezza, protezione CSV contro celle formula e HTML senza script o risorse esterne; report non firmati, nessun registro persistente.
+- Test dedicati, italiano/inglese e scorciatoia Alt+Maiusc+9; motore di riscrittura e Desktop invariati, deploy manuale.
+
 ## Office Edition 1.9.0 — Automation Edition (candidato)
 - Vista Modelli documentali: tre modelli predefiniti, regole presenza/assenza/uguaglianza, formato, date e indicatori privacy, import/export JSON dei personalizzati.
 - Verifica dei modelli in Inspector, separata dal punteggio di completezza e senza modifiche automatiche.
