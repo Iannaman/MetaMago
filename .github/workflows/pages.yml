@@ -68,6 +68,8 @@ jobs:
         run: node Office/tests/pdf-inspector.mjs
       - name: Test PDF Publication
         run: node Office/tests/publication.mjs
+      - name: Test PDF Batch
+        run: node Office/tests/pdf-batch.mjs
       - uses: actions/configure-pages@v5
       - uses: actions/upload-pages-artifact@v3
         with:

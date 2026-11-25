@@ -1,6 +1,9 @@
 'use strict';
 const UI_LANG=location.hash==='#en'?'en':location.hash==='#it'?'it':/^it\b/i.test(navigator.language)?'it':'en';
 const EN=Object.freeze({
+ 'Modifica più documenti · PDF Batch Edition':'Edit multiple documents · PDF Batch Edition',
+ 'Modifica titolo PDF':'Edit PDF title','Titolo PDF':'PDF title',
+ 'Applica regole a documenti Office e PDF senza cambiare gli originali. Per i PDF usa autori, titolo e Mark; deseleziona le proprietà esclusivamente Office.':'Apply rules to Office and PDF files without changing originals. For PDF use authors, title and Mark; deselect Office-only properties.',
   "Office Edition · Le proprietà cambiano, il contenuto no.": "Office Edition · Change the properties, not the content.",
   "Modifica le proprietà descrittive di documenti Word, Excel e PowerPoint autorizzati. Il file originale non viene modificato. I documenti e i nominativi vengono elaborati nel browser e non vengono inviati a server.": "Edit descriptive properties of authorised Word, Excel and PowerPoint documents. Originals are unchanged. Documents and names are processed in your browser and never uploaded.",
   "Rubrica e profili del gruppo": "Contacts and team profiles",
