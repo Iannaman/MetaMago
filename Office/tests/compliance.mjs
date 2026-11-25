@@ -17,7 +17,7 @@ try{
  assert.equal(result.checks[1].status,'pass');assert.equal(result.checks[2].status,'unknown');assert.equal(result.outcome,'unknown');assert.equal(result.fail,'fail');
  await page.locator('#navInspect').click();
  await page.locator('#compliancePanel > summary').click();
- await page.locator('#complianceFiles').setInputFiles([resolve(root,'Test','Prova.docx'),{name:'bad.pdf',mimeType:'application/pdf',buffer:Buffer.from('bad')}]);
+ await page.locator('#complianceFiles').setInputFiles([{name:'Prova.docx',mimeType:'application/vnd.openxmlformats-officedocument.wordprocessingml.document',buffer:await readFile(resolve(root,'Test','Prova.docx'))},{name:'bad.pdf',mimeType:'application/pdf',buffer:Buffer.from('bad')}]);
  await page.locator('#complianceRun').click();await page.waitForFunction(()=>!document.querySelector('#complianceCsv').disabled);
  assert.equal(await page.locator('#complianceRows article').count(),2);assert.match(await page.locator('#complianceRows').textContent(),/Non conclusivo/);assert.deepEqual(errors,[]);
  console.log('PASS compliance batch and unknown handling');
