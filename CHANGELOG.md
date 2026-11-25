@@ -1,5 +1,11 @@
 # Changelog
 
+## Office Edition 2.0.1 — Update Fix
+- Avviso di nuova versione PWA e comando Aggiorna applicazione con conferma di perdita dei dati in memoria; nessuna ricarica automatica delle altre finestre.
+- Verifica manuale in Impostazioni, controllo al ritorno in primo piano e registrazione senza cache HTTP del Worker; controllo della coerenza HTML/versione prima dell'attivazione.
+- Attivazione esplicita del Worker, rimozione delle sole cache obsolete nello scope MetaMago, test di aggiornamento multi-finestra e migrazione da cache precedente.
+- La transizione iniziale da una versione precedente può richiedere di chiudere tutte le finestre o rimuovere il vecchio Worker. Deploy manuale, Desktop invariata.
+
 ## Office Edition 2.0.0 — Professional Edition (candidato al rilascio stabile)
 - Home consolidata con stato dell'area di lavoro, ripresa modifica e accesso a Inspector, confronto, modelli, batch e rubrica.
 - Guida per attività in italiano e inglese, miglioramenti di focus e layout.

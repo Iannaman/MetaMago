@@ -2,7 +2,12 @@
 
 Usare esclusivamente documenti sintetici o copie autorizzate.
 
-## Office Edition 2.0.0 — Professional
+## Office Edition 2.0.1 — Update Fix
+- [ ] Verificare migrazione da una versione già in cache; versione corretta dopo attivazione, eventuale attesa CDN.
+- [ ] Verificare avviso aggiornamento, verifica manuale, annullamento e blocco durante elaborazione, altre finestre non ricaricate.
+- [ ] Verificare nuova cache coerente, vecchia cache rimossa, cache estranee preservate, comportamento senza connessione e con policy aziendali.
+
+### Regressione 2.0.0 — Professional
 - [ ] Aprire Home e tutte le attività, verificare navigazione, focus, zoom 200%, mobile e guida IT/EN.
 - [ ] Creare rubrica, gruppo, profilo, modello e preferenze; esportare configurazione e ripristinarla; verificare assenza di documenti, report e cronologia nel JSON.
 - [ ] Importare configurazione errata, annullare conferma e verificare conservazione dei dati correnti; importare una valida con bozza aperta e verificare conservazione della bozza.

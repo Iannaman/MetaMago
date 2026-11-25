@@ -610,7 +610,20 @@ const EN=Object.freeze({
   "Configurazione importata. Le modifiche al documento sono rimaste invariate.": "Configuration imported. Document edits remain unchanged.",
   "Terminare la sessione? Documenti aperti, bozze, risultati, rubrica e modelli in memoria andranno persi. Esporta prima ciò che vuoi conservare. I file già scaricati non vengono cancellati.": "End session? Open documents, drafts, results, contacts and templates in memory will be lost. Export anything you want to keep first. Downloaded files are not deleted.",
   "Impossibile cancellare la rubrica locale. Disattiva la memorizzazione prima di terminare.": "Cannot clear locally saved contacts. Disable storage before ending the session.",
-  "Cambiare lingua? La pagina verrà ricaricata. Salva le copie ed esporta la configurazione prima di continuare: bozze, report e dati in memoria andranno persi.": "Change language? The page will reload. Save copies and export configuration before continuing: drafts, reports and in-memory data will be lost."
+  "Cambiare lingua? La pagina verrà ricaricata. Salva le copie ed esporta la configurazione prima di continuare: bozze, report e dati in memoria andranno persi.": "Change language? The page will reload. Save copies and export configuration before continuing: drafts, reports and in-memory data will be lost.",
+  "Aggiornamento applicazione": "App update",
+  "Nuovo aggiornamento disponibile": "New update available",
+  "Aggiorna applicazione": "Update application",
+  "Verifica aggiornamenti": "Check for updates",
+  "Salva le copie ed esporta la configurazione prima di aggiornare. L’app verrà ricaricata solo dopo la tua conferma.": "Save copies and export configuration before updating. The app will reload only after your confirmation.",
+  "Verifica aggiornamenti in corso…": "Checking for updates…",
+  "Aggiornamento disponibile.": "Update available.",
+  "Verifica completata. Se è in preparazione un aggiornamento, apparirà una notifica.": "Check complete. A notification will appear if an update is being prepared.",
+  "Verifica non riuscita. Controlla la connessione e riprova.": "Check failed. Check your connection and try again.",
+  "Aggiornare adesso? Salva prima le copie necessarie ed esporta la configurazione. La ricarica chiuderà documenti, bozze, analisi, report e dati in memoria di questa finestra. Le altre finestre non verranno ricaricate.": "Update now? Save necessary copies and export configuration first. Reloading closes documents, drafts, inspections, reports and in-memory data in this window. Other windows will not reload.",
+  "Attivazione dell’aggiornamento…": "Activating update…",
+  "Aggiornamento non ancora attivato. Riprova oppure chiudi e riapri tutte le finestre di MetaMago dopo aver salvato il lavoro.": "Update not yet activated. Try again or save your work, close all MetaMago windows and reopen.",
+  "Aggiornamenti automatici non disponibili in questo browser.": "Automatic updates unavailable in this browser."
 });
 function tr(s){return UI_LANG==='en'&&Object.hasOwn(EN,s)?EN[s]:s}
 document.documentElement.lang=UI_LANG;

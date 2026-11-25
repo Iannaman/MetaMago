@@ -1,9 +1,9 @@
-# MetaMago Professional Edition 2.0.0 — Manuale utente
+# MetaMago Professional Edition 2.0.1 — Manuale utente
 
 MetaMago modifica proprietà dichiarative dei documenti Office autorizzati, non il contenuto, le firme, i registri ufficiali o l'identità verificata. L'edizione web elabora i file nel browser e produce nuove copie. Questa versione è candidata alla stabilità; verificare autorizzazione IT e collaudo su Office.
 
 ## Avvio
-Apri [MetaMago](https://iannaman.github.io/MetaMago/). Premi Installa applicazione se vuoi una finestra autonoma; se il browser non presenta il prompt, segui le istruzioni del menu Edge/Chrome. Non modificare le policy aziendali. Il sito può mostrare una versione precedente fino al deploy. Verifica il numero di versione in alto.
+Apri [MetaMago](https://iannaman.github.io/MetaMago/). Premi Installa applicazione se vuoi una finestra autonoma; se il browser non presenta il prompt, segui le istruzioni del menu Edge/Chrome. Non modificare le policy aziendali. Il sito può mostrare una versione precedente fino al deploy. Verifica il numero di versione in alto. Da 2.0.1, quando compare Nuovo aggiornamento disponibile, salva le copie ed esporta la configurazione prima di premere Aggiorna applicazione e confermare. Non vengono ricaricate le altre finestre; ciascuna mostra un avviso. Puoi cercare aggiornamenti in Impostazioni. Il primo passaggio da versioni precedenti può richiedere la chiusura di tutte le finestre e riapertura; vedi PAGES.md.
 
 ## Attività
 | Attività | Procedura |
