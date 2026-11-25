@@ -4,6 +4,7 @@ import { resolve, dirname } from 'node:path';
 import { fileURLToPath } from 'node:url';
 import { buildPwa } from './pwa-build.mjs';
 import { createHash } from 'node:crypto';
+import { Script } from 'node:vm';
 
 const office=dirname(fileURLToPath(import.meta.url)), root=resolve(office,'..');
 const read=async name=>(await readFile(resolve(office,name),'utf8')).replace(/\r\n/g,'\n');
@@ -30,7 +31,12 @@ if(qpdfWasm.length<8||qpdfWasm.readUInt32LE(0)!==0x6d736100)throw Error('Invalid
 // Emscripten's ES module is embedded as inert JSON, instantiated only inside a dedicated worker.
 const exportPattern=/\bexport\s+default\s+([A-Za-z_$][\w$]*)\s*;?\s*$/;
 if(!exportPattern.test(qpdfGlue))throw Error('Unexpected QPDF Emscripten module export');
-const glue=qpdfGlue.replace(exportPattern,'const MetaMagoQpdfFactory=$1;');
+// The standalone HTML also runs from file:, where module workers can fail
+// on opaque blob origins. The pinned Emscripten ES-module contains a single
+// default export and import.meta.url; adapt those to a classic dedicated worker.
+// No external imports are executed in the browser; the compiled WASM is supplied.
+const glue=qpdfGlue.replace(exportPattern,'const MetaMagoQpdfFactory=$1;').replace(/\bimport\.meta\.url\b/g,'self.location.href');
+new Script(glue,{filename:'qpdf-classic-worker.js'});
 const safeJSON=v=>JSON.stringify(v).replace(/</g,'\\u003c').replace(/\u2028/g,'\\u2028').replace(/\u2029/g,'\\u2029');
 const qpdfBundle='const QPDF_GLUE='+safeJSON(glue)+';\nconst QPDF_WASM='+safeJSON(qpdfWasm.toString('base64'))+';\n';
 const qpdfDigest=createHash('sha256').update(qpdfWasm).digest('hex');

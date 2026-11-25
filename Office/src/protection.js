@@ -30,7 +30,7 @@ function protectionOptions(user,owner,print,modify,extract){
  if(!['none','low','full'].includes(print)||!['none','assembly','form','annotate','all'].includes(modify)||typeof extract!=='boolean')throw pdfErr('Verifica della cifratura non superata. Nessun file prodotto.');
  return {user,owner,print,modify,extract};
 }
-// Code is serialized into an isolated, short-lived module worker.
+// Code is serialized into an isolated, short-lived dedicated classic worker.
 // Its only operations are encrypt, inspect/check new output and test its passwords.
 function protectionWorkerBody(){
  self.onmessage=async ({data})=>{
@@ -83,11 +83,12 @@ function protectionWorkerBody(){
    self.postMessage({ok:false,stage,detail});
   }
  };
+ self.postMessage({ready:true});
 }
 const protectionStages=['startup','compile','encrypt','reader','permissions','owner','password','structure'];
 function protectionFailure(stage,detail){
  const safeStage=protectionStages.includes(stage)?stage:'startup';
- const safeDetail=/^(unknown|init|filesystem|execute|exit-missing|exit--?\d{1,3}|read-output|output-size|json|encryption|printlow|printhigh|extract|modifyassembly|modifyforms|modifyannotations|modifyother|owner-match|timeout|worker|message)$/.test(detail)?detail:'unknown';
+ const safeDetail=/^(unknown|init|filesystem|execute|exit-missing|exit--?\d{1,3}|read-output|output-size|json|encryption|printlow|printhigh|extract|modifyassembly|modifyforms|modifyannotations|modifyother|owner-match|timeout|worker|message|syntax|security|network|runtime)$/.test(detail)?detail:'unknown';
  const err=pdfErr('Verifica della cifratura non superata. Nessun file prodotto.');
  err.diagnostic='QPDF:'+safeStage+':'+safeDetail;return err;
 }
@@ -96,24 +97,35 @@ async function protectPdf(bytes,options,onProgress=()=>{}){
  const checked=protectionOptions(options.user,options.owner,options.print,options.modify,options.extract);
  if(typeof Worker!=='function'||typeof WebAssembly!=='object'||!globalThis.crypto?.getRandomValues)throw pdfErr('Protezione non disponibile in questo browser o bloccata dalle policy.');
  return new Promise((resolve,reject)=>{
-  let worker,url,timer,done=false,stage='startup';
+  let worker,url,timer,done=false,stage='startup',sent=false;
   function finish(fn,value){if(done)return;done=true;clearTimeout(timer);worker?.terminate();if(url)URL.revokeObjectURL(url);fn(value)}
   try{
    const body=QPDF_GLUE+'\n('+protectionWorkerBody.toString()+')();';
    url=URL.createObjectURL(new Blob([body],{type:'text/javascript'}));
-   worker=new Worker(url,{type:'module'});
-   worker.onerror=e=>{e.preventDefault();finish(reject,protectionFailure(stage,'worker'))};
+   worker=new Worker(url);
+   worker.onerror=e=>{
+    e.preventDefault();
+    const m=String(e.message||'');
+    const kind=/syntax|unexpected token|already been declared/i.test(m)?'syntax':/security|content security policy|not allowed/i.test(m)?'security':/network|failed to load|fetch/i.test(m)?'network':m?'runtime':'worker';
+    finish(reject,protectionFailure(stage,kind));
+   };
    worker.onmessageerror=()=>finish(reject,protectionFailure(stage,'message'));
    worker.onmessage=e=>{
     const d=e.data;
+    if(d?.ready===true&&!sent){
+     try{
+      sent=true;
+      const binary=Uint8Array.from(atob(QPDF_WASM),c=>c.charCodeAt(0)),copy=bytes.slice();
+      worker.postMessage({bytes:copy,wasm:binary,options:checked,pages:meta.pages},[copy.buffer,binary.buffer]);
+     }catch(e){finish(reject,protectionFailure(stage,'message'))}
+     return;
+    }
     if(d?.ok===true&&d.output instanceof Uint8Array){finish(resolve,d.output);return}
     if(d?.ok===false){finish(reject,protectionFailure(d.stage,d.detail));return}
     if(protectionStages.includes(d?.stage)){stage=d.stage;onProgress(stage)}
     else finish(reject,protectionFailure(stage,'message'));
    };
-   const binary=Uint8Array.from(atob(QPDF_WASM),c=>c.charCodeAt(0)),copy=bytes.slice();
    timer=setTimeout(()=>finish(reject,protectionFailure(stage,'timeout')),180000);
-   worker.postMessage({bytes:copy,wasm:binary,options:checked,pages:meta.pages},[copy.buffer,binary.buffer]);
   }catch(e){finish(reject,protectionFailure(stage,'worker'))}
  });
 }
