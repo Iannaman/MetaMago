@@ -2,7 +2,13 @@
 
 Usare esclusivamente documenti sintetici o copie autorizzate.
 
-## Office Edition 1.4.0 — Team
+## Office Edition 1.5.0 — Global
+- [ ] Avviare con browser italiano e inglese; verificare lingua, date, errori, confronto, gruppi e batch; cambiare lingua dopo avere salvato/esportato i dati.
+- [ ] Navigare da tastiera, verificare focus, link salta al contenuto e lettura delle etichette.
+- [ ] Online, abilitare uso offline; attendere la conferma e ricaricare il sito senza connessione. Provare installazione Edge solo se consentita.
+- [ ] Verificare la cache: soltanto file statici del programma, nessun documento/rubrica/ZIP; controllare aggiornamento dopo chiusura e riapertura.
+
+### Regressione 1.4.0 — Team
 - [ ] Creare, modificare ed eliminare gruppi senza documento; importare/esportare JSON con gruppi e un JSON precedente.
 - [ ] Importare CSV UTF-8 Nome/Cognome e Nominativo con virgole e punto e virgola; verificare il rifiuto di righe non valide.
 - [ ] Aggiungere un gruppo agli autori esistenti e sostituirli esplicitamente.

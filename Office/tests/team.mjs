@@ -8,7 +8,7 @@ import { chromium } from 'playwright';
 const root=resolve(dirname(fileURLToPath(import.meta.url)),'../..');
 const dir=await mkdtemp(resolve(tmpdir(),'metamago-team-'));
 const browser=await chromium.launch({headless:true});
-const context=await browser.newContext({offline:true,acceptDownloads:true});
+const context=await browser.newContext({locale:'it-IT',offline:true,acceptDownloads:true});
 const page=await context.newPage(),errors=[];
 page.on('pageerror',e=>errors.push(e.message));page.on('dialog',d=>d.accept());
 const id=x=>page.locator('#'+x);

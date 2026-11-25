@@ -1,5 +1,12 @@
 # Changelog
 
+## Office Edition 1.5.0 — Global Edition (candidato)
+- Interfaccia italiana/inglese, selezione dalla lingua del browser e cambio manuale con conferma; date e messaggi localizzati, CSV con intestazioni inglesi e italiane.
+- PWA facoltativa: manifest, icone 192/512, service worker con cache statica limitata al sito; possibilità di riaprire l'app offline dopo preparazione riuscita. Nessuna cache di documenti o rubriche.
+- Focus visibile, link salta al contenuto, rispetto del movimento ridotto, controlli più facilmente selezionabili; rendering differito delle righe batch fuori schermo.
+- Corretto il selettore dei test della rubrica dopo l'aggiunta del pannello gruppi nella v1.4.0.
+- Test lingua inglese e cache PWA; distribuzione Pages manuale. Desktop invariato.
+
 ## Office Edition 1.4.0 — Team Edition (candidato)
 - Gruppi di autori indipendenti dai profili, creazione/modifica/eliminazione, aggiunta o sostituzione autori nel singolo documento.
 - Import CSV UTF-8 con intestazione Nominativo oppure Nome/Cognome, separatore virgola o punto e virgola, modello scaricabile e conferma.

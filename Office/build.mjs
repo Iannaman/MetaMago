@@ -2,13 +2,14 @@
 import { readFile, writeFile, mkdir, rm, readdir } from 'node:fs/promises';
 import { resolve, dirname } from 'node:path';
 import { fileURLToPath } from 'node:url';
+import { buildPwa } from './pwa-build.mjs';
 import { createHash } from 'node:crypto';
 
 const office=dirname(fileURLToPath(import.meta.url)), root=resolve(office,'..');
 const read=async name=>(await readFile(resolve(office,name),'utf8')).replace(/\r\n/g,'\n');
 const version=(await read('VERSION')).trim();
 if(!/^\d+\.\d+\.\d+$/.test(version))throw Error('Invalid version');
-const [template,style,vendor,...modules]=await Promise.all(['src/index.html','src/style.css','vendor/jszip.min.js','src/metadata.js','src/marker.js','src/rubrica.js','src/app.js','src/team.js','src/batch.js'].map(read));
+const [template,style,vendor,...modules]=await Promise.all(['src/index.html','src/style.css','vendor/jszip.min.js','src/i18n.js','src/metadata.js','src/marker.js','src/rubrica.js','src/app.js','src/team.js','src/batch.js','src/pwa.js'].map(read));
 const app=modules.join('').replace(/@@VERSION@@/g,version);
 const hashes=[vendor,app].map(s=>"'sha256-"+createHash('sha256').update(s,'utf8').digest('base64')+"'").join(' ');
 const tokens={VERSION:version,SCRIPT_HASHES:hashes,STYLE:style,VENDOR:vendor,APP:app};
@@ -28,7 +29,8 @@ if(args.includes('--pages')){
  const hash=createHash('sha256').update(html,'utf8').digest('hex');
  await writeFile(resolve(dir,'SHA256SUMS.txt'),hash+'  MetaMago-Office.html\n','utf8');
  await writeFile(resolve(dir,'LICENSE.txt'),await readFile(resolve(root,'LICENSE')));
- const expected=['LICENSE.txt','MetaMago-Office.html','SHA256SUMS.txt','index.html'];
+ await buildPwa(dir,version);
+ const expected=['LICENSE.txt','MetaMago-Office.html','SHA256SUMS.txt','icon-192.png','icon-512.png','index.html','manifest.webmanifest','sw.js'];
  if(JSON.stringify((await readdir(dir)).sort())!==JSON.stringify(expected))throw Error('Unexpected Pages files');
  console.log('Built minimal Pages site: '+dir);
 }

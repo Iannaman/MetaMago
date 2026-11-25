@@ -9,23 +9,24 @@ import { chromium } from 'playwright';
 
 const root=resolve(dirname(fileURLToPath(import.meta.url)),'../..'), site=resolve(root,'dist','pages');
 const version=(await readFile(resolve(root,'Office','VERSION'),'utf8')).trim();
-const expected=['LICENSE.txt','MetaMago-Office.html','SHA256SUMS.txt','index.html'];
+const expected=['LICENSE.txt','MetaMago-Office.html','SHA256SUMS.txt','icon-192.png','icon-512.png','index.html','manifest.webmanifest','sw.js'];
 assert.deepEqual((await readdir(site)).sort(),expected);
 const html=await readFile(resolve(site,'index.html'));
 assert.deepEqual(html,await readFile(resolve(site,'MetaMago-Office.html')));
 assert.deepEqual(html,await readFile(resolve(root,'Office','MetaMago-Office.html')));
 assert.equal((await readFile(resolve(site,'SHA256SUMS.txt'),'utf8')).trim(),createHash('sha256').update(html).digest('hex')+'  MetaMago-Office.html');
 const paths={'/MetaMago/':'index.html','/MetaMago/MetaMago-Office.html':'MetaMago-Office.html','/MetaMago/SHA256SUMS.txt':'SHA256SUMS.txt','/MetaMago/LICENSE.txt':'LICENSE.txt'};
+for(const name of expected)paths['/MetaMago/'+name]=name;
 const httpRequests=[];
 const server=createServer(async (req,res)=>{
  httpRequests.push([req.method,req.url]);
  if(req.method!=='GET'||!Object.hasOwn(paths,req.url)){res.writeHead(404).end();return}
- const f=paths[req.url];res.setHeader('Content-Type',f.endsWith('.html')?'text/html; charset=utf-8':'text/plain; charset=utf-8');res.end(await readFile(resolve(site,f)));
+ const f=paths[req.url];res.setHeader('Content-Type',f.endsWith('.html')?'text/html; charset=utf-8':f.endsWith('.webmanifest')?'application/manifest+json':f.endsWith('.png')?'image/png':f.endsWith('.js')?'application/javascript':'text/plain; charset=utf-8');res.end(await readFile(resolve(site,f)));
 });
 await new Promise(r=>server.listen(0,'127.0.0.1',r));
 const origin='http://127.0.0.1:'+server.address().port;
 const browser=await chromium.launch({headless:true});
-const ctx=await browser.newContext({acceptDownloads:true,serviceWorkers:'block'});
+const ctx=await browser.newContext({locale:'it-IT',acceptDownloads:true,serviceWorkers:'block'});
 const dir=await mkdtemp(resolve(tmpdir(),'metamago-web-'));
 const requests=[],errors=[],violations=[];
 await ctx.route('**/*',route=>route.request().url().startsWith(origin+'/')?route.continue():route.abort());
@@ -43,12 +44,13 @@ try{
  await page.goto(origin+'/MetaMago/');
  assert.match(await id('editionTag').textContent(),new RegExp('ONLINE · '+version.replaceAll('.','\\.')));
  assert.equal(await id('webTools').isVisible(),true);
- await id('rubricPanel').locator('summary').click();
+ await id('rubricPanel').locator('summary').first().click();
  assert.equal(await id('persistLabel').isVisible(),false);
  assert.equal(await id('persist').isDisabled(),true);
  await id('contactName').fill('Online Example');
  await id('addContact').click();
  assert.equal(await page.evaluate(()=>window.storageTouches),0);
+ await page.waitForLoadState('networkidle');
  const baseline=requests.length,httpBaseline=httpRequests.length;
  // Once loaded, the actual document processing also works with network disabled.
  await ctx.setOffline(true);

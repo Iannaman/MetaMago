@@ -1,0 +1,57 @@
+import assert from 'node:assert/strict';
+import { readFile, readdir } from 'node:fs/promises';
+import { createServer } from 'node:http';
+import { resolve,dirname } from 'node:path';
+import { fileURLToPath,pathToFileURL } from 'node:url';
+import { chromium } from 'playwright';
+const root=resolve(dirname(fileURLToPath(import.meta.url)),'../..'),site=resolve(root,'dist','pages');
+const version=(await readFile(resolve(root,'Office','VERSION'),'utf8')).trim();
+const assets=await readdir(site), allowed=new Set(assets), requests=[];
+const types={html:'text/html; charset=utf-8',js:'application/javascript',webmanifest:'application/manifest+json',png:'image/png',txt:'text/plain'};
+const server=createServer(async(req,res)=>{
+ requests.push([req.method,req.url]);const u=new URL(req.url,'http://localhost');
+ const name=u.pathname==='/MetaMago/'?'index.html':u.pathname.slice('/MetaMago/'.length);
+ if(req.method!=='GET'||!u.pathname.startsWith('/MetaMago/')||!allowed.has(name)){res.writeHead(404).end();return}
+ res.setHeader('Content-Type',types[name.split('.').pop()]||'application/octet-stream');res.end(await readFile(resolve(site,name)));
+});
+await new Promise(r=>server.listen(0,'127.0.0.1',r));
+const url='http://127.0.0.1:'+server.address().port+'/MetaMago/';
+const browser=await chromium.launch({headless:true});
+try{
+ const ctx=await browser.newContext({locale:'en-GB',acceptDownloads:true});
+ const page=await ctx.newPage(),errors=[];page.on('pageerror',e=>errors.push(e.message));page.on('dialog',d=>d.accept());
+ const id=x=>page.locator('#'+x);
+ await page.goto(pathToFileURL(resolve(root,'Office','MetaMago-Office.html')).href);
+ assert.equal(await page.locator('html').getAttribute('lang'),'en');
+ assert.equal(await id('open').textContent(),'Choose document');
+ await id('file').setInputFiles(resolve(root,'Test','Prova.docx'));
+ await page.waitForFunction(()=>!document.querySelector('#editor').disabled);
+ await id('title').fill('English Example');
+ assert.match(await id('diff').textContent(),/Title: /);
+ assert.equal(await id('save').textContent(),'Save a document copy');
+ const [d]=await Promise.all([page.waitForEvent('download'),id('save').click()]);assert.match(d.suggestedFilename(),/\.docx$/);
+ await id('completion').waitFor({state:'visible'});
+ assert.match(await id('completionText').textContent(),/Copy generated and verified/);
+ assert.deepEqual(await page.evaluate(()=>parseCsv('First name;Last name\nAlex;Smith\n')),['Alex Smith']);
+ await id('uiLanguage').selectOption('it');
+ await page.waitForFunction(()=>document.documentElement.lang==='it');
+ assert.equal(await id('open').textContent(),'Scegli documento');
+ await page.goto(url);
+ assert.equal(await page.locator('html').getAttribute('lang'),'en');
+ await id('enableOffline').click();
+ await page.waitForFunction(()=>!!navigator.serviceWorker.controller,{},{timeout:30000});
+ assert.match(await id('pwaStatus').textContent(),/ready for offline use/);
+ const keys=await page.evaluate(async()=>{const names=(await caches.keys()).filter(n=>n.startsWith('MetaMago-shell:'));return (await Promise.all(names.map(async n=>(await (await caches.open(n)).keys()).map(r=>new URL(r.url).pathname.split('/').pop())))).flat().sort()});
+ assert.deepEqual(keys,assets.filter(n=>n!=='sw.js').sort());
+ await ctx.setOffline(true);
+ await page.reload();
+ assert.equal(await id('open').textContent(),'Choose document');
+ assert.match(await id('editionTag').textContent(),new RegExp(version.replaceAll('.','\\.')));
+ await id('file').setInputFiles(resolve(root,'Test','Prova.xlsx'));
+ await page.waitForFunction(()=>!document.querySelector('#editor').disabled);
+ await id('title').fill('Offline PWA test');
+ const [offlineDownload]=await Promise.all([page.waitForEvent('download'),id('save').click()]);assert.match(offlineDownload.suggestedFilename(),/\.xlsx$/);
+ assert.deepEqual(errors,[]);
+ await ctx.close();
+ console.log('PASS English UI and CSV, language switch, scoped static PWA cache, offline reload and editing');
+}finally{await browser.close();await new Promise(r=>server.close(r))}

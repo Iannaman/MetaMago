@@ -45,3 +45,4 @@ jobs:
           node Office/tests/mark.mjs
           node Office/tests/web.mjs
           node Office/tests/team.mjs
+          node Office/tests/global.mjs

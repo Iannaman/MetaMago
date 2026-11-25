@@ -12,8 +12,8 @@ function getMarker(part){
 }
 function markChanges(marker,action){
  if(action==='keep')return false;
- if(!['add','remove'].includes(action))throw Error('Azione MetaMago Mark non valida.');
- if(marker.status==='conflict')throw Error('Proprietà MetaMago non riconosciute o duplicate: nessuna modifica al contrassegno.');
+ if(!['add','remove'].includes(action))throw Error(tr('Azione MetaMago Mark non valida.'));
+ if(marker.status==='conflict')throw Error(tr('Proprietà MetaMago non riconosciute o duplicate: nessuna modifica al contrassegno.'));
  return action==='remove'?marker.status==='present':marker.status!=='present'||MARK_KEYS.some(k=>marker.values[k]!==MARK_FIELDS[k]);
 }
 function setMarker(p,action,dirty){
