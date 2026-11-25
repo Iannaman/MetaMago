@@ -1,0 +1,23 @@
+
+const workflowKeys=['batchAuthorMode','batchAuthors','batchLastOn','batchLast','batchCompanyOn','batchCompany','batchManagerOn','batchManager','batchMark','batchPdfTitleOn','batchPdfTitle','batchWatermarkOn','batchWatermarkText','batchWatermarkPosition','batchProtectOn','batchPrint','batchExtract','batchPrivacyOffice','batchPrivacyPdf'];
+const workflowChecks=new Set(['batchLastOn','batchCompanyOn','batchManagerOn','batchPdfTitleOn','batchWatermarkOn','batchProtectOn','batchExtract','batchPrivacyOffice','batchPrivacyPdf']);
+let workflows=[];
+function workflowCapture(){return Object.fromEntries(workflowKeys.map(k=>[k,workflowChecks.has(k)?$(k).checked:$(k).value]))}
+function validateWorkflow(w){
+ if(!w||typeof w.name!=='string'||!validName(w.name)||w.name.length>100||!w.options||Object.keys(w.options).length!==workflowKeys.length)throw Error(tr('Workflow non valido.'));
+ const o={};for(const k of workflowKeys){const v=w.options[k];if(workflowChecks.has(k)?typeof v!=='boolean':typeof v!=='string'||v.length>8000||/[\x00-\x08\x0b\x0c\x0e-\x1f]/.test(v))throw Error(tr('Workflow non valido.'));o[k]=v}
+ for(const [k,allowed] of Object.entries({batchAuthorMode:['keep','append','replace'],batchMark:['keep','add','remove'],batchWatermarkPosition:['center','header','footer'],batchPrint:['none','low','full']}))if(!allowed.includes(o[k]))throw Error(tr('Workflow non valido.'));
+ if(o.batchAuthorMode!=='keep'){const names=teamNames(o.batchAuthors);if(!names.length||names.length>100||!names.every(validName))throw Error(tr('Workflow non valido.'))}
+ if(o.batchWatermarkOn)validatePublication({watermark:{text:o.batchWatermarkText.trim(),position:o.batchWatermarkPosition,size:36,opacity:.3,color:'gray'},fields:[],flatten:false,custom:false,mark:false});
+ if(o.batchPrivacyOffice&&(o.batchAuthorMode!=='keep'||o.batchLastOn||o.batchCompanyOn||o.batchManagerOn))throw Error(tr('Workflow: pulizia Office incompatibile con la modifica dei dati identificativi.'));
+ if(o.batchPrivacyPdf&&o.batchAuthorMode!=='keep')throw Error(tr('Workflow: pulizia PDF incompatibile con la modifica degli autori.'));
+ return {name:w.name.trim(),options:o};
+}
+function workflowRender(name=''){options('workflowSelect',workflows.map(w=>w.name),tr('Scegli un workflow'));$('workflowSelect').value=name}
+$('workflowSave').onclick=()=>{if(busy)return;try{const w=validateWorkflow({name:$('workflowName').value,options:workflowCapture()});if(workflows.some(x=>x.name===w.name)&&!confirm(tr('Sostituire il workflow esistente?')))return;if(workflows.length>=50&&!workflows.some(x=>x.name===w.name))throw Error(tr('Massimo 50 workflow.'));workflows=[...workflows.filter(x=>x.name!==w.name),w];workflowRender(w.name);msg('workflowStatus',tr('Workflow salvato in sessione.'),'ok')}catch(e){msg('workflowStatus',e.message,'error')}};
+$('workflowLoad').onclick=()=>{if(busy)return;const w=workflows.find(x=>x.name===$('workflowSelect').value);if(!w)return;clearBatchPasswords();$('batchRename').value='';for(const k of workflowKeys){if(workflowChecks.has(k))$(k).checked=w.options[k];else $(k).value=w.options[k]}batchInputs();batchInvalidate();$('workflowName').value=w.name;msg('workflowStatus',tr('Workflow caricato. Inserisci eventuali password e controlla l’anteprima.'),'ok')};
+$('workflowDelete').onclick=()=>{if(busy)return;const n=$('workflowSelect').value;if(n&&confirm(tr('Eliminare il workflow?'))){workflows=workflows.filter(w=>w.name!==n);workflowRender();msg('workflowStatus','')}};
+$('workflowExport').onclick=()=>{if(!busy&&confirm(AUDIT_PRIVATE+' '+tr('Esportare il report?')))download(JSON.stringify({version:1,workflows},null,2),'MetaMago-workflow.json','application/json')};
+$('workflowImport').onclick=()=>{if(!busy)$('workflowFile').click()};
+$('workflowFile').onchange=async e=>{const f=e.target.files[0];e.target.value='';if(!f||busy)return;setBusy(true);try{if(f.size>1024*1024)throw Error(tr('Workflow non valido.'));const data=JSON.parse(await f.text());if(data.version!==1||!Array.isArray(data.workflows)||data.workflows.length>50)throw Error(tr('Workflow non valido.'));const list=data.workflows.map(validateWorkflow);if(new Set(list.map(w=>w.name)).size!==list.length)throw Error(tr('Workflow non valido.'));if(confirm(tr('Sostituire tutti i workflow della sessione?'))){workflows=list;workflowRender();msg('workflowStatus',tr('Workflow importati.'),'ok')}}catch(err){msg('workflowStatus',err.message,'error')}finally{setBusy(false)}};
+workflowRender();
