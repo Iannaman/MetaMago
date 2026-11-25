@@ -26,13 +26,18 @@ jobs:
         run: npm install --no-save --no-package-lock playwright@1.56.1
       - name: Install Chromium
         run: npx playwright install --with-deps chromium
-      - name: Test both editions of the Office web app
-        run: |
-          node Office/tests/smoke.mjs
-          node Office/tests/mark.mjs
-          node Office/tests/web.mjs
-          node Office/tests/team.mjs
-          node Office/tests/global.mjs
+      - name: Test smoke
+        run: node Office/tests/smoke.mjs
+      - name: Test mark
+        run: node Office/tests/mark.mjs
+      - name: Test web
+        run: node Office/tests/web.mjs
+      - name: Test team
+        run: node Office/tests/team.mjs
+      - name: Test global
+        run: node Office/tests/global.mjs
+      - name: Test quality
+        run: node Office/tests/quality.mjs
       - uses: actions/configure-pages@v5
       - uses: actions/upload-pages-artifact@v3
         with:

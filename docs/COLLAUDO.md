@@ -2,7 +2,16 @@
 
 Usare esclusivamente documenti sintetici o copie autorizzate.
 
-## Office Edition 1.5.0 — Global
+## Office Edition 1.6.0 — Quality
+- [ ] Aprire e salvare copie autorizzate di Word/Excel/PowerPoint, anche con template, macro non eseguite e proprietà personalizzate.
+- [ ] Verificare rifiuto di ZIP troncati, duplicati, contenuto non coerente con estensione e CRC alterati; originali invariati.
+- [ ] Chiudere documento dopo salvataggio e con modifiche non salvate; verificare conferma, reset campi e focus.
+- [ ] Interrompere anteprima o generazione batch; verificare nessun download e nuova anteprima obbligatoria.
+- [ ] Verificare layout 320/375 px, zoom 200%, tastiera e screen reader, entrambe le lingue.
+- [ ] Misurare tempi e memoria su copie sintetiche di grandi dimensioni; non sono ancora disponibili risultati benchmark.
+- [ ] Collaudo aziendale con IT e verifica delle proprietà nell'applicazione Office, senza risalvare gli originali.
+
+### Regressione 1.5.0 — Global
 - [ ] Avviare con browser italiano e inglese; verificare lingua, date, errori, confronto, gruppi e batch; cambiare lingua dopo avere salvato/esportato i dati.
 - [ ] Navigare da tastiera, verificare focus, link salta al contenuto e lettura delle etichette.
 - [ ] Online, abilitare uso offline; attendere la conferma e ricaricare il sito senza connessione. Provare installazione Edge solo se consentita.

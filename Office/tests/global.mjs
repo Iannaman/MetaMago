@@ -19,7 +19,7 @@ const url='http://127.0.0.1:'+server.address().port+'/MetaMago/';
 const browser=await chromium.launch({headless:true});
 try{
  const ctx=await browser.newContext({locale:'en-GB',acceptDownloads:true});
- const page=await ctx.newPage(),errors=[];page.on('pageerror',e=>errors.push(e.message));page.on('dialog',d=>d.accept());
+ const page=await ctx.newPage(),errors=[];page.on('pageerror',e=>{errors.push(e.message);console.error('PAGE ERROR:',e.message)});page.on('dialog',d=>d.accept());
  const id=x=>page.locator('#'+x);
  await page.goto(pathToFileURL(resolve(root,'Office','MetaMago-Office.html')).href);
  assert.equal(await page.locator('html').getAttribute('lang'),'en');

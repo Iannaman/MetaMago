@@ -1,5 +1,13 @@
 # Changelog
 
+## Office Edition 1.6.0 — Quality Edition (candidato)
+- Corrette collisioni tra la funzione di traduzione e variabili locali nell'ispezione XML e nella tabella delle proprietà.
+- Validazione preventiva della directory ZIP, nomi duplicati, percorsi, header e intervalli; esclusione ZIP64/multidisco; decompressione a dimensione controllata e CRC delle parti lette.
+- Validazione delle relazioni e tipi di contenuto del documento e delle proprietà, confronto più efficiente dei nomi delle parti.
+- Chiusura esplicita documento, blocco cambio lingua durante elaborazione, annullamento cooperativo batch senza download, reset selezione batch non valida.
+- Etichette accessibili e layout su schermi piccoli, rispetto esplicito di hidden.
+- Test aggiuntivi di sicurezza e regressione; esiti per suite e diagnostica degli errori. Desktop invariato, deploy manuale. Restano necessari Office 365/Edge aziendale e benchmark.
+
 ## Office Edition 1.5.0 — Global Edition (candidato)
 - Interfaccia italiana/inglese, selezione dalla lingua del browser e cambio manuale con conferma; date e messaggi localizzati, CSV con intestazioni inglesi e italiane.
 - PWA facoltativa: manifest, icone 192/512, service worker con cache statica limitata al sito; possibilità di riaprire l'app offline dopo preparazione riuscita. Nessuna cache di documenti o rubriche.

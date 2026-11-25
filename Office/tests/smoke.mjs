@@ -11,13 +11,13 @@ const browser=await chromium.launch({headless:true});
 const context=await browser.newContext({locale:'it-IT',acceptDownloads:true,offline:true,timezoneId:'Europe/Rome'});
 const page=await context.newPage();
 const errors=[],dialogs=[];
-page.on('pageerror',e=>errors.push(e.message));
+page.on('pageerror',e=>{errors.push(e.message);console.error('PAGE ERROR:',e.message)});
 page.on('dialog',async d=>{dialogs.push(d.message());await d.accept()});
 const id=x=>page.locator('#'+x);
 const wait=async (fn,arg)=>page.waitForFunction(fn,arg,{timeout:15000});
 const open=async ext=>{
   await id('file').setInputFiles(resolve(root,'Test','Prova.'+ext));
-  await wait(ext=>document.querySelector('#filename').textContent==='Prova.'+ext&&!document.querySelector('#editor').disabled,ext);
+  try{await wait(ext=>document.querySelector('#filename').textContent==='Prova.'+ext&&!document.querySelector('#editor').disabled,ext)}catch(e){console.error('OPEN STATUS:',await id('loadstatus').textContent());throw e}
 };
 const generate=async (name)=>{
   const [download]=await Promise.all([page.waitForEvent('download'),id('save').click()]);

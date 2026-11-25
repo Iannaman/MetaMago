@@ -29,5 +29,6 @@ node Office/tests/mark.mjs
 node Office/tests/web.mjs
 node Office/tests/team.mjs
 node Office/tests/global.mjs
+node Office/tests/quality.mjs
 ```
 Node 22 è necessario solo per sviluppare e collaudare, non per utilizzare l'HTML. Non committare `dist/` o `node_modules/`. La PWA è facoltativa: premi Abilita uso offline del sito e attendi la conferma. La cache può essere cancellata dal browser; per una copia indipendente scarica l'HTML. Installazione e service worker dipendono dal browser e dalle policy IT. Dopo un nuovo deploy, chiudi tutte le schede dell'app e riaprila per consentire l'attivazione del service worker aggiornato.

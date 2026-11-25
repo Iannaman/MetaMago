@@ -10,7 +10,7 @@ const dir=await mkdtemp(resolve(tmpdir(),'metamago-team-'));
 const browser=await chromium.launch({headless:true});
 const context=await browser.newContext({locale:'it-IT',offline:true,acceptDownloads:true});
 const page=await context.newPage(),errors=[];
-page.on('pageerror',e=>errors.push(e.message));page.on('dialog',d=>d.accept());
+page.on('pageerror',e=>{errors.push(e.message);console.error('PAGE ERROR:',e.message)});page.on('dialog',d=>d.accept());
 const id=x=>page.locator('#'+x);
 const wait=async (fn,arg)=>page.waitForFunction(fn,arg,{timeout:20000});
 const fixture=ext=>resolve(root,'Test','Prova.'+ext);

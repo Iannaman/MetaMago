@@ -32,7 +32,7 @@ const requests=[],errors=[],violations=[];
 await ctx.route('**/*',route=>route.request().url().startsWith(origin+'/')?route.continue():route.abort());
 const page=await ctx.newPage();
 page.on('request',r=>requests.push(r.url()));
-page.on('pageerror',e=>errors.push(e.message));
+page.on('pageerror',e=>{errors.push(e.message);console.error('PAGE ERROR:',e.message)});
 page.on('dialog',d=>d.accept());
 await page.addInitScript(()=>{
  window.storageTouches=0;window.cspViolations=[];

@@ -107,7 +107,6 @@ const EN=Object.freeze({
   "Apri un altro documento": "Open another document",
   "Guida rapida e limiti": "Quick guide and limits",
   "Apri il file, aggiorna le proprietà e salva una copia. Controlla il risultato in Office → File → Informazioni. Un nuovo salvataggio in Office può cambiare ultimo autore e data di modifica. Gli autori sono proprietà dichiarative, non identità verificate né voci della rubrica Microsoft 365. Non usare su documenti protocollati, firmati o soggetti a vincoli senza autorizzazione.": "Open the file, edit properties and save a copy. Check in Office → File → Info. Saving again in Office may change the last author and modification date. Authors are declarative properties, not verified identities or Microsoft 365 directory entries. Do not use on registered, signed or restricted documents without authorisation.",
-  "Supporto ai formati Open XML moderni, incluse varianti con macro (mai eseguite). Non supporta file cifrati, firmati, IRM, Strict, DOC/XLS/PPT/XLSB. Limiti beta: 50 MiB di file, 150 MiB di dati decompressi. Nessuna sovrascrittura diretta, password o modifica delle date del filesystem. Il contrassegno finale va verificato nell'applicativo Office. MetaMago Mark è facoltativo, rimovibile e non aggiunge informazioni personali; può essere visualizzato nelle proprietà personalizzate di Office, ma non certifica la provenienza.": "Supports modern Open XML formats, including macro-enabled variants (macros are never executed). No encrypted, signed, IRM, Strict, DOC/XLS/PPT/XLSB files. Beta limits: 50 MiB file, 150 MiB expanded data. No direct overwrite, passwords or file-system date editing. Check final status in Office. MetaMago Mark is optional, removable and adds no personal information; it appears in Office custom properties but does not prove provenance.",
   "Se Edge o l'organizzazione blocca il file, chiedi indicazioni al supporto IT: non modificare le policy di sicurezza.": "If Edge or your organisation blocks the file, contact IT support; do not change security policies.",
   "Nome e cognome": "Full name",
   "Cerca per nome o cognome": "Search by first or last name",
@@ -300,7 +299,27 @@ const EN=Object.freeze({
   "Apri il contenuto principale": "Skip to main content",
   "Lingua dell’interfaccia": "Interface language",
   " nominativi, ": " contacts, ",
-  " profili)": " profiles)"
+  " profili)": " profiles)",
+  "Supporto ai formati Open XML moderni, incluse varianti con macro (mai eseguite). Non supporta file cifrati, firmati, IRM, Strict, DOC/XLS/PPT/XLSB. Limiti: 50 MiB di file, 150 MiB di dati decompressi. Archivi ZIP64, multidisco o con nomi non UTF-8 non supportati. Nessuna sovrascrittura diretta, password o modifica delle date del filesystem. Il contrassegno finale va verificato nell'applicativo Office. MetaMago Mark è facoltativo, rimovibile e non aggiunge informazioni personali; può essere visualizzato nelle proprietà personalizzate di Office, ma non certifica la provenienza.": "Supports modern Open XML formats, including macro-enabled variants (macros are never executed). No encrypted, signed, IRM, Strict, DOC/XLS/PPT/XLSB files. Limits: 50 MiB file, 150 MiB expanded data. ZIP64, multi-disk or non-UTF-8 names are unsupported. No direct overwrite, passwords or file-system date editing. Check final status in Office. MetaMago Mark is optional, removable and adds no personal information; it appears in Office custom properties but does not prove provenance.",
+  "Directory ZIP incoerente.": "Inconsistent ZIP directory.",
+  "Relazioni Open XML non valide.": "Invalid Open XML relationships.",
+  "Tipi di contenuto Open XML non validi.": "Invalid Open XML content types.",
+  "Tipo o percorso della proprietà non valido.": "Invalid property type or path.",
+  "Struttura ZIP non valida o non supportata.": "Invalid or unsupported ZIP structure.",
+  "Nome ZIP duplicato.": "Duplicate ZIP name.",
+  "Decompressione oltre il limite dichiarato.": "Decompression exceeds declared limit.",
+  "Controllo CRC o dimensione ZIP non riuscito.": "ZIP CRC or size check failed.",
+  "Chiudi documento": "Close document",
+  "Chiudere il documento senza salvare le modifiche?": "Close the document without saving changes?",
+  "Documento chiuso.": "Document closed.",
+  "Interrompi elaborazione": "Cancel processing",
+  "Interruzione richiesta: attendo il documento corrente.": "Cancellation requested: waiting for current document.",
+  "Anteprima interrotta. Ripeti il controllo.": "Preview cancelled. Run the preview again.",
+  "Interrotto": "Cancelled",
+  "Operazione interrotta: nessuno ZIP scaricato.": "Operation cancelled: no ZIP downloaded.",
+  "Elenco autori": "Author list",
+  "Nome del profilo": "Profile name",
+  "Limiti: 50 MiB di file, 150 MiB di dati decompressi. Archivi ZIP64, multidisco o con nomi non UTF-8 non supportati.": "Limits: 50 MiB file, 150 MiB expanded data. ZIP64, multi-disk or non-UTF-8 names are unsupported."
 });
 function tr(s){return UI_LANG==='en'&&Object.hasOwn(EN,s)?EN[s]:s}
 document.documentElement.lang=UI_LANG;
