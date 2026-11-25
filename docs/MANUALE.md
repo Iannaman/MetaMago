@@ -1,4 +1,4 @@
-# MetaMago Protection Edition 2.2.0 — Manuale utente
+# MetaMago PDF Inspector Edition 2.3.0 — Manuale utente
 
 MetaMago modifica proprietà dichiarative dei documenti Office autorizzati, non il contenuto, le firme, i registri ufficiali o l'identità verificata. L'edizione web elabora i file nel browser e produce nuove copie. Questa versione è candidata alla stabilità; verificare autorizzazione IT e collaudo su Office.
 
@@ -33,3 +33,6 @@ Dalla Home apri un PDF oppure scegli Metadati PDF. I valori Info e XMP sono affi
 
 ## Protezione PDF
 Apri un PDF accettato dall'editor; salva o ripristina eventuali modifiche ai metadati, scegli originale o ultima copia verificata. Imposta password proprietario, eventuale password di apertura e autorizzazioni. Conserva le password, conferma, scarica una nuova copia _protetto.pdf e provala nel lettore. Senza password di apertura il documento è leggibile da chiunque; le restrizioni non sono assolute. Non rimuove protezioni esistenti. Vedi [guida Protection](PROTECTION.md).
+
+## Inspector PDF
+Analizza documento → scegli un PDF oppure Analizza PDF aperto. Leggi impronta, versione, pagine, permessi, indizi privacy e metadati. Per un PDF cifrato inserisci solo una password autorizzata quando richiesta; non viene prodotta una copia senza protezione. Non verifica le firme né certifica PDF/A o assenza di dati sensibili. Vedi [guida](PDF-INSPECTOR.md).

@@ -2,7 +2,7 @@
 let currentView='home', tourIndex=0;
 const viewKeys=['home','edit','batch','rubric','settings','help','inspect','models','audit','pdf'];
 function updateWorkspaceStatus(){
- const el=$('workspaceStatus');if(!el)return;$('inspectCurrent').disabled=busy||!state;
+ const el=$('workspaceStatus');if(!el)return;$('inspectCurrent').disabled=busy||!state;if(typeof syncPdfInspectorControls==='function')syncPdfInspectorControls();
  el.textContent=busy?tr('Elaborazione in corso…'):(pending()||(typeof pdfPending==='function'&&pdfPending()))?tr('Documento con modifiche non salvate'):state||(typeof pdfSession!=='undefined'&&pdfSession)?tr('Documento aperto'):tr('Nessun documento aperto');
 }
 function goView(key,{focus=true}={}){

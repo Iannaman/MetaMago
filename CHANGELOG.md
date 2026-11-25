@@ -1,5 +1,11 @@
 # Changelog
 
+## Office Edition 2.3.0 — PDF Inspector Edition (candidato)
+- Inspector unificato Office/PDF in sola lettura, accesso da editor PDF, SHA-256 dei byte originali, versione e numero di pagine, controllo strutturale QPDF, permessi di lettura.
+- Rilevamento mirato di metadati, firme/campi firma, annotazioni e flag nascosti, allegati, JavaScript, azioni, riferimenti esterni, moduli, livelli, multimedia e restrizioni. PDF/A dichiarato (non validato) da XMP supportato.
+- PDF cifrati: verifica password autorizzata, permessi, analisi strutturale; nessun file decrittato, XMP cifrato non letto. Stato non conclusivo se controllo incompleto. Nessuna esecuzione di azioni o estrazione allegati.
+- Test browser con fixture sintetiche, cifrate, firme simulate, contenuto attivo non eseguito, SHA-256, limiti e regressioni Office. Desktop invariata, deploy manuale.
+
 ## Office Edition 2.2.0 — Protection Edition (candidato)
 - Protezione PDF originale o copia metadati verificata, AES-256 R6, password proprietario obbligatoria e apertura facoltativa, stampa/modifica/copia configurabili.
 - QPDF 12.2.0 WebAssembly in Worker temporaneo, risorse incorporate nell'HTML e nessuna richiesta di rete durante il trattamento; CSP autorizza solo compilazione WASM oltre agli script con hash.

@@ -2,7 +2,13 @@
 
 Usare esclusivamente documenti sintetici o copie autorizzate.
 
-## Office Edition 2.2.0 — Protection
+## Office Edition 2.3.0 — PDF Inspector
+- [ ] Analizzare PDF in chiaro, firmato/campi firma, con annotazioni, allegati, JavaScript, link, moduli e livelli; verificare nessuna modifica o esecuzione.
+- [ ] Analizzare PDF con password errata/corretta e con sole restrizioni; verificare permessi e assenza di password nei risultati.
+- [ ] Verificare SHA-256 con strumento indipendente, PDF/A dichiarato, XMP non supportato, limiti e stati non conclusivi, regressioni Inspector Office.
+- [ ] Verificare in Edge/Acrobat reale e con policy IT; nessuna certificazione di firma, sicurezza o PDF/A.
+
+### Regressione 2.2.0 — Protection
 - [ ] Proteggere PDF originale e copia metadati; provare password errata, corretta e proprietario; verificare AES-256 R6 e permessi con un lettore indipendente.
 - [ ] Verificare sola limitazione modifiche senza password di apertura, stampa completa/bassa/nessuna, copia, organizzazione, moduli, commenti.
 - [ ] Verificare rifiuto dei PDF già protetti, firmati o PDF/A dichiarati, e nessun download in caso di errore, timeout o policy WASM bloccata.

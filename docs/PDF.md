@@ -13,4 +13,4 @@ Campi RDF canonici: dc:title e dc:description (Alt con solo x-default), dc:creat
 Node 22, `npm ci --prefix Office/pdf-deps --ignore-scripts --no-audit --no-fund`, `node Office/build.mjs`, `node Office/build.mjs --check --pages`. PDF-lib 1.17.1 e dipendenze pin/integrity nel lockfile; licenze incluse nella build. Nessun CDN in esecuzione. HTML prodotto non versionato. Test `node Office/tests/pdf.mjs` con Playwright Chromium e pdftoppm; gli originali e le copie sintetiche vengono renderizzati e confrontati. Prima di dichiarare stabile verificare su Edge e Acrobat/lettori reali.
 
 ## Roadmap
-2.2 Protection (cifratura e permessi); 2.3 PDF Inspector; 2.4 Publication; 2.5 PDF Automation (batch, modelli, Audit); 2.6 Document Tools; 3.0 Universal. Il batch, Inspector e Audit esistenti restano per Office.
+2.2 Protection (cifratura e permessi); 2.3 PDF Inspector; 2.4 Publication; 2.5 PDF Automation (batch, modelli, Audit); 2.6 Document Tools; 3.0 Universal. Inspector dalla 2.3.0 supporta PDF (vedi PDF-INSPECTOR.md). Batch e Audit restano per Office.
