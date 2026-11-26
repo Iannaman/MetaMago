@@ -23,7 +23,13 @@ const oldHTML='<!doctype html><html><body><span id="editionTag">v1.9.0</span><sc
 const legacySW="const name='MetaMago-shell:'+self.registration.scope+':1.9.0',index=new URL('index.html',self.registration.scope).href;self.addEventListener('install',e=>e.waitUntil(caches.open(name).then(c=>c.add(index))));self.addEventListener('activate',e=>e.waitUntil(self.clients.claim()));self.addEventListener('fetch',e=>{if(e.request.mode==='navigate')e.respondWith(caches.open(name).then(c=>c.match(index)))})";
 const types={html:'text/html; charset=utf-8',js:'application/javascript',webmanifest:'application/manifest+json',png:'image/png',txt:'text/plain'};
 const server=createServer((req,res)=>{
- const u=new URL(req.url,'http://localhost'),name=u.pathname==='/MetaMago/'?'index.html':u.pathname.slice('/MetaMago/'.length);
+ const u=new URL(req.url,'http://localhost');
+ // Same-origin observer deliberately outside the worker scope. It must not
+ // keep the legacy worker alive while we wait for the real activation.
+ if(req.method==='GET'&&u.pathname==='/activation-probe'){
+  res.writeHead(200,{'Content-Type':'text/html; charset=utf-8','Cache-Control':'no-store'}).end('<!doctype html><title>Activation observer</title>');return;
+ }
+ const name=u.pathname==='/MetaMago/'?'index.html':u.pathname.slice('/MetaMago/'.length);
  if(req.method!=='GET'||!u.pathname.startsWith('/MetaMago/')||!Object.hasOwn(files,name)){res.writeHead(404).end();return}
  res.setHeader('Content-Type',types[name.split('.').pop()]);res.setHeader('Cache-Control','no-store');
  if(name==='index.html')res.end(phase==='legacy'?oldHTML:phase==='next'?nextHtml:html);
@@ -45,10 +51,27 @@ try{
  // old windows allows activation; no force-reload is introduced into the old app.
  await a.evaluate(async()=>{const r=await navigator.serviceWorker.getRegistration();await r.update()});
  await a.waitForFunction(async()=>!!(await navigator.serviceWorker.getRegistration()).waiting);
+ const probe=watch(await ctx.newPage());await probe.goto(new URL('/activation-probe',url).href);
+ assert.equal(await probe.evaluate(()=>navigator.serviceWorker.controller===null),true,'observer must be outside the worker scope');
  await a.close();
+ // Opening another scoped window immediately can race activation and keep
+ // the old shell in use indefinitely. Observe activation without a scoped client.
+ try{
+  await probe.waitForFunction(async({url,version})=>{
+   const r=await navigator.serviceWorker.getRegistration(url);
+   if(!r?.active||r.active.state!=='activated'||r.waiting||r.installing)return false;
+   const keys=await caches.keys(),prefix='MetaMago-shell:'+url+':';
+   return keys.includes(prefix+version)&&!keys.includes(prefix+'1.9.0');
+  },{url,version},{timeout:60000});
+ }catch(e){
+  console.error('Legacy migration activation diagnostics',await probe.evaluate(async url=>{
+   const r=await navigator.serviceWorker.getRegistration(url);
+   return {active:r?.active?.state,waiting:r?.waiting?.state,installing:r?.installing?.state,caches:await caches.keys(),controlled:!!navigator.serviceWorker.controller};
+  },url));throw e;
+ }
+ await probe.close();
  a=watch(await ctx.newPage());await a.goto(url);
- if(await a.locator('#editionTag').textContent()==='v1.9.0'){await a.close();a=watch(await ctx.newPage());await a.goto(url)}
- await a.waitForFunction(v=>document.querySelector('#editionTag').textContent==='v'+v,version);
+ assert.equal(await a.locator('#editionTag').textContent(),'v'+version,'new navigation must serve the activated shell');
  await a.waitForFunction(()=>!!updateReg&&!!navigator.serviceWorker.controller);
  assert.ok(await a.evaluate(async()=>!(await caches.keys()).some(k=>k.endsWith(':1.9.0'))));
  assert.ok(await a.evaluate(async()=>(await caches.keys()).includes('unrelated-cache')));
