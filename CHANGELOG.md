@@ -1,5 +1,10 @@
 # Changelog
 
+## Office Edition 3.2.4 — Visual Comparison (candidato)
+- Confronto grafico originale/copia basato sulle effettive modifiche Office, PDF e batch.
+- Distinzione esplicita tra modifiche previste e copia verificata, rimozioni e Info/XMP discordanti.
+- Test di modifica, reset, salvataggio, confronto batch e visualizzazione mobile.
+
 ## Office Edition 3.2.3 — Document Workspace (candidato)
 - Apertura singolo file dalla home verso scheda unificata con illustrazione, nome, proprietà originali e azioni compatibili.
 - Navigazione contestuale verso i motori di modifica, ispezione, pulizia e protezione senza riselezionare il file.

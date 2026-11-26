@@ -129,6 +129,8 @@ jobs:
         run: node Office/tests/visual.mjs
       - name: Test Document Workspace
         run: node Office/tests/workspace.mjs
+      - name: Test Visual Comparison
+        run: node Office/tests/comparison.mjs
 
   browser-compatibility:
     runs-on: ubuntu-24.04

@@ -202,7 +202,7 @@ function syncPdfControls(){
  $('pdfFallbackInspect').disabled=busy;$('pdfFallbackClear').disabled=busy;$('pdfChoose').disabled=busy;$('pdfClose').disabled=busy;$('pdfControls').disabled=busy;
  $('pdfSave').disabled=busy||!pdfPending();$('pdfAgain').hidden=!pdfLast||pdfPending();if(typeof syncPublicationControls==='function')syncPublicationControls();if(typeof syncProtectionControls==='function')syncProtectionControls();
 }
-function pdfRefresh(){syncPdfControls();if(typeof updateWorkspaceStatus==='function')updateWorkspaceStatus();if(typeof syncProfessionalControls==='function')syncProfessionalControls()}
+function pdfRefresh(){syncPdfControls();if(typeof syncPdfComparison==='function')syncPdfComparison();if(typeof updateWorkspaceStatus==='function')updateWorkspaceStatus();if(typeof syncProfessionalControls==='function')syncProfessionalControls()}
 function pdfCustomRow(key='',value='',editable=true){
  const row=document.createElement('div');row.className='pdf-custom-row';
  const label=document.createElement('label'),check=document.createElement('input');check.type='checkbox';label.className='check';label.append(check,document.createTextNode(tr('Modifica')));

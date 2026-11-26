@@ -1,6 +1,18 @@
 'use strict';
 const UI_LANG=location.hash==='#en'?'en':location.hash==='#it'?'it':/^it\b/i.test(navigator.language)?'it':'en';
 const EN=Object.freeze({
+ 'Confronto delle modifiche':'Change comparison',
+ 'Modifiche previste':'Planned changes',
+ 'Modifiche della copia verificata':'Changes in the verified copy',
+ 'Copia prevista':'Planned copy',
+ 'Copia verificata':'Verified copy',
+ 'Riepilogo testuale':'Text summary',
+ 'Valore rimosso':'Value removed',
+ 'Info originale':'Original Info',
+ 'XMP originale':'Original XMP',
+ 'Rappresentazione delle proprietà, non anteprima delle pagine. L’originale non viene riscritto.':'Property representation, not a page preview. The original is not rewritten.',
+ 'Aggiungi / aggiorna':'Add / update',
+ 'Rimuovi':'Remove',
  'Il tuo documento':'Your document',
  'Apri scheda documento':'Open document overview',
  'Vai alla scheda documento':'Go to document overview',
