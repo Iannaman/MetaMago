@@ -1,6 +1,16 @@
 'use strict';
 const UI_LANG=location.hash==='#en'?'en':location.hash==='#it'?'it':/^it\b/i.test(navigator.language)?'it':'en';
 const EN=Object.freeze({
+ 'Scopri i metadati con un esempio illustrato. Non serve un file personale.':'Explore metadata with an illustrated example. No personal file needed.',
+ 'Dimostrazione: nessun documento reale viene modificato.':'Demonstration: no real document is modified.',
+ 'Un documento contiene pagine visibili e proprietà nascoste, come autore e titolo.':'A document contains visible pages and hidden properties such as author and title.',
+ 'Scopri i metadati':'Discover metadata',
+ 'MetaMago legge le proprietà supportate senza modificare il file. I dati nel testo richiedono controlli separati.':'MetaMago reads supported properties without changing the file. Data in the text requires separate checks.',
+ 'Scegli cosa cambiare':'Choose what to change',
+ 'In questo esempio rimuoviamo l’autore, lasciando invariato il titolo.':'In this example we remove the author, leaving the title unchanged.',
+ 'La nuova copia contiene le proprietà selezionate. L’originale resta separato; verifica sempre la copia nel lettore appropriato.':'The new copy contains the selected properties. The original remains separate; always review the copy in the appropriate reader.',
+ 'Autore di esempio':'Example author',
+ 'Relazione di esempio':'Example report',
  'Confronto delle modifiche':'Change comparison',
  'Modifiche previste':'Planned changes',
  'Modifiche della copia verificata':'Changes in the verified copy',

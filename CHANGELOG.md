@@ -1,5 +1,10 @@
 # Changelog
 
+## Office Edition 3.2.5 — Visual Storytelling (candidato)
+- Guida illustrata in quattro passaggi con esempio sintetico di metadati, scansione, rimozione e copia separata.
+- Animazioni a durata limitata, controlli manuali e rispetto di prefers-reduced-motion.
+- Nessuna elaborazione reale nella dimostrazione; test di navigazione, isolamento della sessione e accessibilità.
+
 ## Office Edition 3.2.4 — Visual Comparison (candidato)
 - Confronto grafico originale/copia basato sulle effettive modifiche Office, PDF e batch.
 - Distinzione esplicita tra modifiche previste e copia verificata, rimozioni e Info/XMP discordanti.

@@ -32,11 +32,12 @@ const systemTheme=matchMedia('(prefers-color-scheme: dark)');
 function applyTheme(){const selected=$('uiTheme').value;document.documentElement.dataset.theme=selected==='system'?(systemTheme.matches?'dark':'light'):selected}
 $('uiTheme').onchange=applyTheme;systemTheme.addEventListener?.('change',applyTheme);applyTheme();
 const tour=[
- ['Apri un documento','Seleziona un file Word, Excel, PowerPoint o PDF. Puoi anche trascinarlo nella zona di apertura.'],
- ['Modifica le proprietà','Cambia solo le informazioni necessarie. La modalità avanzata mostra altre proprietà; la rubrica e i profili sono facoltativi.'],
- ['Controlla e salva','Leggi il riepilogo delle modifiche e salva una copia. Verifica il risultato in Microsoft Office.']
+ ['Apri un documento','Un documento contiene pagine visibili e proprietà nascoste, come autore e titolo.'],
+ ['Scopri i metadati','MetaMago legge le proprietà supportate senza modificare il file. I dati nel testo richiedono controlli separati.'],
+ ['Scegli cosa cambiare','In questo esempio rimuoviamo l’autore, lasciando invariato il titolo.'],
+ ['Controlla e salva','La nuova copia contiene le proprietà selezionate. L’originale resta separato; verifica sempre la copia nel lettore appropriato.']
 ];
-function renderTour(){const [title,body]=tour[tourIndex];$('tourStep').textContent=tr('Passaggio')+' '+(tourIndex+1)+' / '+tour.length;$('tourTitle').textContent=tr(title);$('tourText').textContent=tr(body);$('tourPrev').disabled=tourIndex===0;$('tourNext').textContent=tr(tourIndex===tour.length-1?'Inizia a modificare':'Avanti')}
+function renderTour(){const [title,body]=tour[tourIndex];$('tourStep').textContent=tr('Passaggio')+' '+(tourIndex+1)+' / '+tour.length;$('tourTitle').textContent=tr(title);$('tourText').textContent=tr(body);$('tourPrev').disabled=tourIndex===0;$('tourNext').textContent=tr(tourIndex===tour.length-1?'Inizia a modificare':'Avanti');$('tourIllustration').dataset.stage=String(tourIndex);$('tourExample').hidden=tourIndex===0;$('tourExampleAuthor').textContent=tr(tourIndex<2?'Autore di esempio':'Valore rimosso');$('tourExampleTitle').textContent=tr('Relazione di esempio')}
 function startTour(){goView('home');tourIndex=0;$('tourBox').hidden=false;$('startTour').hidden=true;renderTour();$('tourNext').focus()}
 function closeTour(){$('tourBox').hidden=true;$('startTour').hidden=false;$('startTour').focus()}
 $('startTour').onclick=startTour;$('helpTour').onclick=startTour;$('tourClose').onclick=closeTour;$('tourPrev').onclick=()=>{if(tourIndex>0){tourIndex--;renderTour()}};$('tourNext').onclick=()=>{if(tourIndex<tour.length-1){tourIndex++;renderTour()}else{closeTour();goView('edit')}};
