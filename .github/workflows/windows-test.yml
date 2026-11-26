@@ -117,6 +117,8 @@ jobs:
         run: node Office/tests/detection.mjs
       - name: Test Quick Actions
         run: node Office/tests/presets.mjs
+      - name: Test Guided Experience
+        run: node Office/tests/guided.mjs
 
   browser-compatibility:
     runs-on: ubuntu-24.04

@@ -1,5 +1,10 @@
 # Changelog
 
+## Office Edition 3.1.4 — Guided Experience (candidato)
+- Indicatore contestuale batch in quattro passaggi, basato su file, anteprima e ZIP effettivi.
+- Errori PDF-lib di parsing presentati con messaggio leggibile e dettagli tecnici espandibili.
+- Test dedicati per transizioni, invalidazione dell’anteprima ed errori.
+
 ## Office Edition 3.1.3 — Quick Actions (candidato)
 - Sei preset guidati dalla home: uso interno, pubblicazione esterna, riservato PDF, rimozione identificativi, standard aziendale e sola analisi.
 - Sostituzione esplicita delle impostazioni batch, password azzerate, nessuna elaborazione o salvataggio automatico.

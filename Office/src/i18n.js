@@ -1,6 +1,19 @@
 'use strict';
 const UI_LANG=location.hash==='#en'?'en':location.hash==='#it'?'it':/^it\b/i.test(navigator.language)?'it':'en';
 const EN=Object.freeze({
+ 'Percorso elaborazione documenti':'Document processing guide',
+ 'Prepara le copie in quattro passaggi':'Prepare copies in four steps',
+ 'Scegli file':'Choose files',
+ 'Imposta operazioni':'Configure operations',
+ 'Controlla anteprima':'Review preview',
+ 'Scarica copie':'Download copies',
+ 'Seleziona uno o più documenti per iniziare.':'Select one or more documents to begin.',
+ 'Imposta le operazioni, poi controlla l’anteprima.':'Configure operations, then review the preview.',
+ 'Anteprima pronta: verifica le modifiche e conferma la generazione delle copie.':'Preview ready: review changes and confirm copy generation.',
+ 'Nessuna copia pronta: verifica gli esiti e modifica le impostazioni.':'No copies ready: review results and adjust settings.',
+ 'ZIP generato: verifica le copie scaricate.':'ZIP generated: review the downloaded copies.',
+ 'Dettagli tecnici':'Technical details',
+ 'Il lettore ha rilevato una struttura non supportata.':'The reader detected an unsupported structure.',
  'Parti dal risultato':'Start with the outcome',
  'Scegli una preparazione guidata. Nessuna modifica o download automatico.':'Choose a guided preparation. No automatic modifications or downloads.',
  'Obiettivo del documento':'Document goal',
