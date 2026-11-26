@@ -1,5 +1,10 @@
 # Changelog
 
+## Office Edition 3.1.2 — Smart Detection (candidato)
+- Riepilogo automatico Office/PDF e indicazioni contestuali sui metadati rilevati.
+- Riepilogo Privacy Inspector con categorie presenti e non conclusive, avvisi per firme, restrizioni, cifratura e parser incompatibile.
+- Nessuna modifica automatica; analisi completa accessibile dall’editor. Test di regressione dedicati.
+
 ## Office Edition 3.1.1 — Motion Update (candidato)
 - Microinterazioni drag & drop, schede e navigazione, animazione breve delle viste.
 - Indicatore scansione/attesa legato al reale stato busy, feedback per esiti ed errori.

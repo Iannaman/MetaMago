@@ -113,6 +113,8 @@ jobs:
         run: node Office/tests/smart-interface.mjs
       - name: Test Motion
         run: node Office/tests/motion.mjs
+      - name: Test Smart Detection
+        run: node Office/tests/detection.mjs
 
   browser-compatibility:
     runs-on: ubuntu-24.04
