@@ -232,11 +232,11 @@ async function openPdf(file){
  goView('pdf',{focus:false});clearPdfFailedInput();setBusy(true);let bytes=null;try{
   if(!/\.pdf$/i.test(file.name)||file.size>PDF_MAX)throw pdfErr('PDF non valido o superiore a 20 MiB.');
   bytes=new Uint8Array(await file.arrayBuffer());const meta=await inspectPdf(bytes);
-  pdfSession={file,bytes,meta};pdfLast=null;showPdf();msg('pdfStatus',tr('PDF pronto. Seleziona i campi da modificare.'),'ok');
+  pdfSession={file,bytes,meta};pdfLast=null;showPdf();if(typeof smartPdfSummary==='function')smartPdfSummary(file,meta);msg('pdfStatus',tr('PDF pronto. Seleziona i campi da modificare.'),'ok');
  }catch(e){if(bytes&&bytes.length>=8&&bytes.length<=PDF_MAX&&new TextDecoder().decode(bytes.subarray(0,5))==='%PDF-'){offerPdfInspection(file,bytes);msg('pdfStatus',tr('PDF non apribile nell’editor. Puoi tentare l’analisi QPDF in sola lettura; nessuna modifica verrà effettuata.')+' '+e.message+(pdfSession?' '+tr('Il documento aperto in precedenza è ancora nell’editor.'):''),'error')}else msg('pdfStatus',tr('Impossibile aprire PDF: ')+e.message,'error')}finally{$('pdfFile').value='';setBusy(false);pdfRefresh()}
 }
 $('pdfChoose').onclick=()=>$('pdfFile').click();$('pdfFile').onchange=e=>openPdf(e.target.files[0]);
-$('pdfClose').onclick=()=>{if(busy||pdfPending()&&!confirm(tr('Abbandonare le modifiche PDF non salvate?')))return;clearPdfFailedInput();pdfSession=null;pdfLast=null;if(typeof clearPublication==='function')clearPublication();if(typeof clearProtection==='function')clearProtection();$('pdfRows').replaceChildren();$('pdfCustomRows').replaceChildren();$('pdfFilename').textContent='';$('pdfSummary').textContent='';$('pdfOut').value='';$('pdfEditor').hidden=true;$('pdfClose').hidden=true;msg('pdfStatus','');msg('pdfSaveStatus','');pdfRefresh()};
+$('pdfClose').onclick=()=>{if(busy||pdfPending()&&!confirm(tr('Abbandonare le modifiche PDF non salvate?')))return;clearPdfFailedInput();pdfSession=null;pdfLast=null;if(typeof smartClear==='function')smartClear('smartPdfResult');if(typeof clearPublication==='function')clearPublication();if(typeof clearProtection==='function')clearProtection();$('pdfRows').replaceChildren();$('pdfCustomRows').replaceChildren();$('pdfFilename').textContent='';$('pdfSummary').textContent='';$('pdfOut').value='';$('pdfEditor').hidden=true;$('pdfClose').hidden=true;msg('pdfStatus','');msg('pdfSaveStatus','');pdfRefresh()};
 $('pdfReset').onclick=()=>{if(!busy&&pdfSession&&(!pdfPending()||confirm(tr('Abbandonare le modifiche PDF non salvate?')))){pdfLast=null;showPdf()}};
 $('pdfAddCustom').onclick=()=>{if(!busy&&$('pdfCustomRows').children.length<100)pdfCustomRow()};
 $('pdfMark').onchange=pdfRefresh;$('pdfOut').oninput=pdfRefresh;

@@ -10,7 +10,7 @@ const office=dirname(fileURLToPath(import.meta.url)), root=resolve(office,'..');
 const read=async name=>(await readFile(resolve(office,name),'utf8')).replace(/\r\n/g,'\n');
 const version=(await read('VERSION')).trim();
 if(!/^\d+\.\d+\.\d+$/.test(version))throw Error('Invalid version');
-const [template,style,vendor,...modules]=await Promise.all(['src/index.html','src/style.css','vendor/jszip.min.js','src/i18n.js','src/metadata.js','src/zip-guard.js','src/marker.js','src/rubrica.js','src/app.js','src/team.js','src/batch.js','src/pwa.js','src/experience.js','src/inspector.js','src/automation.js','src/xlsx-contacts.js','src/audit.js','src/performance.js','src/professional.js','src/pdf.js','src/protection.js','src/pdf-inspector.js','src/publication.js','src/privacy.js','src/compliance.js','src/workflow.js','src/unified.js','src/motion.js'].map(read));
+const [template,style,vendor,...modules]=await Promise.all(['src/index.html','src/style.css','vendor/jszip.min.js','src/i18n.js','src/metadata.js','src/zip-guard.js','src/marker.js','src/rubrica.js','src/app.js','src/team.js','src/batch.js','src/pwa.js','src/experience.js','src/inspector.js','src/automation.js','src/xlsx-contacts.js','src/audit.js','src/performance.js','src/professional.js','src/pdf.js','src/protection.js','src/pdf-inspector.js','src/publication.js','src/privacy.js','src/compliance.js','src/workflow.js','src/unified.js','src/motion.js','src/detection.js'].map(read));
 // PDF-lib is pinned by npm ci in pdf-deps; bundled into the HTML, never loaded from a CDN.
 const pdfRoot=resolve(office,'pdf-deps','node_modules');
 const pdfVendor=(await readFile(resolve(pdfRoot,'pdf-lib','dist','pdf-lib.min.js'),'utf8')).replace(/\r\n/g,'\n').replace(/^\/\/#[^\n]*sourceMappingURL[^\n]*$/gm,'');
