@@ -18,15 +18,20 @@ function goView(key,{focus=true}={}){
  if(typeof syncProfessionalControls==='function')syncProfessionalControls();if(focus){const title=document.querySelector('[data-view="'+key+'"] .view-title');title?.focus();window.scrollTo(0,0)}
 }
 for(const button of document.querySelectorAll('[data-view-target]'))button.addEventListener('click',()=>goView(button.dataset.viewTarget));
-$('homeOpen').onclick=()=>{if(busy)return;goView('edit',{focus:false});$('file').click()};
+function smartOpenFiles(files){if(busy)return;const list=Array.from(files||[]);if(list.length===1)return openFile(list[0]);if(list.length>1)return selectBatch(list)}
+$('homeOpen').onclick=()=>{if(!busy)$('homeFiles').click()};$('homeFiles').onchange=e=>{const files=Array.from(e.target.files);e.target.value='';smartOpenFiles(files)};
+$('smartPrivacy').addEventListener('click',()=>{if(!busy){$('batchPanel').open=true;const privacy=$('batchPrivacyOffice');privacy?.closest('details')?.setAttribute('open','');privacy?.focus()}});
+$('smartProtect').addEventListener('click',()=>{if(!busy)$('pdfChoose').focus()});
+$('smartInspect').addEventListener('click',()=>{if(!busy)$('inspectChoose').focus()});
+$('smartEdit').addEventListener('click',()=>{if(!busy)$('open').focus()});
 for(const event of ['dragover','dragenter'])$('homeDrop').addEventListener(event,e=>{e.preventDefault();if(!busy)$('homeDrop').classList.add('over')});
 $('homeDrop').ondragleave=()=>$('homeDrop').classList.remove('over');
-$('homeDrop').ondrop=e=>{e.preventDefault();$('homeDrop').classList.remove('over');if(busy)return;const files=e.dataTransfer.files;if(files.length===1)openFile(files[0]);else if(files.length>1)selectBatch(files)};
+$('homeDrop').ondrop=e=>{e.preventDefault();$('homeDrop').classList.remove('over');if(busy)return;smartOpenFiles(e.dataTransfer.files)};
 const systemTheme=matchMedia('(prefers-color-scheme: dark)');
 function applyTheme(){const selected=$('uiTheme').value;document.documentElement.dataset.theme=selected==='system'?(systemTheme.matches?'dark':'light'):selected}
 $('uiTheme').onchange=applyTheme;systemTheme.addEventListener?.('change',applyTheme);applyTheme();
 const tour=[
- ['Apri un documento','Seleziona un file Word, Excel o PowerPoint. Puoi anche trascinarlo nella zona di apertura.'],
+ ['Apri un documento','Seleziona un file Word, Excel, PowerPoint o PDF. Puoi anche trascinarlo nella zona di apertura.'],
  ['Modifica le proprietà','Cambia solo le informazioni necessarie. La modalità avanzata mostra altre proprietà; la rubrica e i profili sono facoltativi.'],
  ['Controlla e salva','Leggi il riepilogo delle modifiche e salva una copia. Verifica il risultato in Microsoft Office.']
 ];

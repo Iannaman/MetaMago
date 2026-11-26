@@ -1,6 +1,21 @@
 'use strict';
 const UI_LANG=location.hash==='#en'?'en':location.hash==='#it'?'it':/^it\b/i.test(navigator.language)?'it':'en';
 const EN=Object.freeze({
+ 'Inizia da un documento oppure scegli un risultato da ottenere.':'Start with a document or choose an outcome.',
+ 'Trascina qui i tuoi documenti':'Drop your documents here',
+ 'Word, Excel, PowerPoint e PDF · uno o più file':'Word, Excel, PowerPoint and PDF · one or more files',
+ 'Sfoglia documenti':'Browse documents',
+ 'Elaborazione sul dispositivo · Originali invariati':'On-device processing · Originals unchanged',
+ 'Azioni rapide':'Quick actions',
+ 'Analizza':'Analyse',
+ 'Scopri quali informazioni contiene il file':'Discover information contained in the file',
+ 'Ripulisci':'Clean up',
+ 'Rimuovi proprietà identificative supportate':'Remove supported identifying properties',
+ 'Proteggi PDF':'Protect PDF',
+ 'Password, restrizioni e filigrana':'Passwords, restrictions and watermark',
+ 'Strumenti professionali':'Professional tools',
+ 'Elaborazione massiva, audit, modelli e profili.':'Batch processing, audit, templates and profiles.',
+ 'Seleziona un file Word, Excel, PowerPoint o PDF. Puoi anche trascinarlo nella zona di apertura.':'Select a Word, Excel, PowerPoint or PDF file. You can also drag it to the opening area.',
  'PDF non apribile nell’editor. Puoi tentare l’analisi QPDF in sola lettura; nessuna modifica verrà effettuata.':'PDF cannot be opened in the editor. You can attempt read-only QPDF inspection; no changes will be made.',
  'Analizza originale in sola lettura (QPDF)':'Inspect original read-only (QPDF)',
  'Rimuovi documento non aperto':'Remove unopened document',

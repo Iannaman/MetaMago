@@ -84,6 +84,8 @@ jobs:
         run: node Office/tests/stability.mjs
       - name: Test PDF fallback
         run: node Office/tests/pdf-fallback.mjs
+      - name: Test Smart Interface
+        run: node Office/tests/smart-interface.mjs
       - uses: actions/configure-pages@v5
       - uses: actions/upload-pages-artifact@v3
         with:
