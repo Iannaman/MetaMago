@@ -7,7 +7,7 @@ function smartRender(id,file,kind,items,advice,action=null){
  const list=document.createElement('ul');
  for(const [state,label] of items){const li=document.createElement('li');li.dataset.state=state;li.textContent=label;list.append(li)}
  const hint=document.createElement('p');hint.className='smart-advice';hint.textContent=advice;
- el.append(title,doc,list,hint);
+ const head=document.createElement('div');head.className='visual-document-head';head.append(visualDocument(kind),doc);el.append(title,head,list,hint);
  if(action){const b=document.createElement('button');b.type='button';b.className='secondary';b.textContent=tr('Approfondisci con l’analisi privacy');b.onclick=()=>{if(!busy)action()};el.append(b)}
  el.hidden=false;
 }

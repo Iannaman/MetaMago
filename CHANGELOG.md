@@ -1,5 +1,10 @@
 # Changelog
 
+## Office Edition 3.2.2 — Visual Identity (candidato)
+- Illustrazione di apertura con Word, Excel, PowerPoint e PDF; quattro metafore visive per le azioni rapide.
+- Rappresentazione schematica del formato nei riepiloghi documento; nessuna anteprima di pagina simulata.
+- SVG nativi, nessuna dipendenza o richiesta di rete, tema chiaro/scuro e test dedicati.
+
 ## Office Edition 3.2.1 — UX Cleanup (candidato)
 - Home centrata su apertura documenti e quattro azioni, rimozione duplicazione percorso guidato e schede professionali.
 - Preset espandibili, sessione visibile con documenti aperti, navigazione mobile a scorrimento orizzontale.
