@@ -7,8 +7,8 @@ function updateWorkspaceStatus(){
 }
 function goView(key,{focus=true}={}){
  if(busy||!viewKeys.includes(key))return;
- currentView=key;
- for(const pane of document.querySelectorAll('[data-view]'))pane.hidden=pane.dataset.view!==key;
+ const changed=currentView!==key;currentView=key;
+ for(const pane of document.querySelectorAll('[data-view]')){pane.hidden=pane.dataset.view!==key;if(changed&&!pane.hidden&&typeof motionView==='function')motionView(pane)}
  for(const nav of document.querySelectorAll('.side-nav [data-view-target]')){
   if(nav.dataset.viewTarget===key)nav.setAttribute('aria-current','page');else nav.removeAttribute('aria-current');
  }

@@ -1,5 +1,11 @@
 # Changelog
 
+## Office Edition 3.1.1 — Motion Update (candidato)
+- Microinterazioni drag & drop, schede e navigazione, animazione breve delle viste.
+- Indicatore scansione/attesa legato al reale stato busy, feedback per esiti ed errori.
+- Rispetto di prefers-reduced-motion; nessuna dipendenza o modifica dei motori documentali.
+- Test dedicati di stato, navigazione e movimento ridotto.
+
 ## Office Edition 3.1.0 — Smart Interface (candidato)
 - Home orientata al documento e selezione multipla con instradamento automatico verso editor Office/PDF o batch.
 - Quattro azioni rapide e strumenti professionali raggruppati; interfaccia responsive, tema scuro e traduzioni.
