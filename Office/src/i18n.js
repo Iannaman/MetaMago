@@ -1,6 +1,9 @@
 'use strict';
 const UI_LANG=location.hash==='#en'?'en':location.hash==='#it'?'it':/^it\b/i.test(navigator.language)?'it':'en';
 const EN=Object.freeze({
+ 'Documenti':'Documents',
+ 'Strumenti':'Tools',
+ 'Apri un documento per iniziare. Le operazioni disponibili dipendono dal formato.':'Open a document to begin. Available operations depend on its format.',
  'Experience Edition · Le proprietà cambiano, il contenuto no.':'Experience Edition · Properties change, content does not.',
  'Percorso elaborazione documenti':'Document processing guide',
  'Prepara le copie in quattro passaggi':'Prepare copies in four steps',

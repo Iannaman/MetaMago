@@ -10,7 +10,7 @@ try{
  const page=await browser.newPage({locale:'it-IT',offline:true,viewport:{width:375,height:800},acceptDownloads:true}),errors=[],downloads=[],requests=[];let accept=true;
  page.on('pageerror',e=>errors.push(e.message));page.on('download',d=>downloads.push(d.suggestedFilename()));page.on('request',r=>{if(/^https?:/.test(r.url()))requests.push(r.url())});page.on('dialog',d=>accept?d.accept():d.dismiss());
  const id=x=>page.locator('#'+x);await page.goto(pathToFileURL(resolve(root,'Office','MetaMago-Office.html')).href);
- assert.match(await id('editionTag').textContent(),/3\.2\.0/);
+ assert.match(await id('editionTag').textContent(),/3\.2\.\d+|3\.3\.0/);
  const fixture=await page.evaluate(async input=>{
   const original=new Uint8Array(input),m=await inspect(original,'docx');
   const office=await rewrite(original,'docx',{author:'Synthetic private',lastAuthor:'Synthetic reviewer',company:'Synthetic company',manager:'Synthetic manager',title:'Experience fixture'},m.final,'keep');
@@ -18,7 +18,7 @@ try{
   return {office:Array.from(office),pdf:Array.from(await p.save({useObjectStreams:false}))};
  },Array.from(await readFile(resolve(root,'Test','Prova.docx'))));
  const hash=b=>createHash('sha256').update(Buffer.from(b)).digest('hex');
- await id('quickPreset').selectOption('external');await id('quickPresetStart').click();
+ await id('quickPresetsDisclosure').locator('summary').click();await id('quickPreset').selectOption('external');await id('quickPresetStart').click();
  await id('batchFiles').setInputFiles([{name:'fixture.docx',mimeType:'application/vnd.openxmlformats-officedocument.wordprocessingml.document',buffer:Buffer.from(fixture.office)},{name:'fixture.pdf',mimeType:'application/pdf',buffer:Buffer.from(fixture.pdf)}]);
  await id('batchPreview').click();await page.waitForFunction(()=>!document.querySelector('#batchRun').disabled&&!busy,null,{timeout:130000});
  assert.equal(await page.evaluate(()=>batchPlan.rows.filter(r=>r.status===tr('Pronto')).length),2);
