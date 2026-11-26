@@ -1,5 +1,12 @@
 # Changelog
 
+## Office Edition 3.3.0 — Visual Experience Edition (candidato)
+- Consolidamento di UX Cleanup, Visual Identity, Document Workspace, Visual Comparison, Visual Storytelling, Visual PDF Preview e Usability Optimization.
+- Illustrazioni contestuali anche nella scheda documento e accesso diretto all’anteprima del PDF originale.
+- Messaggi di annullamento e errore coerenti con il formato di download; ripristino dell’etichetta dopo invalidazione.
+- Rendering reale con controllo pixel su tre motori browser e test end-to-end Word con download diretto e originali invariati.
+- Checklist di accettazione, misure UX e collaudo manuale da completare.
+
 ## Office Edition 3.2.7 — Usability Optimization (candidato)
 - Download diretto opzionale per una sola selezione; ZIP per più file e modalità professionale predefinita.
 - Preset pubblicazione esterna con controlli privacy preliminari, distinti dalla sola rimozione identificativi e inclusi nei report.

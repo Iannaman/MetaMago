@@ -33,6 +33,17 @@ try{
  assert.deepEqual(r,{blocked:true,legacy:'institutional',stable:'institutional',failed:true,hashLength:64,checks:2});
  await page.locator('#quickPresetsDisclosure>summary').click();await page.locator('#quickPreset').selectOption('standard');await page.locator('#quickPresetStart').click();
  assert.equal(await page.locator('#compliancePanel').evaluate(e=>e.open),true);
+ // Exercise real page rasterisation in every browser, not just application startup.
+ const raster=await page.evaluate(async()=>{
+  const d=await PDFLib.PDFDocument.create({updateMetadata:false}),p=d.addPage([180,240]);
+  p.drawRectangle({x:20,y:80,width:100,height:90,color:PDFLib.rgb(.8,.1,.1)});
+  const bytes=await d.save({useObjectStreams:false}),canvas=document.createElement('canvas');
+  const pages=await renderLocalPdfPage(bytes,1,canvas),pixels=canvas.getContext('2d').getImageData(0,0,canvas.width,canvas.height).data;
+  let red=0;for(let i=0;i<pixels.length;i+=4)if(pixels[i]>120&&pixels[i+1]<90&&pixels[i+2]<90)red++;
+  return {pages,red,width:canvas.width,height:canvas.height};
+ });
+ assert.equal(raster.pages,1);assert.ok(raster.red>1000,'expected rendered red rectangle');assert.ok(raster.width*raster.height<=1000000);
  assert.deepEqual(errors,[]);
+ console.log('PASS '+engine+' actual local PDF raster and pixel verification');
  console.log('PASS '+engine+' startup, SHA-256, QPDF, compliance gate, missing model and legacy workflow');
 }finally{await browser?.close();await new Promise(r=>server.close(r))}

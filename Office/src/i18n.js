@@ -1,6 +1,10 @@
 'use strict';
 const UI_LANG=location.hash==='#en'?'en':location.hash==='#it'?'it':/^it\b/i.test(navigator.language)?'it':'en';
 const EN=Object.freeze({
+ 'Visual Experience Edition · Modifica le proprietà, conserva l’originale.':'Visual Experience Edition · Edit properties, preserve the original.',
+ 'Visualizza una pagina del PDF originale':'View a page of the original PDF',
+ 'Operazione interrotta: nessuna copia scaricata.':'Operation cancelled: no copy downloaded.',
+ 'Copia non generata: ':'Copy not generated: ',
  'Le copie possono essere scaricate singolarmente (un solo documento selezionato) oppure in un unico ZIP.':'Copies can be downloaded directly (one selected document) or in a single ZIP.',
  'Controlla anche gli indicatori privacy degli originali (sola lettura)':'Also check original privacy indicators (read-only)',
  'Il controllo preliminare segnala elementi da verificare; non certifica l’assenza di dati sensibili.':'Preliminary checks identify items to review; they do not certify the absence of sensitive data.',
