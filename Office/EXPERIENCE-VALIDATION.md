@@ -1,4 +1,4 @@
-# MetaMago 3.2.0 — Experience Edition: acceptance checklist
+# MetaMago 3.3.0 — Visual Experience Edition: acceptance checklist
 
 Candidate until all applicable CI jobs and manual acceptance tests have passed.
 
@@ -10,6 +10,24 @@ Candidate until all applicable CI jobs and manual acceptance tests have passed.
 - Smart Interface, Motion, Smart Detection, Quick Actions, Guided Experience and Design System regression tests.
 - End-to-end mixed Office/PDF privacy preset: select documents, preview, refuse confirmation, generate ZIP, verify output metadata and unchanged SHA-256 of original inputs; cancellation during real ZIP generation must not produce a download.
 - Deterministic generated HTML and minimal Pages build.
+
+- Visual UX: home disclosure, illustrations, document workspace, planned/verified comparison, isolated synthetic tutorial, single-page local raster and publication preview.
+- Render a known coloured rectangle and verify pixel output on Chromium, Firefox and WebKit; verify direct single-file Office/PDF downloads separately from ZIP.
+
+## Usability study protocol (not yet executed)
+
+Recruit at least five novice or occasional users and five experienced users; use synthetic documents and counterbalance the order of 3.2.0 and 3.3.0. Give a task goal, not navigation instructions. Record success without help, elapsed time excluding processing, errors, unnecessary steps, whether the original was understood to remain unchanged, and the System Usability Scale (SUS) after each version. Record exclusions and failures rather than silently discarding them.
+
+| Task | Design target (not a measured result) |
+|---|---|
+| Change Word author | 45 seconds |
+| Identify personal metadata | 30 seconds |
+| Configure PDF protection | 90 seconds |
+| Clean 10 files | 120 seconds excluding processing |
+| Recover from unsupported PDF | Without external assistance |
+| Understand that original stays unchanged | 100% |
+| Complete tasks without help | At least 90% |
+| SUS | At least 85/100 |
 
 ## Manual acceptance (use synthetic documents only)
 

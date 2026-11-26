@@ -1,0 +1,36 @@
+import assert from 'node:assert/strict';
+import {chromium} from 'playwright';
+import {resolve,dirname} from 'node:path';
+import {fileURLToPath,pathToFileURL} from 'node:url';
+import {readFile} from 'node:fs/promises';
+import {createHash} from 'node:crypto';
+const root=resolve(dirname(fileURLToPath(import.meta.url)),'../..');
+const browser=await chromium.launch({headless:true});
+try{
+ const page=await browser.newPage({locale:'it-IT',offline:true,viewport:{width:375,height:800},acceptDownloads:true}),errors=[],downloads=[],network=[];
+ page.on('pageerror',e=>errors.push(e.message));page.on('download',d=>downloads.push(d.suggestedFilename()));page.on('request',r=>{if(/^https?:/.test(r.url()))network.push(r.url())});page.on('dialog',d=>d.accept());
+ const id=x=>page.locator('#'+x),action=x=>id('workspaceActions').locator('[data-workspace-action='+x+']');
+ await page.goto(pathToFileURL(resolve(root,'Office','MetaMago-Office.html')).href);
+ assert.match(await id('editionTag').textContent(),/3\.3\.0/);
+ const fixture=Buffer.from(await page.evaluate(async input=>{const bytes=new Uint8Array(input),m=await inspect(bytes,'docx');return Array.from(await rewrite(bytes,'docx',{author:'Synthetic private',company:'Synthetic company',title:'Visual fixture'},m.final,'keep'))},Array.from(await readFile(resolve(root,'Test','Prova.docx')))));
+ const hash=createHash('sha256').update(fixture).digest('hex');
+ await id('homeFiles').setInputFiles({name:'visual.docx',mimeType:'application/vnd.openxmlformats-officedocument.wordprocessingml.document',buffer:fixture});await id('viewWorkspace').waitFor();
+ assert.match(await id('workspaceProperties').textContent(),/Synthetic private/);assert.equal(await action('edit').locator('svg').count(),1);assert.equal(await action('preview').count(),0);
+ await action('inspect').click();await id('inspectWorkspace').waitFor();await id('inspectWorkspace').click();
+ await id('navHome').click();await id('quickPresetsDisclosure').locator('summary').click();await id('quickPreset').selectOption('identity');await id('quickPresetStart').click();
+ await id('batchFiles').setInputFiles({name:'visual.docx',mimeType:'application/vnd.openxmlformats-officedocument.wordprocessingml.document',buffer:fixture});
+ await id('batchPreview').click();await page.waitForFunction(()=>!busy&&!document.querySelector('#batchRun').disabled,null,{timeout:130000});
+ assert.match(await id('batchRows').locator('.visual-comparison').textContent(),/Synthetic private/);assert.equal(await id('batchRows').locator('.visual-comparison').getAttribute('data-state'),'planned');
+ const d=page.waitForEvent('download');await id('batchRun').click();const output=await d;await page.waitForFunction(()=>!busy&&!!batchDirect);
+ assert.equal(output.suggestedFilename(),'visual_metadati.docx');
+ const result=await page.evaluate(async bytes=>{const m=await inspect(new Uint8Array(bytes),'docx');return {author:m.values.author,company:m.values.company,title:m.values.title,originalHash:await batchFingerprint(new Uint8Array(await batchFiles[0].arrayBuffer()))}},Array.from(await readFile(await output.path())));
+ assert.deepEqual(result,{author:'',company:'',title:'Visual fixture',originalHash:hash});
+ assert.equal(await id('batchRows').locator('.visual-comparison').getAttribute('data-state'),'verified');
+ const pdf=Buffer.from(await page.evaluate(async()=>{const p=await PDFLib.PDFDocument.create({updateMetadata:false});p.addPage([180,240]).drawRectangle({x:20,y:30,width:70,height:60,color:PDFLib.rgb(.1,.2,.8)});return Array.from(await p.save({useObjectStreams:false}))}));
+ await id('navHome').click();await id('homeFiles').setInputFiles({name:'visual.pdf',mimeType:'application/pdf',buffer:pdf});await id('viewWorkspace').waitFor();await action('preview').click();
+ await page.waitForFunction(()=>!busy&&document.querySelector('#pdfPreviewStatus').classList.contains('ok'),null,{timeout:45000});
+ assert.match(await id('pdfPreviewRenderedPage').textContent(),/1 \/ 1/);assert.equal(await id('pdfPreviewAfterFigure').isVisible(),false);
+ await id('pdfPreviewClose').click();assert.equal(await id('pdfPreviewPanel').isVisible(),false);
+ assert.deepEqual(downloads,['visual_metadati.docx']);assert.deepEqual(network,[]);assert.deepEqual(errors,[]);
+ console.log('PASS Visual Experience E2E: illustrated Office workspace, inspection, direct verified copy, SHA-256, contextual real PDF preview and offline isolation');
+}finally{await browser.close()}

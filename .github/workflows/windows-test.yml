@@ -137,6 +137,8 @@ jobs:
         run: node Office/tests/pdf-preview.mjs
       - name: Test Usability Optimization
         run: node Office/tests/usability.mjs
+      - name: Test Visual Experience End-to-End
+        run: node Office/tests/visual-experience-e2e.mjs
 
   browser-compatibility:
     runs-on: ubuntu-24.04
