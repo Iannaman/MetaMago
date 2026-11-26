@@ -1,6 +1,20 @@
 'use strict';
 const UI_LANG=location.hash==='#en'?'en':location.hash==='#it'?'it':/^it\b/i.test(navigator.language)?'it':'en';
 const EN=Object.freeze({
+ 'Le copie possono essere scaricate singolarmente (un solo documento selezionato) oppure in un unico ZIP.':'Copies can be downloaded directly (one selected document) or in a single ZIP.',
+ 'Controlla anche gli indicatori privacy degli originali (sola lettura)':'Also check original privacy indicators (read-only)',
+ 'Il controllo preliminare segnala elementi da verificare; non certifica l’assenza di dati sensibili.':'Preliminary checks identify items to review; they do not certify the absence of sensitive data.',
+ 'Formato del download':'Download format',
+ 'Archivio ZIP':'ZIP archive',
+ 'File diretto per un solo documento, ZIP per più documenti':'Direct file for one document, ZIP for multiple documents',
+ 'Controlli privacy dell’originale':'Original privacy checks',
+ ' invariati. Controlla ogni anteprima prima di generare le copie.':' unchanged. Review each preview before generating copies.',
+ 'Genera copia del documento':'Generate document copy',
+ 'Copia verificata. Controlla il download.':'Verified copy. Check your download.',
+ 'Nessuna copia generata.':'No copy generated.',
+ 'Copia generata: verifica il documento scaricato.':'Copy generated: check the downloaded document.',
+ 'Controlla gli indicatori privacy degli originali e predispone la rimozione dei metadati identificativi supportati. Verifica anche il contenuto prima di condividere.':'Check original privacy indicators and prepare removal of supported identifying metadata. Also review content before sharing.',
+ 'Pagina visualizzata: ':'Displayed page: ',
  'Anteprima visiva PDF':'PDF visual preview',
  'Visualizza pagina PDF':'View PDF page',
  'Rendering locale della pagina, senza collegamenti o moduli interattivi. Annotazioni e alcuni elementi complessi possono non essere visualizzati. Non sostituisce il controllo nel lettore PDF.':'Local page rendering, with no interactive links or forms. Annotations and some complex elements may not appear. This does not replace checking in a PDF reader.',

@@ -70,7 +70,7 @@ function inspectionReport(){
 }
 function clearBatchAudit(){batchAudit=null;$('batchReport').hidden=true;$('batchReportLabel').textContent=''}
 function storeBatchAudit(rows,phase){
- const preview=phase==='preview';batchAudit={title:tr(preview?'Report anteprima batch':'Report esito batch'),rows:rows.flatMap(r=>[[tr('Documento'),r.file.name,r.name||'',r.error||'',r.status],...(r.auditChanges||[]).map(c=>[r.file.name,c.label,c.before,c.after,preview?tr('Proposta'):r.status])])};$('batchReportLabel').textContent=tr(preview?'Anteprima: modifiche proposte, non eseguite.':'Esito elaborazione: controlla i singoli stati.');$('batchReport').hidden=false;
+ const preview=phase==='preview';batchAudit={title:tr(preview?'Report anteprima batch':'Report esito batch'),rows:rows.flatMap(r=>[[tr('Documento'),r.file.name,r.name||'',r.error||'',r.status],...(r.auditChanges||[]).map(c=>[r.file.name,c.label,c.before,c.after,preview?tr('Proposta'):r.status]),...(r.preflight||[]).map(v=>[r.file.name,tr('Controlli privacy dell’originale'),v,'',tr('Da verificare')])])};$('batchReportLabel').textContent=tr(preview?'Anteprima: modifiche proposte, non eseguite.':'Esito elaborazione: controlla i singoli stati.');$('batchReport').hidden=false;
 }
 for(const format of ['csv','html']){
  const suffix=format==='csv'?'Csv':'Html';

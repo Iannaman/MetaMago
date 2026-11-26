@@ -135,6 +135,8 @@ jobs:
         run: node Office/tests/storytelling.mjs
       - name: Test Visual PDF Preview
         run: node Office/tests/pdf-preview.mjs
+      - name: Test Usability Optimization
+        run: node Office/tests/usability.mjs
 
   browser-compatibility:
     runs-on: ubuntu-24.04
