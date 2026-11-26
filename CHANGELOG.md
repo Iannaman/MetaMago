@@ -1,5 +1,10 @@
 # Changelog
 
+## Office Edition 3.0.2 — PDF Compatibility (candidato)
+- Analisi QPDF in sola lettura offerta dopo rifiuto del parser PDF-lib; nessuna modifica permissiva.
+- Indicazione separata del fallimento del parser e del precedente documento ancora aperto.
+- Test di regressione del percorso alternativo.
+
 ## Office Edition 3.0.1 — Stability Update (candidato)
 - Impedisce la disattivazione implicita di Compliance quando un modello selezionato viene eliminato; riferimenti ai modelli predefiniti indipendenti dalla lingua.
 - Nuovi test di compatibilità Chromium, Firefox, WebKit e blocco Compliance su copie reali.

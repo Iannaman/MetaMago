@@ -96,14 +96,14 @@ async function inspectPdfReadOnly(bytes,password=''){
  const result=await pdfInspectEngine(bytes,password);password='';
  try{result.hash=Array.from(new Uint8Array(await crypto.subtle.digest('SHA-256',bytes)),x=>x.toString(16).padStart(2,'0')).join('')}catch(e){result.hash=''}
  if(result.locked)return result;
- result.xmpState=result.counts.xmp?'unknown':'absent';result.pdfa=null;result.xmpFields={};
+ result.xmpState=result.counts.xmp?'unknown':'absent';result.pdfa=null;result.xmpFields={};result.strictParseFailed=false;
  if(!result.encrypted){
   try{
    const doc=await PDFLib.PDFDocument.load(bytes,{updateMetadata:false,throwOnInvalidObject:true});
    const xmp=await readPdfXmp(doc);
    result.xmpState=xmp?'read':result.counts.xmp?'unknown':'absent';result.pdfa=xmp||!result.counts.xmp?false:null;
    if(xmp)for(const [key,,p,n,kind] of PF){const field=xmpField(xmp,p,n,kind);result.xmpFields[key]=field.editable?String(field.value||'').slice(0,2000):tr('Non conclusivo')}
-  }catch(e){if(e.message===tr('PDF/A dichiarato: riscrittura non consentita.')){result.pdfa=true;result.xmpState='pdfa'}}
+  }catch(e){if(e.message===tr('PDF/A dichiarato: riscrittura non consentita.')){result.pdfa=true;result.xmpState='pdfa'}else{result.strictParseFailed=true}}
  }
  return result;
 }
@@ -128,7 +128,7 @@ function renderPdfInspection(file,r){
   const properties=new Map(r.properties);
   for(const [key,label] of PF){const t=document.createElement('tr');t.append(inspectCell(tr(label)),inspectCell(properties.get(key)||'—'),inspectCell(r.xmpFields[key]||'—'));$('pdfInspectProperties').append(t);properties.delete(key)}
   for(const [key,value] of properties){const t=document.createElement('tr');t.append(inspectCell(key),inspectCell(value),inspectCell('—'));$('pdfInspectProperties').append(t)}
-  $('pdfInspectXmp').textContent=tr(r.xmpState==='read'?'XMP analizzato':r.xmpState==='absent'?'XMP assente':r.xmpState==='pdfa'?'PDF/A dichiarato (non validato)':'XMP non analizzato: PDF cifrato o struttura non supportata.')+(r.propertiesTruncated?' · …':'');
+  $('pdfInspectXmp').textContent=tr(r.xmpState==='read'?'XMP analizzato':r.xmpState==='absent'?'XMP assente':r.xmpState==='pdfa'?'PDF/A dichiarato (non validato)':'XMP non analizzato: PDF cifrato o struttura non supportata.')+(r.propertiesTruncated?' · …':'')+(r.strictParseFailed?' · '+tr('Lettura PDF-lib non riuscita; risultati QPDF separati.'):'');
  }
  for(const [key,label,description] of PDF_INSPECT_FINDINGS){
   const count=r.locked?0:key==='pdfa'?(r.pdfa===true?1:0):r.counts[key];
