@@ -119,6 +119,8 @@ jobs:
         run: node Office/tests/presets.mjs
       - name: Test Guided Experience
         run: node Office/tests/guided.mjs
+      - name: Test Design System
+        run: node Office/tests/design-system.mjs
 
   browser-compatibility:
     runs-on: ubuntu-24.04
