@@ -9,14 +9,14 @@ try{
  const id=x=>page.locator('#'+x);
  await page.goto(pathToFileURL(resolve(root,'Office','MetaMago-Office.html')).href);
  await id('homeFiles').setInputFiles(resolve(root,'Test','Prova.docx'));await page.waitForFunction(()=>!document.querySelector('#editor').disabled);
- assert.equal(await id('smartOfficeResult').isVisible(),true);assert.match(await id('smartOfficeResult').textContent(),/Prova.docx/);
+ await id('workspaceActions').locator('[data-workspace-action=edit]').click();assert.equal(await id('smartOfficeResult').isVisible(),true);assert.match(await id('smartOfficeResult').textContent(),/Prova.docx/);
  await id('smartOfficeResult').locator('button').click();await page.waitForFunction(()=>!document.querySelector('#inspectResult').hidden&&!document.querySelector('#inspectChoose').disabled);
  assert.equal(await id('smartInspectResult').isVisible(),true);
  await id('inspectClear').click();assert.equal(await id('smartInspectResult').isVisible(),false);
  await id('navEdit').click();await id('closeDocument').click();assert.equal(await id('smartOfficeResult').isVisible(),false);
  const pdf=Buffer.from(await page.evaluate(async()=>{const d=await PDFLib.PDFDocument.create({updateMetadata:false});d.addPage();d.setAuthor('Synthetic author');d.setTitle('Synthetic title');return Array.from(await d.save({useObjectStreams:false}))}));
  await id('navHome').click();await id('homeFiles').setInputFiles({name:'sample.pdf',mimeType:'application/pdf',buffer:pdf});await page.waitForFunction(()=>!document.querySelector('#pdfEditor').hidden&&!document.querySelector('#pdfChoose').disabled);
- assert.match(await id('smartPdfResult').textContent(),/Autore presente/);
+ await id('workspaceActions').locator('[data-workspace-action=edit]').click();assert.match(await id('smartPdfResult').textContent(),/Autore presente/);
  await id('smartPdfResult').locator('button').click();await page.waitForFunction(()=>!document.querySelector('#pdfInspectResult').hidden&&!document.querySelector('#inspectChoose').disabled,null,{timeout:130000});
  assert.match(await id('smartInspectResult').textContent(),/Categorie con elementi da verificare/);
  await page.evaluate(()=>smartPdfInspection(new File(['x'],'locked.pdf'),{locked:true,encrypted:true}));assert.match(await id('smartInspectResult').textContent(),/Password necessaria/);

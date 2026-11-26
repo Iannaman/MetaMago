@@ -17,7 +17,7 @@ function syncProfessionalControls(){
  if(!professionalReady)return;
  const el=$('homeSessionStatus');if(!el)return;
  el.textContent=((pending()||(typeof pdfPending==='function'&&pdfPending()))?tr('Documento con modifiche non salvate'):state||(typeof pdfSession!=='undefined'&&pdfSession)?tr('Documento aperto'):tr('Nessun documento aperto'))+' · '+contacts.length+' '+tr('nominativi')+' · '+profiles.length+' '+tr('profili')+' · '+groups.length+' '+tr('gruppi')+' · '+(typeof customModels==='undefined'?0:customModels.length)+' '+tr('modelli personalizzati')+' · '+(Array.isArray(workflows)?workflows.length:0)+' workflow';
- $('resumeEditor').hidden=!state;$('resumePdf').hidden=typeof pdfSession==='undefined'||!pdfSession;$('homeSessionPanel').hidden=$('resumeEditor').hidden&&$('resumePdf').hidden;
+ $('resumeEditor').hidden=!state;$('resumePdf').hidden=typeof pdfSession==='undefined'||!pdfSession;$('homeSessionPanel').hidden=$('resumeEditor').hidden&&$('resumePdf').hidden;if(typeof syncDocumentWorkspace==='function')syncDocumentWorkspace();
  if($('modelDelete')&&typeof modelEditing!=='undefined')$('modelDelete').disabled=busy||!modelEditing;
 }
 $('configExport').onclick=()=>{

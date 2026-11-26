@@ -90,6 +90,7 @@ async function inspectPrivacy(meta,ext,onProgress=()=>{}){
 }
 function inspectCell(text){const td=document.createElement('td');td.textContent=String(text);return td}
 function clearInspection(){
+ if(typeof clearWorkspaceInspection==='function')clearWorkspaceInspection();
  if(typeof smartClear==='function')smartClear('smartInspectResult');
  if(typeof clearPdfInspection==='function')clearPdfInspection();
  if(typeof clearModelInspection==='function')clearModelInspection();if(typeof clearAuditInspection==='function')clearAuditInspection();

@@ -127,6 +127,8 @@ jobs:
         run: node Office/tests/ux-cleanup.mjs
       - name: Test Visual Identity
         run: node Office/tests/visual.mjs
+      - name: Test Document Workspace
+        run: node Office/tests/workspace.mjs
 
   browser-compatibility:
     runs-on: ubuntu-24.04

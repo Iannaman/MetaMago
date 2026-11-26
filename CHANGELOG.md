@@ -1,5 +1,10 @@
 # Changelog
 
+## Office Edition 3.2.3 — Document Workspace (candidato)
+- Apertura singolo file dalla home verso scheda unificata con illustrazione, nome, proprietà originali e azioni compatibili.
+- Navigazione contestuale verso i motori di modifica, ispezione, pulizia e protezione senza riselezionare il file.
+- Bozze conservate; limiti dei parser e controlli di sicurezza invariati.
+
 ## Office Edition 3.2.2 — Visual Identity (candidato)
 - Illustrazione di apertura con Word, Excel, PowerPoint e PDF; quattro metafore visive per le azioni rapide.
 - Rappresentazione schematica del formato nei riepiloghi documento; nessuna anteprima di pagina simulata.

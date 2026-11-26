@@ -1,12 +1,13 @@
 
 let currentView='home', tourIndex=0;
-const viewKeys=['home','edit','batch','rubric','settings','help','inspect','models','audit','pdf'];
+const viewKeys=['home','edit','batch','rubric','settings','help','inspect','models','audit','pdf','workspace'];
 function updateWorkspaceStatus(){
  const el=$('workspaceStatus');if(!el)return;$('inspectCurrent').disabled=busy||!state;if(typeof syncPdfInspectorControls==='function')syncPdfInspectorControls();
  el.textContent=busy?tr('Elaborazione in corso…'):(pending()||(typeof pdfPending==='function'&&pdfPending()))?tr('Documento con modifiche non salvate'):state||(typeof pdfSession!=='undefined'&&pdfSession)?tr('Documento aperto'):tr('Nessun documento aperto');
 }
 function goView(key,{focus=true}={}){
  if(busy||!viewKeys.includes(key))return;
+ if(key==='workspace'&&(typeof renderDocumentWorkspace!=='function'||!renderDocumentWorkspace()))return;
  const changed=currentView!==key;currentView=key;
  for(const pane of document.querySelectorAll('[data-view]')){pane.hidden=pane.dataset.view!==key;if(changed&&!pane.hidden&&typeof motionView==='function')motionView(pane)}
  for(const nav of document.querySelectorAll('.side-nav [data-view-target]')){
@@ -18,7 +19,7 @@ function goView(key,{focus=true}={}){
  if(typeof syncProfessionalControls==='function')syncProfessionalControls();if(focus){const title=document.querySelector('[data-view="'+key+'"] .view-title');title?.focus();window.scrollTo(0,0)}
 }
 for(const button of document.querySelectorAll('[data-view-target]'))button.addEventListener('click',()=>goView(button.dataset.viewTarget));
-function smartOpenFiles(files){if(busy)return;const list=Array.from(files||[]);if(list.length===1)return openFile(list[0]);if(list.length>1)return selectBatch(list)}
+async function smartOpenFiles(files){if(busy)return;const list=Array.from(files||[]);if(list.length===1){const f=list[0];await openFile(f);if(typeof enterDocumentWorkspace==='function'){if(/\.pdf$/i.test(f.name)&&pdfSession?.file===f)enterDocumentWorkspace('pdf');else if(state?.file===f)enterDocumentWorkspace('office')}return}if(list.length>1)return selectBatch(list)}
 $('homeOpen').onclick=()=>{if(!busy)$('homeFiles').click()};$('homeFiles').onchange=e=>{const files=Array.from(e.target.files);e.target.value='';smartOpenFiles(files)};
 $('smartPrivacy').addEventListener('click',()=>{if(!busy){$('batchPanel').open=true;const privacy=$('batchPrivacyOffice');privacy?.closest('details')?.setAttribute('open','');privacy?.focus()}});
 $('smartProtect').addEventListener('click',()=>{if(!busy)$('pdfChoose').focus()});
