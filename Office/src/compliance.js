@@ -10,7 +10,7 @@ async function complianceCheck(file,model){
   if(model.format!=='all')return [{label:tr('Modello documentale'),status:'na'}];
   if(file.size>PDF_MAX)throw Error(tr('PDF non valido o superiore a 20 MiB.'));
   const bytes=new Uint8Array(await file.arrayBuffer()),r=await inspectPdfReadOnly(bytes);
-  const checks=[{label:'QPDF',status:r.locked||r.partial?'unknown':r.check===0?'pass':'fail'}];
+  const structural={label:'QPDF',status:r.locked||r.partial?'unknown':r.check===0?'pass':'fail'};const checks=[structural];
   const map={title:'Title',author:'Author',subject:'Subject',keywords:'Keywords',};
   const privacyMap={comments:'annotations',external:'external',embedded:'attachments'};
   const props=new Map(r.properties||[]);
@@ -24,7 +24,7 @@ async function complianceCheck(file,model){
   }
   if(model.dates)checks.push({label:tr('Date presenti e coerenti'),status:'unknown'});
   for(const k of model.privacy){const key=Object.hasOwn(privacyMap,k)?privacyMap[k]:null;checks.push({label:tr(FINDINGS.find(f=>f[0]===k)[1]),status:key&&!r.locked?(r.counts?.[key]?'fail':r.partial||!Number.isInteger(r.counts?.[key])?'unknown':'pass'):'unknown'})}
-  return checks;
+  if(checks.length===1)checks.push({label:tr('Modello documentale'),status:'unknown'});return checks;
  }
  if(!Object.hasOwn(formats,ext)||file.size>MAX)throw Error(tr('Formato non supportato.'));
  if(model.format!=='all'&&model.format!==formats[ext])return [{label:tr('Modello documentale'),status:'na'}];

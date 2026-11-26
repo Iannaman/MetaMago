@@ -6,6 +6,7 @@ const browser=await chromium.launch({headless:true});
 try{
  const page=await browser.newPage({locale:'it-IT',offline:true,viewport:{width:375,height:800}});const errors=[];page.on('pageerror',e=>errors.push(e.message));page.on('dialog',d=>d.accept());
  await page.goto(pathToFileURL(resolve(dirname(fileURLToPath(import.meta.url)),'../MetaMago-Office.html')).href);
+ assert.deepEqual(errors,[],'startup regression');
  const r=await page.evaluate(async()=>{
   $('batchCompliance').value='institutional';$('workflowName').value='Gate test';$('workflowSave').click();$('batchCompliance').value='';$('workflowLoad').click();
   const restored=$('batchCompliance').value,backup=validateConfiguration(configData()).workflows[0].complianceModel;

@@ -1,7 +1,7 @@
 
 const workflowKeys=['batchAuthorMode','batchAuthors','batchLastOn','batchLast','batchCompanyOn','batchCompany','batchManagerOn','batchManager','batchMark','batchPdfTitleOn','batchPdfTitle','batchWatermarkOn','batchWatermarkText','batchWatermarkPosition','batchProtectOn','batchPrint','batchExtract','batchPrivacyOffice','batchPrivacyPdf'];
 const workflowChecks=new Set(['batchLastOn','batchCompanyOn','batchManagerOn','batchPdfTitleOn','batchWatermarkOn','batchProtectOn','batchExtract','batchPrivacyOffice','batchPrivacyPdf']);
-let workflows=[];
+var workflows=[];
 function workflowCapture(){return Object.fromEntries(workflowKeys.map(k=>[k,workflowChecks.has(k)?$(k).checked:$(k).value]))}
 function validateWorkflow(w){
  if(!w||typeof w.name!=='string'||!validName(w.name)||w.name.length>100||!w.options||Object.keys(w.options).length!==workflowKeys.length)throw Error(tr('Workflow non valido.'));
@@ -20,4 +20,4 @@ $('workflowDelete').onclick=()=>{if(busy)return;const n=$('workflowSelect').valu
 $('workflowExport').onclick=()=>{if(!busy&&confirm(AUDIT_PRIVATE+' '+tr('Esportare il report?')))download(JSON.stringify({version:1,workflows},null,2),'MetaMago-workflow.json','application/json')};
 $('workflowImport').onclick=()=>{if(!busy)$('workflowFile').click()};
 $('workflowFile').onchange=async e=>{const f=e.target.files[0];e.target.value='';if(!f||busy)return;setBusy(true);try{if(f.size>1024*1024)throw Error(tr('Workflow non valido.'));const data=JSON.parse(await f.text());if(data.version!==1||!Array.isArray(data.workflows)||data.workflows.length>50)throw Error(tr('Workflow non valido.'));const list=data.workflows.map(validateWorkflow);if(new Set(list.map(w=>w.name)).size!==list.length)throw Error(tr('Workflow non valido.'));if(confirm(tr('Sostituire tutti i workflow della sessione?'))){workflows=list;workflowRender();msg('workflowStatus',tr('Workflow importati.'),'ok')}}catch(err){msg('workflowStatus',err.message,'error')}finally{setBusy(false)}};
-workflowRender();
+workflowRender();syncProfessionalControls();
