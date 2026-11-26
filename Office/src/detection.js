@@ -2,7 +2,7 @@
 function smartClear(id){const el=$(id);if(el){el.replaceChildren();el.hidden=true}}
 function smartRender(id,file,kind,items,advice,action=null){
  const el=$(id);smartClear(id);
- const title=document.createElement('h3');title.textContent=tr('Riepilogo intelligente');
+ const title=document.createElement('h3');title.id=id+'Title';title.textContent=tr('Riepilogo intelligente');el.setAttribute('role','region');el.setAttribute('aria-labelledby',title.id);
  const doc=document.createElement('p');doc.className='smart-document';doc.textContent=file.name+' · '+kind+' · '+tr('Dimensione: ')+(file.size/1024).toFixed(1)+' KiB';
  const list=document.createElement('ul');
  for(const [state,label] of items){const li=document.createElement('li');li.dataset.state=state;li.textContent=label;list.append(li)}

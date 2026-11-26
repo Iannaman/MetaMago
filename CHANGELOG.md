@@ -1,5 +1,10 @@
 # Changelog
 
+## Office Edition 3.1.5 — Design System (candidato)
+- Token grafici condivisi, icone SVG delle azioni rapide, target touch da almeno 44 px.
+- Regioni con nome accessibile, focus visibile e supporto colori forzati.
+- Test accessibilità di base, tastiera, tema scuro e layout responsive.
+
 ## Office Edition 3.1.4 — Guided Experience (candidato)
 - Indicatore contestuale batch in quattro passaggi, basato su file, anteprima e ZIP effettivi.
 - Errori PDF-lib di parsing presentati con messaggio leggibile e dettagli tecnici espandibili.
