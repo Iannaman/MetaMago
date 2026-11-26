@@ -90,6 +90,8 @@ jobs:
         run: node Office/tests/motion.mjs
       - name: Test Smart Detection
         run: node Office/tests/detection.mjs
+      - name: Test Quick Actions
+        run: node Office/tests/presets.mjs
       - uses: actions/configure-pages@v5
       - uses: actions/upload-pages-artifact@v3
         with:

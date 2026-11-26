@@ -1,5 +1,10 @@
 # Changelog
 
+## Office Edition 3.1.3 — Quick Actions (candidato)
+- Sei preset guidati dalla home: uso interno, pubblicazione esterna, riservato PDF, rimozione identificativi, standard aziendale e sola analisi.
+- Sostituzione esplicita delle impostazioni batch, password azzerate, nessuna elaborazione o salvataggio automatico.
+- Test di regressione dedicati.
+
 ## Office Edition 3.1.2 — Smart Detection (candidato)
 - Riepilogo automatico Office/PDF e indicazioni contestuali sui metadati rilevati.
 - Riepilogo Privacy Inspector con categorie presenti e non conclusive, avvisi per firme, restrizioni, cifratura e parser incompatibile.
