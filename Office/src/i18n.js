@@ -1,6 +1,7 @@
 'use strict';
 const UI_LANG=location.hash==='#en'?'en':location.hash==='#it'?'it':/^it\b/i.test(navigator.language)?'it':'en';
 const EN=Object.freeze({
+ 'Experience Edition · Le proprietà cambiano, il contenuto no.':'Experience Edition · Properties change, content does not.',
  'Percorso elaborazione documenti':'Document processing guide',
  'Prepara le copie in quattro passaggi':'Prepare copies in four steps',
  'Scegli file':'Choose files',

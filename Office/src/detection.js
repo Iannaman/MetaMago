@@ -1,5 +1,5 @@
 
-function smartClear(id){const el=$(id);if(el){el.replaceChildren();el.hidden=true}}
+function smartClear(id){const el=$(id);if(el){el.replaceChildren();el.hidden=true;el.removeAttribute('role');el.removeAttribute('aria-labelledby')}}
 function smartRender(id,file,kind,items,advice,action=null){
  const el=$(id);smartClear(id);
  const title=document.createElement('h3');title.id=id+'Title';title.textContent=tr('Riepilogo intelligente');el.setAttribute('role','region');el.setAttribute('aria-labelledby',title.id);
@@ -13,13 +13,14 @@ function smartRender(id,file,kind,items,advice,action=null){
 }
 function smartPresent(v){return typeof v==='string'&&v.trim().length>0}
 function smartOfficeSummary(file,ext,meta){
- const v=meta.values,items=[['review',tr(smartPresent(v.author)?'Autore presente nei metadati':'Autore non rilevato nei campi esaminati')],['info',tr(smartPresent(v.title)?'Titolo presente':'Titolo non rilevato')]];
+ const v=meta.values,items=[[smartPresent(v.author)?'review':'info',tr(smartPresent(v.author)?'Autore presente nei metadati':'Autore non rilevato nei campi esaminati')],['info',tr(smartPresent(v.title)?'Titolo presente':'Titolo non rilevato')]];
  if(smartPresent(v.company))items.push(['review',tr('Organizzazione presente nei metadati')]);
  if(Object.keys(meta.z.files).some(p=>/vbaProject\.bin$/i.test(p)))items.push(['review',tr('Possibili macro: verifica prima della condivisione')]);
  smartRender('smartOfficeResult',file,formats[ext],items,tr('Controlli preliminari: non equivalgono a un controllo privacy completo.'),()=>{if(state?.file===file)runInspection(file,state.bytes)});
 }
+function smartFieldFinding(field,present,absent,level){if(!field||!field.editable)return ['unknown',(field?.label||tr('Proprietà'))+' · '+tr('Non determinabile senza ulteriori verifiche.')];return smartPresent(field.value)||smartPresent(field.xmp)?[level,tr(present)]:['info',tr(absent)]}
 function smartPdfSummary(file,meta){
- const fields=meta.fields,author=fields.find(f=>f.key==='Author'),title=fields.find(f=>f.key==='Title'),items=[['review',tr(smartPresent(author?.value)||smartPresent(author?.xmp)?'Autore presente nei metadati':'Autore non rilevato nei campi esaminati')],['info',tr(smartPresent(title?.value)||smartPresent(title?.xmp)?'Titolo presente':'Titolo non rilevato')]];
+ const fields=meta.fields,author=fields.find(f=>f.key==='Author'),title=fields.find(f=>f.key==='Title'),items=[smartFieldFinding(author,'Autore presente nei metadati','Autore non rilevato nei campi esaminati','review'),smartFieldFinding(title,'Titolo presente','Titolo non rilevato','info')];
  if(fields.some(f=>f.editable&&smartPresent(f.value)&&smartPresent(f.xmp)&&f.value!==f.xmp))items.push(['review',tr('Metadati Info e XMP discordanti')]);
  if(fields.some(f=>!f.editable)||meta.custom.some(f=>!f.editable))items.push(['unknown',tr('Proprietà non modificabili rilevate')]);
  if(meta.custom.length)items.push(['review',tr('Proprietà personalizzate rilevate')]);

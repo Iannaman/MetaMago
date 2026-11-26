@@ -1,5 +1,12 @@
 # Changelog
 
+## Office Edition 3.2.0 — Experience Edition (candidato)
+- Annullamento ZIP senza eccezioni nel callback di avanzamento; test di cancellazione durante l’archiviazione.
+- Consolidamento di Smart Interface, Motion, Smart Detection, Quick Actions, Guided Experience e Design System.
+- Riepiloghi più conservativi per campi non interpretabili e regioni accessibili ripulite correttamente.
+- Collaudo end-to-end del preset privacy su batch misto Office/PDF, annullamento, anteprima, ZIP e verifica degli originali.
+- Checklist di accettazione automatica e manuale; nessuna dichiarazione di stabilità prima della validazione.
+
 ## Office Edition 3.1.5 — Design System (candidato)
 - Token grafici condivisi, icone SVG delle azioni rapide, target touch da almeno 44 px.
 - Regioni con nome accessibile, focus visibile e supporto colori forzati.
