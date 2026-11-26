@@ -1,6 +1,10 @@
 'use strict';
 const UI_LANG=location.hash==='#en'?'en':location.hash==='#it'?'it':/^it\b/i.test(navigator.language)?'it':'en';
 const EN=Object.freeze({
+ 'PDF non apribile nell’editor. Puoi tentare l’analisi QPDF in sola lettura; nessuna modifica verrà effettuata.':'PDF cannot be opened in the editor. You can attempt read-only QPDF inspection; no changes will be made.',
+ 'Analizza originale in sola lettura (QPDF)':'Inspect original read-only (QPDF)',
+ 'Rimuovi documento non aperto':'Remove unopened document',
+ 'Il documento aperto in precedenza è ancora nell’editor.':'The previously opened document is still in the editor.',
  'Modello precedente non disponibile — seleziona un modello':'Previous model unavailable — select a model',
  'Modello documentale mancante: ripristinalo prima di caricare il workflow.':'Document model missing: restore it before loading the workflow.',
  'Limite dimensione copie batch superato.':'Batch output size limit exceeded.',
