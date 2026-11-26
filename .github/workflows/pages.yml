@@ -106,6 +106,8 @@ jobs:
         run: node Office/tests/workspace.mjs
       - name: Test Visual Comparison
         run: node Office/tests/comparison.mjs
+      - name: Test Visual Storytelling
+        run: node Office/tests/storytelling.mjs
       - uses: actions/configure-pages@v5
       - uses: actions/upload-pages-artifact@v3
         with:

@@ -15,11 +15,11 @@ try{
  assert.equal(await id('viewEdit').isVisible(),false);
  assert.equal(await id('viewRubric').isVisible(),false);
  assert.equal(await id('navHome').getAttribute('aria-current'),'page');
- await id('startTour').click();assert.match(await id('tourStep').textContent(),/1 \/ 3/);
+ await id('startTour').click();assert.match(await id('tourStep').textContent(),/1 \/ 4/);
  assert.equal(await id('tourPrev').isDisabled(),true);
- await id('tourNext').click();assert.match(await id('tourStep').textContent(),/2 \/ 3/);
- await id('tourPrev').click();assert.match(await id('tourStep').textContent(),/1 \/ 3/);
- await id('tourNext').click();await id('tourNext').click();await id('tourNext').click();
+ await id('tourNext').click();assert.match(await id('tourStep').textContent(),/2 \/ 4/);
+ await id('tourPrev').click();assert.match(await id('tourStep').textContent(),/1 \/ 4/);
+ await id('tourNext').click();await id('tourNext').click();await id('tourNext').click();await id('tourNext').click();
  assert.equal(await id('viewEdit').isVisible(),true);
  await id('file').setInputFiles(resolve(root,'Test','Prova.docx'));
  await page.waitForFunction(()=>!document.querySelector('#editor').disabled);
