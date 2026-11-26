@@ -10,7 +10,7 @@ try{
   assert.match(await id(button).textContent(),new RegExp(name));assert.equal(await id(button).locator('svg').count(),1);
   assert.ok((await id(button).boundingBox()).height>=44);
  }
- assert.equal(await page.getByRole('region',{name:'Parti dal risultato'}).count(),1);
+ await id('quickPresetsDisclosure').locator('summary').click();assert.equal(await page.getByRole('region',{name:'Parti dal risultato'}).count(),1);
  await id('smartEdit').focus();await page.keyboard.press('Enter');assert.equal(await id('viewEdit').isVisible(),true);assert.equal(await id('navEdit').getAttribute('aria-current'),'page');
  await id('navSettings').click();await id('uiTheme').selectOption('dark');await id('navHome').click();
  assert.equal(await page.locator('html').evaluate(e=>getComputedStyle(e).getPropertyValue('--mm-surface').trim()),'#20283b');

@@ -98,6 +98,8 @@ jobs:
         run: node Office/tests/design-system.mjs
       - name: Test Experience End-to-End
         run: node Office/tests/experience-e2e.mjs
+      - name: Test UX Cleanup
+        run: node Office/tests/ux-cleanup.mjs
       - uses: actions/configure-pages@v5
       - uses: actions/upload-pages-artifact@v3
         with:

@@ -7,7 +7,7 @@ try{
  const page=await browser.newPage({locale:'it-IT',offline:true,viewport:{width:375,height:800}}),errors=[],downloads=[];let accept=true;
  page.on('pageerror',e=>errors.push(e.message));page.on('download',d=>downloads.push(d.suggestedFilename()));page.on('dialog',d=>accept?d.accept():d.dismiss());
  const id=x=>page.locator('#'+x);await page.goto(pathToFileURL(resolve(dirname(fileURLToPath(import.meta.url)),'../MetaMago-Office.html')).href);
- async function preset(p){await id('navHome').click();await id('quickPreset').selectOption(p);await id('quickPresetStart').click()}
+ async function preset(p){await id('navHome').click();if(!await id('quickPresetsDisclosure').evaluate(e=>e.open))await id('quickPresetsDisclosure').locator('summary').click();await id('quickPreset').selectOption(p);await id('quickPresetStart').click()}
  await preset('internal');assert.equal(await id('batchAuthorMode').inputValue(),'replace');assert.equal(await id('batchRun').isDisabled(),true);
  await page.evaluate(()=>{$('batchOwner').value='Secret-test-1234';$('batchCompany').value='Draft';$('batchCompanyOn').checked=true});
  accept=false;await preset('external');assert.equal(await id('viewHome').isVisible(),true);assert.equal(await page.evaluate(()=>$('batchCompany').value),'Draft');

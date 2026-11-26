@@ -31,7 +31,7 @@ try{
   return {blocked,legacy,stable,failed,hashLength:hash.length,checks:row.auditChanges.length};
  });
  assert.deepEqual(r,{blocked:true,legacy:'institutional',stable:'institutional',failed:true,hashLength:64,checks:2});
- await page.locator('#unifiedGoal').selectOption('check');await page.locator('#unifiedStart').click();
+ await page.locator('#quickPresetsDisclosure>summary').click();await page.locator('#quickPreset').selectOption('standard');await page.locator('#quickPresetStart').click();
  assert.equal(await page.locator('#compliancePanel').evaluate(e=>e.open),true);
  assert.deepEqual(errors,[]);
  console.log('PASS '+engine+' startup, SHA-256, QPDF, compliance gate, missing model and legacy workflow');

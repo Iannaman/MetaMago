@@ -1,5 +1,10 @@
 # Changelog
 
+## Office Edition 3.2.1 — UX Cleanup (candidato)
+- Home centrata su apertura documenti e quattro azioni, rimozione duplicazione percorso guidato e schede professionali.
+- Preset espandibili, sessione visibile con documenti aperti, navigazione mobile a scorrimento orizzontale.
+- Migrazione dei test di navigazione verso il percorso unificato dei preset.
+
 ## Office Edition 3.2.0 — Experience Edition (candidato)
 - Annullamento ZIP senza eccezioni nel callback di avanzamento; test di cancellazione durante l’archiviazione.
 - Consolidamento di Smart Interface, Motion, Smart Detection, Quick Actions, Guided Experience e Design System.
