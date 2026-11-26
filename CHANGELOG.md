@@ -1,6 +1,7 @@
 # Changelog
 
 ## Office Edition 3.2.0 — Experience Edition (candidato)
+- Annullamento ZIP senza eccezioni nel callback di avanzamento; test di cancellazione durante l’archiviazione.
 - Consolidamento di Smart Interface, Motion, Smart Detection, Quick Actions, Guided Experience e Design System.
 - Riepiloghi più conservativi per campi non interpretabili e regioni accessibili ripulite correttamente.
 - Collaudo end-to-end del preset privacy su batch misto Office/PDF, annullamento, anteprima, ZIP e verifica degli originali.

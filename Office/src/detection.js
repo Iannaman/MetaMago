@@ -18,7 +18,7 @@ function smartOfficeSummary(file,ext,meta){
  if(Object.keys(meta.z.files).some(p=>/vbaProject\.bin$/i.test(p)))items.push(['review',tr('Possibili macro: verifica prima della condivisione')]);
  smartRender('smartOfficeResult',file,formats[ext],items,tr('Controlli preliminari: non equivalgono a un controllo privacy completo.'),()=>{if(state?.file===file)runInspection(file,state.bytes)});
 }
-function smartFieldFinding(field,present,absent,level){if(!field||!field.editable)return ['unknown',tr('Non determinabile senza ulteriori verifiche.')+' · '+tr(present)];return smartPresent(field.value)||smartPresent(field.xmp)?[level,tr(present)]:['info',tr(absent)]}
+function smartFieldFinding(field,present,absent,level){if(!field||!field.editable)return ['unknown',(field?.label||tr('Proprietà'))+' · '+tr('Non determinabile senza ulteriori verifiche.')];return smartPresent(field.value)||smartPresent(field.xmp)?[level,tr(present)]:['info',tr(absent)]}
 function smartPdfSummary(file,meta){
  const fields=meta.fields,author=fields.find(f=>f.key==='Author'),title=fields.find(f=>f.key==='Title'),items=[smartFieldFinding(author,'Autore presente nei metadati','Autore non rilevato nei campi esaminati','review'),smartFieldFinding(title,'Titolo presente','Titolo non rilevato','info')];
  if(fields.some(f=>f.editable&&smartPresent(f.value)&&smartPresent(f.xmp)&&f.value!==f.xmp))items.push(['review',tr('Metadati Info e XMP discordanti')]);

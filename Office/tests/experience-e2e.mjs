@@ -33,5 +33,13 @@ try{
  },Array.from(await readFile(await download.path())));
  assert.equal(result.count,2);assert.deepEqual(result.office,['','','','','Experience fixture']);assert.deepEqual(result.pdf.slice(0,4),[['',''],['',''],['',''],['','']]);assert.equal(result.pdf[4][0],'Experience PDF');assert.equal(result.pages,1);assert.deepEqual(result.originals,[hash(fixture.office),hash(fixture.pdf)]);
  assert.equal(await page.locator('#batchGuideSteps [data-complete=true]').count(),4);assert.deepEqual(downloads,['MetaMago-copie.zip']);assert.deepEqual(requests,[]);assert.deepEqual(errors,[]);
+ // Exercise cancellation inside the real ZIP progress callback; no exception may escape.
+ await page.evaluate(()=>{const original=JSZip.prototype.generateAsync;JSZip.prototype.generateAsync=function(options,update){if(options?.type==='blob'&&options.streamFiles)return original.call(this,options,meta=>{if(!batchCancelled)$('batchCancel').click();if(update)update(meta)});return original.call(this,options,update)}});
+ await id('batchPreview').click();await page.waitForFunction(()=>!document.querySelector('#batchRun').disabled&&!busy,null,{timeout:130000});
+ await id('batchRun').click();await page.waitForFunction(()=>!busy&&batchPlan===null&&batchZip===null,null,{timeout:240000});
+ assert.match(await id('batchStatus').textContent(),/nessuno ZIP scaricato/);
+ assert.equal(await id('batchAgain').isVisible(),false);assert.equal(downloads.length,1);assert.deepEqual(errors,[]);
+ const unknown=await page.evaluate(()=>smartFieldFinding({editable:false,label:'Autore'},'Autore presente nei metadati','Autore non rilevato','review'));
+ assert.equal(unknown[0],'unknown');assert.doesNotMatch(unknown[1],/presente/);
  console.log('PASS Experience E2E: mixed Office/PDF privacy preset, actual preview, cancel, download, metadata verification, originals SHA-256, offline');
 }finally{await browser.close()}

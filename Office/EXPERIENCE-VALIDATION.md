@@ -8,7 +8,7 @@ Candidate until all applicable CI jobs and manual acceptance tests have passed.
 - Complete existing Chromium regression suite, including PDF rendering and independent QPDF verification.
 - Chromium, Firefox and WebKit compatibility matrix.
 - Smart Interface, Motion, Smart Detection, Quick Actions, Guided Experience and Design System regression tests.
-- End-to-end mixed Office/PDF privacy preset: select documents, preview, refuse confirmation, generate ZIP, verify output metadata and unchanged SHA-256 of original inputs.
+- End-to-end mixed Office/PDF privacy preset: select documents, preview, refuse confirmation, generate ZIP, verify output metadata and unchanged SHA-256 of original inputs; cancellation during real ZIP generation must not produce a download.
 - Deterministic generated HTML and minimal Pages build.
 
 ## Manual acceptance (use synthetic documents only)
