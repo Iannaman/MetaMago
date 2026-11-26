@@ -5,12 +5,13 @@ import { fileURLToPath } from 'node:url';
 import { buildPwa } from './pwa-build.mjs';
 import { createHash } from 'node:crypto';
 import { Script } from 'node:vm';
+import { rendererBundle } from './renderer-build.mjs';
 
 const office=dirname(fileURLToPath(import.meta.url)), root=resolve(office,'..');
 const read=async name=>(await readFile(resolve(office,name),'utf8')).replace(/\r\n/g,'\n');
 const version=(await read('VERSION')).trim();
 if(!/^\d+\.\d+\.\d+$/.test(version))throw Error('Invalid version');
-const [template,style,vendor,...modules]=await Promise.all(['src/index.html','src/style.css','vendor/jszip.min.js','src/i18n.js','src/metadata.js','src/zip-guard.js','src/marker.js','src/rubrica.js','src/app.js','src/team.js','src/batch.js','src/pwa.js','src/experience.js','src/inspector.js','src/automation.js','src/xlsx-contacts.js','src/audit.js','src/performance.js','src/professional.js','src/pdf.js','src/protection.js','src/pdf-inspector.js','src/publication.js','src/privacy.js','src/compliance.js','src/workflow.js','src/unified.js','src/motion.js','src/detection.js','src/presets.js','src/guided.js','src/visual.js','src/workspace.js','src/comparison.js'].map(read));
+const [template,style,vendor,...modules]=await Promise.all(['src/index.html','src/style.css','vendor/jszip.min.js','src/i18n.js','src/metadata.js','src/zip-guard.js','src/marker.js','src/rubrica.js','src/app.js','src/team.js','src/batch.js','src/pwa.js','src/experience.js','src/inspector.js','src/automation.js','src/xlsx-contacts.js','src/audit.js','src/performance.js','src/professional.js','src/pdf.js','src/protection.js','src/pdf-inspector.js','src/publication.js','src/privacy.js','src/compliance.js','src/workflow.js','src/unified.js','src/motion.js','src/detection.js','src/presets.js','src/guided.js','src/visual.js','src/workspace.js','src/comparison.js','src/pdf-preview.js'].map(read));
 // PDF-lib is pinned by npm ci in pdf-deps; bundled into the HTML, never loaded from a CDN.
 const pdfRoot=resolve(office,'pdf-deps','node_modules');
 const pdfVendor=(await readFile(resolve(pdfRoot,'pdf-lib','dist','pdf-lib.min.js'),'utf8')).replace(/\r\n/g,'\n').replace(/^\/\/#[^\n]*sourceMappingURL[^\n]*$/gm,'');
@@ -44,7 +45,8 @@ if(qpdfDigest!=='843495f51c8249f49863649a5e2e719e76709aa05f871e56d080e032fac4550
 console.log('QPDF WASM sha256 '+qpdfDigest);
 const notice='/*\n'+notices.join('\n\n').replace(/\*\//g,'* /').replace(/<\/script/gi,'< /script')+'\n*/\n';
 if(/<\/script/i.test(pdfVendor))throw Error('PDF vendor contains script closing tag');
-const app=(notice+pdfVendor+';\n'+qpdfBundle+modules.join('').replace(/@@VERSION@@/g,version)).replace(/\r\n?/g,'\n');
+const renderer=await rendererBundle(office);
+const app=(notice+pdfVendor+';\n'+qpdfBundle+renderer+modules.join('').replace(/@@VERSION@@/g,version)).replace(/\r\n?/g,'\n');
 const hashes=[vendor,app].map(s=>"'sha256-"+createHash('sha256').update(s,'utf8').digest('base64')+"'").join(' ');
 const tokens={VERSION:version,SCRIPT_HASHES:hashes,STYLE:style,VENDOR:vendor,APP:app};
 const html=template.replace(/@@([A-Z_]+)@@/g,(m,k)=>{if(!Object.hasOwn(tokens,k))throw Error('Unknown token '+k);return tokens[k]});

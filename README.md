@@ -3,7 +3,7 @@
 # MetaMago 🪄
 **Le proprietà cambiano, il contenuto no.**
 
-Editor locale dei metadati di Microsoft Word, Excel e PowerPoint. Sviluppato da [Iannaman](https://github.com/Iannaman). Office Edition 3.2.5 è candidata al rilascio stabile; Desktop Edition resta beta. Il collaudo manuale su Office ed Edge aziendale è necessario prima di adottarla.
+Editor locale dei metadati di Microsoft Word, Excel e PowerPoint. Sviluppato da [Iannaman](https://github.com/Iannaman). Office Edition 3.2.6 è candidata al rilascio stabile; Desktop Edition resta beta. Il collaudo manuale su Office ed Edge aziendale è necessario prima di adottarla.
 
 ## Scegli l'edizione
 
@@ -21,11 +21,13 @@ Editor locale dei metadati di Microsoft Word, Excel e PowerPoint. Sviluppato da 
 | MetaMago Mark e ispettore proprietà personalizzate | Sì, facoltativo | Non ancora |
 | Sola lettura Windows | No | Sì |
 
-### Office Edition — v3.2.5 · Visual Storytelling
+### Office Edition — v3.2.6 · Visual PDF Preview
 
 [**Avvia MetaMago**](https://iannaman.github.io/MetaMago/). Per aprirlo in una finestra dedicata, premi **Installa applicazione** o usa il comando App di Edge, se consentito. Seleziona un documento, modifica le proprietà e salva una copia. Verifica il risultato in Office > File > Informazioni.
 
 La modalità Semplice è predefinita; Avanzata mostra altre proprietà e protezione. Puoi gestire la rubrica anche senza aprire un documento, richiamare un profilo dal menu rapido, selezionare l'ultimo autore con un clic e confermare i nomi digitati anche al salvataggio. La schermata di completamento permette di scaricare di nuovo la copia o aprire un altro documento. Le date visualizzate seguono la lingua selezionata; il confronto Audit usa valori originali.
+
+**Visual PDF Preview (3.2.6, candidato):** rendering locale a pagina singola e confronto con una copia temporanea delle operazioni di pubblicazione. PDF.js incorporato nella build con versione e hash fissati; nessuna connessione durante l’uso. La prima build richiede l’archivio della dipendenza dal registry npm. L’anteprima non è una certificazione di fedeltà grafica.
 
 **Visual Storytelling (3.2.5, candidato):** guida illustrata interattiva in quattro passaggi, esempio sintetico di rimozione dell’autore, animazioni non bloccanti e movimento ridotto.
 

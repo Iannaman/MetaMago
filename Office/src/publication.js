@@ -15,7 +15,7 @@ function currentPublicationCopy(){
 }
 function clearPublication(){
  if(!publicationReady)return;
- publicationLast=null;$('publicationSource').value='original';$('publicationPreset').value='custom';
+ if(typeof clearPdfPreview==='function')clearPdfPreview();publicationLast=null;$('publicationSource').value='original';$('publicationPreset').value='custom';
  $('publicationWatermark').checked=false;$('publicationText').value=tr('BOZZA');$('publicationPosition').value='center';$('publicationSize').value='36';$('publicationOpacity').value='30';$('publicationColor').value='gray';
  $('publicationFlatten').checked=false;$('publicationCustom').checked=false;$('publicationMark').checked=false;$('publicationAck').checked=false;
  for(const k of publicationFields)$('publication-'+k).checked=false;
@@ -39,7 +39,7 @@ function syncPublicationControls(){
  const options=publicationOptions(),lines=publicationSummary(options),source=publicationSource();
  $('publicationSummary').textContent=pdfPending()?tr('Salva o ripristina prima le modifiche ai metadati.'):source?.name+'\n'+(lines.join('\n')||tr('Nessuna operazione selezionata.'));
  $('publicationRun').disabled=busy||!source||!lines.length||!$('publicationAck').checked;
- $('publicationAgain').hidden=!currentPublicationCopy();$('publicationAgain').disabled=busy;
+ $('publicationAgain').hidden=!currentPublicationCopy();$('publicationAgain').disabled=busy;if(typeof syncPdfPreview==='function')syncPdfPreview();
 }
 function publicationChanged(){
  publicationLast=null;$('publicationAck').checked=false;msg('publicationStatus','');syncPublicationControls();syncProtectionControls();

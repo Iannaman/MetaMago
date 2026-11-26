@@ -1,6 +1,23 @@
 'use strict';
 const UI_LANG=location.hash==='#en'?'en':location.hash==='#it'?'it':/^it\b/i.test(navigator.language)?'it':'en';
 const EN=Object.freeze({
+ 'Anteprima visiva PDF':'PDF visual preview',
+ 'Visualizza pagina PDF':'View PDF page',
+ 'Rendering locale della pagina, senza collegamenti o moduli interattivi. Annotazioni e alcuni elementi complessi possono non essere visualizzati. Non sostituisce il controllo nel lettore PDF.':'Local page rendering, with no interactive links or forms. Annotations and some complex elements may not appear. This does not replace checking in a PDF reader.',
+ 'Pagina':'Page',
+ 'Visualizza pagina':'View page',
+ 'Chiudi anteprima':'Close preview',
+ 'Documento di partenza':'Source document',
+ 'Copia temporanea prevista':'Planned temporary copy',
+ 'Anteprima della pagina di partenza':'Preview of source page',
+ 'Anteprima della pagina modificata':'Preview of modified page',
+ 'Anteprima delle operazioni':'Preview operations',
+ 'Preparazione anteprima locale…':'Preparing local preview…',
+ 'Anteprima locale pronta. Nessun file scaricato.':'Local preview ready. No file downloaded.',
+ 'Anteprima non disponibile per questo documento. Usa il lettore PDF per la verifica.':'Preview unavailable for this document. Use a PDF reader to check it.',
+ 'Anteprima scaduta: ripeti il controllo.':'Preview timed out: try again.',
+ 'Numero pagina non valido.':'Invalid page number.',
+ 'Pagina troppo grande o geometria non valida.':'Page too large or invalid geometry.',
  'Scopri i metadati con un esempio illustrato. Non serve un file personale.':'Explore metadata with an illustrated example. No personal file needed.',
  'Dimostrazione: nessun documento reale viene modificato.':'Demonstration: no real document is modified.',
  'Un documento contiene pagine visibili e proprietà nascoste, come autore e titolo.':'A document contains visible pages and hidden properties such as author and title.',

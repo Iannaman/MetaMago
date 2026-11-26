@@ -108,6 +108,8 @@ jobs:
         run: node Office/tests/comparison.mjs
       - name: Test Visual Storytelling
         run: node Office/tests/storytelling.mjs
+      - name: Test Visual PDF Preview
+        run: node Office/tests/pdf-preview.mjs
       - uses: actions/configure-pages@v5
       - uses: actions/upload-pages-artifact@v3
         with:
