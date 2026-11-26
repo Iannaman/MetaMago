@@ -1,6 +1,8 @@
 'use strict';
 const UI_LANG=location.hash==='#en'?'en':location.hash==='#it'?'it':/^it\b/i.test(navigator.language)?'it':'en';
 const EN=Object.freeze({
+ 'Analisi del documento in corso…':'Analysing document…',
+ 'Elaborazione dei documenti in corso…':'Processing documents…',
  'Inizia da un documento oppure scegli un risultato da ottenere.':'Start with a document or choose an outcome.',
  'Trascina qui i tuoi documenti':'Drop your documents here',
  'Word, Excel, PowerPoint e PDF · uno o più file':'Word, Excel, PowerPoint and PDF · one or more files',

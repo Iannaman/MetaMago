@@ -111,6 +111,8 @@ jobs:
         run: node Office/tests/pdf-fallback.mjs
       - name: Test Smart Interface
         run: node Office/tests/smart-interface.mjs
+      - name: Test Motion
+        run: node Office/tests/motion.mjs
 
   browser-compatibility:
     runs-on: ubuntu-24.04
