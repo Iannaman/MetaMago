@@ -105,3 +105,29 @@ jobs:
         run: node Office/tests/optimization.mjs
       - name: Test Unified
         run: node Office/tests/unified.mjs
+      - name: Test Stability
+        run: node Office/tests/stability.mjs
+
+  browser-compatibility:
+    runs-on: ubuntu-24.04
+    strategy:
+      fail-fast: false
+      matrix:
+        browser: [chromium, firefox, webkit]
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: '22'
+      - name: Build application
+        run: |
+          npm ci --prefix Office/pdf-deps --ignore-scripts --no-audit --no-fund
+          node Office/build.mjs
+      - name: Install Playwright
+        run: npm install --no-save --no-package-lock playwright@1.56.1
+      - name: Install browser
+        run: npx playwright install --with-deps ${{ matrix.browser }}
+      - name: Compatibility tests
+        env:
+          METAMAGO_BROWSER: ${{ matrix.browser }}
+        run: node Office/tests/compatibility.mjs

@@ -1,5 +1,13 @@
 # Changelog
 
+## Office Edition 3.0.1 — Stability Update (candidato)
+- Impedisce la disattivazione implicita di Compliance quando un modello selezionato viene eliminato; riferimenti ai modelli predefiniti indipendenti dalla lingua.
+- Nuovi test di compatibilità Chromium, Firefox, WebKit e blocco Compliance su copie reali.
+- Conservazione della selezione Compliance nei workflow; rifiuto esplicito del caricamento se il modello manca.
+- Svuotamento password alla nuova selezione; esiti batch coerenti in caso di annullamento o errore ZIP.
+- Regole PDF non equivalenti trattate come non conclusive; riuso Blob nel download.
+- Test di regressione aggiuntivi.
+
 ## Office Edition 3.0.0 — Unified Professional Edition (candidato)
 - Percorso guidato per obiettivo e ripresa della sessione PDF.
 - Backup configurazione v2 con workflow, compatibile con import v1; nessuna password.

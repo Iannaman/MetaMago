@@ -80,6 +80,8 @@ jobs:
         run: node Office/tests/optimization.mjs
       - name: Test Unified
         run: node Office/tests/unified.mjs
+      - name: Test Stability
+        run: node Office/tests/stability.mjs
       - uses: actions/configure-pages@v5
       - uses: actions/upload-pages-artifact@v3
         with:

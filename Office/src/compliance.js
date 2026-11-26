@@ -10,12 +10,12 @@ async function complianceCheck(file,model){
   if(model.format!=='all')return [{label:tr('Modello documentale'),status:'na'}];
   if(file.size>PDF_MAX)throw Error(tr('PDF non valido o superiore a 20 MiB.'));
   const bytes=new Uint8Array(await file.arrayBuffer()),r=await inspectPdfReadOnly(bytes);
-  const checks=[{label:'QPDF',status:r.locked||r.partial?'unknown':r.check===0?'pass':'fail'}];
-  const map={title:'Title',author:'Author',subject:'Subject',keywords:'Keywords',description:'Subject'};
+  const structural={label:'QPDF',status:r.locked||r.partial?'unknown':r.check===0?'pass':'fail'};const checks=[structural];
+  const map={title:'Title',author:'Author',subject:'Subject',keywords:'Keywords',};
   const privacyMap={comments:'annotations',external:'external',embedded:'attachments'};
   const props=new Map(r.properties||[]);
   for(const rule of model.rules){
-   const key=map[rule.field];let status='unknown';
+   const key=Object.hasOwn(map,rule.field)?map[rule.field]:null;let status='unknown';
    if(key&&!r.locked&&!r.partial&&!r.propertiesTruncated&&['read','absent'].includes(r.xmpState)){
     const a=String(props.get(key)||'').trim(),b=String(r.xmpFields?.[key]||'').trim();
     if(b!==tr('Non conclusivo')&&!(a&&b&&a!==b)){const v=a||b;status=(rule.op==='present'?!!v:rule.op==='empty'?!v:v===rule.value)?'pass':'fail'}
@@ -23,8 +23,8 @@ async function complianceCheck(file,model){
    checks.push({label:specs[rule.field][3],status});
   }
   if(model.dates)checks.push({label:tr('Date presenti e coerenti'),status:'unknown'});
-  for(const k of model.privacy){const key=privacyMap[k];checks.push({label:tr(FINDINGS.find(f=>f[0]===k)[1]),status:key&&!r.locked?(r.counts?.[key]?'fail':r.partial?'unknown':'pass'):'unknown'})}
-  return checks;
+  for(const k of model.privacy){const key=Object.hasOwn(privacyMap,k)?privacyMap[k]:null;checks.push({label:tr(FINDINGS.find(f=>f[0]===k)[1]),status:key&&!r.locked?(r.counts?.[key]?'fail':r.partial||!Number.isInteger(r.counts?.[key])?'unknown':'pass'):'unknown'})}
+  if(checks.length===1)checks.push({label:tr('Modello documentale'),status:'unknown'});return checks;
  }
  if(!Object.hasOwn(formats,ext)||file.size>MAX)throw Error(tr('Formato non supportato.'));
  if(model.format!=='all'&&model.format!==formats[ext])return [{label:tr('Modello documentale'),status:'na'}];
