@@ -1,5 +1,10 @@
 # Changelog
 
+## Office Edition 3.1.0 — Smart Interface (candidato)
+- Home orientata al documento e selezione multipla con instradamento automatico verso editor Office/PDF o batch.
+- Quattro azioni rapide e strumenti professionali raggruppati; interfaccia responsive, tema scuro e traduzioni.
+- Conservazione della navigazione, delle bozze e dei controlli di integrità; test di regressione dedicati.
+
 ## Office Edition 3.0.2 — PDF Compatibility (candidato)
 - Analisi QPDF in sola lettura offerta dopo rifiuto del parser PDF-lib; nessuna modifica permissiva.
 - Indicazione separata del fallimento del parser e del precedente documento ancora aperto.
