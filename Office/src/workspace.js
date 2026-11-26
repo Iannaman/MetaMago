@@ -1,5 +1,5 @@
 
-let workspaceKind='',workspaceInspectionFile=null;
+var workspaceKind='',workspaceInspectionFile=null;
 function workspaceSource(kind=workspaceKind){return kind==='office'?state:kind==='pdf'?pdfSession:null}
 function workspaceField(field){if(!field||!field.editable)return tr('Non determinabile senza ulteriori verifiche.');if(smartPresent(field.value)&&smartPresent(field.xmp)&&field.value!==field.xmp)return tr('Valori originali diversi (Info e XMP)');return field.value||field.xmp||tr('Non disponibile nei campi esaminati')}
 function syncDocumentWorkspace(){if(!$('workspaceResume'))return;if(!workspaceSource())workspaceKind=state?'office':pdfSession?'pdf':'';$('workspaceResume').hidden=!workspaceSource();$('officeWorkspace').hidden=!state;$('inspectWorkspace').hidden=!workspaceInspectionFile||workspaceSource()?.file!==workspaceInspectionFile}
