@@ -1,6 +1,20 @@
 'use strict';
 const UI_LANG=location.hash==='#en'?'en':location.hash==='#it'?'it':/^it\b/i.test(navigator.language)?'it':'en';
 const EN=Object.freeze({
+ 'Il tuo documento':'Your document',
+ 'Apri scheda documento':'Open document overview',
+ 'Vai alla scheda documento':'Go to document overview',
+ 'Torna alla scheda del documento':'Return to document overview',
+ 'Apri un altro documento':'Open another document',
+ 'Scegli cosa fare con questo documento. Le modifiche verranno salvate in una copia.':'Choose what to do with this document. Changes will be saved in a copy.',
+ "Le informazioni sono preliminari: l'analisi completa richiede controlli aggiuntivi.":'Preliminary information: full inspection requires additional checks.',
+ 'Non disponibile nei campi esaminati':'Not available in the examined fields',
+ 'Valori originali diversi (Info e XMP)':'Different original values (Info and XMP)',
+ 'Modifica le proprietà del documento aperto':'Edit properties of the open document',
+ 'Analizza il documento originale in sola lettura':'Inspect the original document read-only',
+ 'Scegli i metadati da rimuovere dalla copia':'Choose metadata to remove from the copy',
+ 'Configura password e restrizioni della copia PDF':'Configure password and restrictions for the PDF copy',
+ 'Sono presenti modifiche non salvate. Salvale o ripristinale prima della pulizia o protezione.':'There are unsaved changes. Save or reset them before cleanup or protection.',
  'Documenti':'Documents',
  'Strumenti':'Tools',
  'Apri un documento per iniziare. Le operazioni disponibili dipendono dal formato.':'Open a document to begin. Available operations depend on its format.',

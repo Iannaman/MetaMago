@@ -17,11 +17,11 @@ try{
  await id('smartProfessional').locator('[data-view-target=audit]').click();assert.equal(await id('viewAudit').isVisible(),true);
  await id('navHome').click();await id('homeFiles').setInputFiles(resolve(root,'Test','Prova.docx'));
  await page.waitForFunction(()=>!document.querySelector('#editor').disabled);
- await id('title').fill('Smart draft');await id('navHome').click();await id('resumeEditor').click();assert.equal(await id('title').inputValue(),'Smart draft');
+ await id('workspaceActions').locator('[data-workspace-action=edit]').click();await id('title').fill('Smart draft');await id('navHome').click();await id('resumeEditor').click();assert.equal(await id('title').inputValue(),'Smart draft');
  await id('navHome').click();
  const pdf=Buffer.from(await page.evaluate(async()=>{const d=await PDFLib.PDFDocument.create({updateMetadata:false});d.addPage();return Array.from(await d.save({useObjectStreams:false}))}));
  await id('homeFiles').setInputFiles({name:'sample.pdf',mimeType:'application/pdf',buffer:pdf});await page.waitForFunction(()=>!document.querySelector('#pdfEditor').hidden&&!document.querySelector('#pdfChoose').disabled);
- assert.equal(await id('viewPdf').isVisible(),true);
+ assert.equal(await id('viewWorkspace').isVisible(),true);await id('workspaceActions').locator('[data-workspace-action=edit]').click();assert.equal(await id('viewPdf').isVisible(),true);
  await id('navHome').click();
  const docx=await readFile(resolve(root,'Test','Prova.docx'));
  await id('homeFiles').setInputFiles([{name:'sample.pdf',mimeType:'application/pdf',buffer:pdf},{name:'sample.docx',mimeType:'application/vnd.openxmlformats-officedocument.wordprocessingml.document',buffer:docx}]);

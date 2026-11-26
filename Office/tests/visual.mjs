@@ -13,7 +13,7 @@ try{
  await id('navSettings').click();await id('uiTheme').selectOption('dark');await id('navHome').click();
  assert.equal(await page.locator('.visual-hero .vis-paper').first().evaluate(e=>getComputedStyle(e).fill),'rgb(48, 55, 80)');
  await id('homeFiles').setInputFiles(resolve(root,'Test','Prova.docx'));await page.waitForFunction(()=>!document.querySelector('#editor').disabled);
- assert.equal(await id('smartOfficeResult').locator('.visual-document-icon').textContent(),'W');
+ assert.equal(await id('workspaceDocumentHead').locator('.visual-document-icon').textContent(),'W');await id('workspaceActions').locator('[data-workspace-action=edit]').click();assert.equal(await id('smartOfficeResult').locator('.visual-document-icon').textContent(),'W');
  await id('navHome').click();for(const width of [320,375,768,1280]){await page.setViewportSize({width,height:800});assert.ok(await page.evaluate(()=>document.documentElement.scrollWidth<=innerWidth+1))}
  assert.deepEqual(errors,[]);assert.deepEqual(requests,[]);console.log('PASS Visual Identity: local SVG, format illustration, dark theme and responsive layout');
 }finally{await browser.close()}
