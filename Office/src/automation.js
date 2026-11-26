@@ -25,6 +25,7 @@ function modelOption(id,items,emptyLabel){
  const el=$(id),prev=el.value;el.replaceChildren();if(emptyLabel){const o=document.createElement('option');o.value='';o.textContent=emptyLabel;el.append(o)}
  for(const m of items){const o=document.createElement('option');o.value=m.id;o.textContent=m.name+(m.builtin?' · '+tr('Predefinito'):'');el.append(o)}
  if([...el.options].some(o=>o.value===prev))el.value=prev;
+ else if(id==='batchCompliance'&&prev){const o=document.createElement('option');o.value='__missing_model__';o.textContent=tr('Modello precedente non disponibile — seleziona un modello');el.append(o);el.value=o.value;}
 }
 function refreshModels(){
  const items=getModels();modelOption('modelSelect',items,null);modelOption('inspectModel',items,tr('Nessun modello'));modelOption('renameModel',items,tr('Nome originale + metadati'));modelOption('batchRename',items,tr('Nome originale + metadati'));

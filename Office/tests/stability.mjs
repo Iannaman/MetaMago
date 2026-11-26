@@ -17,7 +17,7 @@ try{
   const checks=await complianceCheck(new File([await pdf.save({useObjectStreams:false})],'sample.pdf'),{format:'all',rules:[{field:'description',op:'equals',value:'Synthetic'}],dates:false,privacy:[]});
   return {restored,backup,refused,cleared,aborted:rows.every(x=>x.status===tr('Interrotto')),pdf:checks[1].status};
  });
- assert.deepEqual(r,{restored:'institutional',backup:'Documento istituzionale',refused:true,cleared:true,aborted:true,pdf:'unknown'});
+ assert.deepEqual(r,{restored:'institutional',backup:'builtin:institutional',refused:true,cleared:true,aborted:true,pdf:'unknown'});
  assert.deepEqual(errors,[]);
  console.log('PASS workflow compliance persistence, missing model refusal, password reset, cancellation states and PDF rule conservatism');
 }finally{await browser.close()}

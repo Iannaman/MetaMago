@@ -1,6 +1,7 @@
 'use strict';
 const UI_LANG=location.hash==='#en'?'en':location.hash==='#it'?'it':/^it\b/i.test(navigator.language)?'it':'en';
 const EN=Object.freeze({
+ 'Modello precedente non disponibile — seleziona un modello':'Previous model unavailable — select a model',
  'Modello documentale mancante: ripristinalo prima di caricare il workflow.':'Document model missing: restore it before loading the workflow.',
  'Limite dimensione copie batch superato.':'Batch output size limit exceeded.',
  'Modifica più documenti · PDF Batch Edition':'Edit multiple documents · PDF Batch Edition',
