@@ -1,5 +1,6 @@
 
-function batchGuideState(fileCount,plan,zip,running){
+function batchGuideState(fileCount,plan,zip,running,direct=null){
+ if(direct)return {step:3,hint:'Copia generata: verifica il documento scaricato.',done:true};
  if(zip)return {step:3,hint:'ZIP generato: verifica le copie scaricate.',done:true};
  if(running)return {step:plan?2:fileCount?1:0,hint:'Elaborazione in corso…',done:false};
  if(plan)return {step:2,hint:plan.rows.some(r=>r.status===tr('Pronto'))?'Anteprima pronta: verifica le modifiche e conferma la generazione delle copie.':'Nessuna copia pronta: verifica gli esiti e modifica le impostazioni.',done:false};
@@ -7,7 +8,7 @@ function batchGuideState(fileCount,plan,zip,running){
 }
 function syncBatchGuide(){
  const el=$('batchGuideSteps');if(!el)return;
- const s=batchGuideState(batchFiles.length,batchPlan,batchZip,busy);
+ const s=batchGuideState(batchFiles.length,batchPlan,batchZip,busy,batchDirect);
  for(const [i,li] of [...el.children].entries()){if(i===s.step&&!s.done)li.setAttribute('aria-current','step');else li.removeAttribute('aria-current');li.dataset.complete=String(i<s.step||s.done)}
  $('batchGuideHint').textContent=tr(s.hint);
 }

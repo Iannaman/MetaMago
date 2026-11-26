@@ -24,7 +24,7 @@ async function renderLocalPdfPage(bytes,number,canvas){
  }finally{clearTimeout(timer);try{render?.cancel()}catch{}try{const closing=task?.destroy();if(closing)await Promise.race([closing.catch(()=>{}),new Promise(r=>setTimeout(r,500))])}catch{}try{worker?.destroy()}catch{}port?.terminate();URL.revokeObjectURL(url)}
 }
 function clearPdfPreview(){
- if(!pdfPreviewReady)return;pdfPreviewState=null;$('pdfPreviewPanel').hidden=true;$('pdfPreviewPages').hidden=true;
+ if(!pdfPreviewReady)return;pdfPreviewState=null;$('pdfPreviewPanel').hidden=true;$('pdfPreviewPages').hidden=true;$('pdfPreviewRenderedPage').hidden=true;$('pdfPreviewRenderedPage').textContent='';
  for(const id of ['pdfPreviewBefore','pdfPreviewAfter']){$(id).width=1;$(id).height=1}msg('pdfPreviewStatus','');
 }
 function pdfPreviewSource(mode){return mode==='publication'?publicationSource():pdfSession?{bytes:pdfSession.bytes,name:pdfSession.file.name}:null}
@@ -44,7 +44,7 @@ async function startPdfPreview(mode,number=1){
   if(options)validatePublication(options);
   const max=await renderLocalPdfPage(source.bytes,number,$('pdfPreviewBefore'));$('pdfPreviewPage').max=String(max);
   if(options){const temporary=await preparePublicationPdf(source.bytes,options);await renderLocalPdfPage(temporary.result,number,$('pdfPreviewAfter'))}
-  $('pdfPreviewAfterFigure').hidden=!options;$('pdfPreviewPages').dataset.single=String(!options);$('pdfPreviewPages').hidden=false;
+  $('pdfPreviewAfterFigure').hidden=!options;$('pdfPreviewPages').dataset.single=String(!options);$('pdfPreviewPages').hidden=false;$('pdfPreviewRenderedPage').textContent=tr('Pagina visualizzata: ')+number+' / '+max;$('pdfPreviewRenderedPage').hidden=false;
   msg('pdfPreviewStatus',tr('Anteprima locale pronta. Nessun file scaricato.'),'ok');
  }catch(e){$('pdfPreviewPages').hidden=true;for(const id of ['pdfPreviewBefore','pdfPreviewAfter']){$(id).width=1;$(id).height=1}msg('pdfPreviewStatus',tr('Anteprima non disponibile per questo documento. Usa il lettore PDF per la verifica.')+' '+e.message,'error')}
  finally{setBusy(false);syncPdfPreview();$('pdfPreviewPanel').scrollIntoView({block:'start'});}

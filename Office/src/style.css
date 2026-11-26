@@ -105,3 +105,6 @@ main{max-width:1220px}.workspace{display:grid;grid-template-columns:210px minmax
 
 /* Local PDF raster preview; canvas is non-interactive and bounded. */
 .pdf-visual-preview{padding:16px}.pdf-visual-preview input[type=number]{width:90px;max-width:100%}.pdf-visual-preview .row{align-items:center;flex-wrap:wrap}.pdf-preview-pages{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:12px;margin:12px 0}.pdf-preview-pages figure{margin:0;min-width:0}.pdf-preview-pages figcaption{font-size:13px;font-weight:600;margin-bottom:6px;color:var(--mm-muted)}.pdf-preview-pages canvas{display:block;width:100%;height:auto;background:white;border:1px solid var(--border);border-radius:6px;max-width:100%}.pdf-preview-pages[data-single=true]{grid-template-columns:minmax(0,560px)}@media(max-width:600px){.pdf-preview-pages{grid-template-columns:1fr}.pdf-visual-preview{padding:12px}}
+
+/* Usability Optimization: explicit original review and actual rendered page number. */
+.batch-preflight-findings{white-space:pre-wrap;overflow-wrap:anywhere;font-size:13px;margin:6px 0}.batch-panel #batchOutputMode{max-width:100%}#pdfPreviewRenderedPage{font-weight:600}#batchPanel #batchRun{min-height:44px}

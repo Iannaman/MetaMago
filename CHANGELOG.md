@@ -1,5 +1,11 @@
 # Changelog
 
+## Office Edition 3.2.7 — Usability Optimization (candidato)
+- Download diretto opzionale per una sola selezione; ZIP per più file e modalità professionale predefinita.
+- Preset pubblicazione esterna con controlli privacy preliminari, distinti dalla sola rimozione identificativi e inclusi nei report.
+- Conferma solo in presenza di selezioni o impostazioni da sostituire; indicazione della pagina effettivamente renderizzata.
+- Test reali per singolo PDF, ripetizione del download, anteprima e annullamento.
+
 ## Office Edition 3.2.6 — Visual PDF Preview (candidato)
 - Rendering locale pagina singola e confronto della pagina con una copia temporanea per pubblicazione.
 - PDF.js 6.5.438 incorporato con integrità SHA-512 verificata, worker locale, CSP invariata, nessun link o modulo interattivo.
