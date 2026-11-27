@@ -7,7 +7,7 @@ const quickPresets={
  standard:{hint:'Scegli un modello e verifica le regole in sola lettura.',view:'inspect'},
  analyse:{hint:'Analizza un documento senza modificarlo.',view:'inspect'}
 };
-const presetDefaults={batchOutputMode:'zip',batchPreflight:false,batchAuthorMode:'keep',batchAuthors:'',batchLastOn:false,batchLast:'',batchCompanyOn:false,batchCompany:'',batchManagerOn:false,batchManager:'',batchMark:'keep',batchPdfTitleOn:false,batchPdfTitle:'',batchWatermarkOn:false,batchWatermarkText:'',batchWatermarkPosition:'center',batchProtectOn:false,batchPrint:'none',batchExtract:false,batchPrivacyOffice:false,batchPrivacyPdf:false,batchSeparatePdf:false,batchPdfAuthorMode:'keep',batchPdfAuthors:'',batchPdfMark:'keep'};
+const presetDefaults={batchOutputMode:'zip',batchPreflight:false,batchAuthorMode:'keep',batchAuthors:'',batchLastOn:false,batchLast:'',batchCompanyOn:false,batchCompany:'',batchManagerOn:false,batchManager:'',batchMark:'keep',batchPdfTitleOn:false,batchPdfTitle:'',batchWatermarkOn:false,batchWatermarkText:'',batchWatermarkPosition:'center',batchProtectOn:false,batchPrint:'none',batchExtract:false,batchPrivacyOffice:false,batchPrivacyPdf:false,batchSeparatePdf:false,batchPdfAuthorMode:'keep',batchPdfAuthors:'',batchPdfMark:'keep',...Object.fromEntries(batchOfficeFamilies.flatMap(k=>batchOfficeSuffixes.map(s=>['batch'+k+s,s==='Mode'||s==='Mark'?'keep':s.endsWith('On')||s==='Privacy'?false:''])))};
 function quickPresetHint(){const p=quickPresets[$('quickPreset').value];$('quickPresetHint').textContent=p?tr(p.hint):''}
 function prepareQuickPreset(key){
  if(busy||!Object.hasOwn(quickPresets,key))return false;
