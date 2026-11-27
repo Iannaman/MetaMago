@@ -1,4 +1,4 @@
-# MetaMago 3.3.1 — Stability & Quality Edition: acceptance checklist
+# MetaMago 3.3.2 — PWA Validation Update: acceptance checklist
 
 Candidate until all applicable CI jobs and manual acceptance tests have passed.
 
@@ -10,6 +10,7 @@ Candidate until all applicable CI jobs and manual acceptance tests have passed.
 - Smart Interface, Motion, Smart Detection, Quick Actions, Guided Experience and Design System regression tests.
 - End-to-end mixed Office/PDF privacy preset: select documents, preview, refuse confirmation, generate ZIP, verify output metadata and unchanged SHA-256 of original inputs; cancellation during real ZIP generation must not produce a download.
 - Deterministic generated HTML and minimal Pages build.
+- Three independent PWA migration runs: active worker version, cached shell and first scoped navigation must agree; no reload/retry to hide stale HTML.
 - Workflow preliminary privacy check preserved on save/load and configuration roundtrip; legacy recipes without the field still load, malformed values are rejected and passwords are excluded.
 
 - Visual UX: home disclosure, illustrations, document workspace, planned/verified comparison, isolated synthetic tutorial, single-page local raster and publication preview.

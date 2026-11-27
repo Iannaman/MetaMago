@@ -1,10 +1,11 @@
 # Checklist di rilascio — Office Edition
 
-Versione candidata: leggere `Office/VERSION` (3.3.1 al momento di questo aggiornamento). Non segnare un controllo come superato senza evidenza riferita al commit esatto. La Desktop Edition resta beta.
+Versione candidata: leggere `Office/VERSION` (3.3.2 al momento di questo aggiornamento). Non segnare un controllo come superato senza evidenza riferita al commit esatto. La Desktop Edition resta beta.
 
 ## Gate automatici
 - [ ] Windows tests: integrazione PowerShell, pacchetto portable, build deterministica e intera suite Chromium (Office, PDF, privacy, batch, workflow, audit, PWA e UX).
 - [ ] Matrice Chromium / Firefox / WebKit verde, rendering PDF incluso.
+- [ ] Tre migrazioni PWA indipendenti consecutive: nessun risultato intermittente ignorato.
 - [ ] Regressione workflow: controllo privacy preliminare salvato, backup e compatibilità legacy, esclusione delle password.
 - [ ] Nessun errore JavaScript inatteso, verifica strutturale indipendente QPDF e originali invariati nei test pertinenti.
 - [ ] Verifica dei benchmark sintetici; nessuna promessa di velocità o RAM non misurata.

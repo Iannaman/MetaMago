@@ -60,8 +60,18 @@ try{
   await probe.waitForFunction(async({url,version})=>{
    const r=await navigator.serviceWorker.getRegistration(url);
    if(!r?.active||r.active.state!=='activated'||r.waiting||r.installing)return false;
+   const active=r.active,channel=new MessageChannel();
+   // State and cache names alone are not proof that the new worker is active.
+   const reported=await new Promise(resolve=>{
+    const timer=setTimeout(()=>{channel.port1.close();resolve(null)},750);
+    channel.port1.onmessage=e=>{clearTimeout(timer);channel.port1.close();resolve(e.data?.version??null)};
+    try{active.postMessage({type:'METAMAGO_VERSION'},[channel.port2])}catch{clearTimeout(timer);channel.port1.close();resolve(null)}
+   });
+   if(reported!==version||r.active!==active||r.waiting||r.installing)return false;
    const keys=await caches.keys(),prefix='MetaMago-shell:'+url+':';
-   return keys.includes(prefix+version)&&!keys.includes(prefix+'1.9.0');
+   if(!keys.includes(prefix+version)||keys.includes(prefix+'1.9.0'))return false;
+   const cache=await caches.open(prefix+version),response=await cache.match(new URL('index.html',url).href);
+   return !!response&&(await response.text()).includes('id="editionTag">v'+version+'</span>');
   },{url,version},{timeout:60000});
  }catch(e){
   console.error('Legacy migration activation diagnostics',await probe.evaluate(async url=>{
@@ -69,10 +79,23 @@ try{
    return {active:r?.active?.state,waiting:r?.waiting?.state,installing:r?.installing?.state,caches:await caches.keys(),controlled:!!navigator.serviceWorker.controller};
   },url));throw e;
  }
- await probe.close();
+ // Keep the unscoped observer alive until the first scoped navigation is checked.
+ // Do not reload or retry navigation: stale HTML must still fail this test.
  a=watch(await ctx.newPage());await a.goto(url);
- assert.equal(await a.locator('#editionTag').textContent(),'v'+version,'new navigation must serve the activated shell');
+ const served=await a.locator('#editionTag').textContent();
+ if(served!=='v'+version){
+  console.error('First scoped navigation diagnostics',await a.evaluate(async()=>{
+   const r=await navigator.serviceWorker.getRegistration();return {url:location.href,active:r?.active?.state,waiting:r?.waiting?.state,installing:r?.installing?.state,controlled:!!navigator.serviceWorker.controller,caches:await caches.keys()};
+  }));
+ }
+ assert.equal(served,'v'+version,'new navigation must serve the activated shell');
  await a.waitForFunction(()=>!!updateReg&&!!navigator.serviceWorker.controller);
+ assert.equal(await a.evaluate(()=>new Promise(resolve=>{
+  const channel=new MessageChannel(),timer=setTimeout(()=>{channel.port1.close();resolve(null)},1500);
+  channel.port1.onmessage=e=>{clearTimeout(timer);channel.port1.close();resolve(e.data?.version??null)};
+  try{navigator.serviceWorker.controller.postMessage({type:'METAMAGO_VERSION'},[channel.port2])}catch{clearTimeout(timer);channel.port1.close();resolve(null)}
+ })),version,'new navigation must be controlled by the expected worker');
+ await probe.close();
  assert.ok(await a.evaluate(async()=>!(await caches.keys()).some(k=>k.endsWith(':1.9.0'))));
  assert.ok(await a.evaluate(async()=>(await caches.keys()).includes('unrelated-cache')));
  const b=watch(await ctx.newPage());await b.goto(url);await b.waitForFunction(()=>!!updateReg&&!!navigator.serviceWorker.controller);
