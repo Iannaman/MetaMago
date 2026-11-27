@@ -11,7 +11,7 @@ try{
  page.on('pageerror',e=>errors.push(e.message));page.on('download',d=>downloads.push(d.suggestedFilename()));page.on('request',r=>{if(/^https?:/.test(r.url()))network.push(r.url())});page.on('dialog',d=>d.accept());
  const id=x=>page.locator('#'+x),action=x=>id('workspaceActions').locator('[data-workspace-action='+x+']');
  await page.goto(pathToFileURL(resolve(root,'Office','MetaMago-Office.html')).href);
- assert.match(await id('editionTag').textContent(),/3\.3\.0/);
+ assert.equal(await id('editionTag').textContent(),'v'+(await readFile(resolve(root,'Office','VERSION'),'utf8')).trim());
  const fixture=Buffer.from(await page.evaluate(async input=>{const bytes=new Uint8Array(input),m=await inspect(bytes,'docx');return Array.from(await rewrite(bytes,'docx',{author:'Synthetic private',company:'Synthetic company',title:'Visual fixture'},m.final,'keep'))},Array.from(await readFile(resolve(root,'Test','Prova.docx')))));
  const hash=createHash('sha256').update(fixture).digest('hex');
  await id('homeFiles').setInputFiles({name:'visual.docx',mimeType:'application/vnd.openxmlformats-officedocument.wordprocessingml.document',buffer:fixture});await id('viewWorkspace').waitFor();

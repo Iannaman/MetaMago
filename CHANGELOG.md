@@ -4,6 +4,7 @@
 - Salvataggio e ripristino del controllo privacy preliminare nei workflow e nei backup; nessuna password inclusa.
 - Compatibilità con workflow precedenti privi del campo: controllo disattivato; valori non booleani rifiutati.
 - Test di regressione per ripristino, roundtrip configurazione e ricette legacy.
+- Test end-to-end allineati dinamicamente a Office/VERSION, senza versioni hardcoded.
 - Checklist di rilascio allineata alla versione corrente e collaudo manuale esplicitamente ancora necessario.
 
 ## Office Edition 3.3.0 — Visual Experience Edition (candidato)
