@@ -114,7 +114,7 @@ async function inspectPdfReadOnly(bytes,password=''){
 }
 var pdfInspectInput=null;
 function clearPdfInspection(){
- pdfInspectInput=null;$('pdfInspectPassword').value='';$('pdfInspectPasswordPanel').hidden=true;$('pdfInspectResult').hidden=true;$('pdfInspectFilename').textContent='';$('pdfInspectSummary').textContent='';$('pdfInspectHash').textContent='';$('pdfInspectCoverage').textContent='';$('pdfInspectPermissions').replaceChildren();$('pdfInspectProperties').replaceChildren();$('pdfInspectXmp').textContent='';$('pdfInspectFindings').replaceChildren();$('pdfInspectAttachmentNames').replaceChildren();$('pdfInspectAttachments').hidden=true;
+ pdfInspectInput=null;$('pdfInspectPassword').value='';$('pdfInspectPasswordPanel').hidden=true;$('pdfInspectResult').hidden=true;$('pdfInspectFilename').textContent='';$('pdfInspectSummary').textContent='';$('pdfInspectHash').textContent='';$('pdfInspectCoverage').textContent='';$('pdfInspectPermissions').replaceChildren();$('pdfInspectProperties').replaceChildren();$('pdfInspectXmp').textContent='';$('pdfInspectFindings').replaceChildren();clearPrivacyReview('pdfInspectFindings');$('pdfInspectAttachmentNames').replaceChildren();$('pdfInspectAttachments').hidden=true;
 }
 function syncPdfInspectorControls(){
  if(!$('inspectPdfCurrent'))return;
@@ -141,6 +141,7 @@ function renderPdfInspection(file,r){
   const card=document.createElement('article'),h=document.createElement('h3'),p=document.createElement('p'),desc=document.createElement('p');
   card.className='finding';card.dataset.status=status;card.dataset.finding=key;h.textContent=tr(label);p.className='finding-state';p.textContent=status==='present'?tr('Da verificare')+' ('+count+' '+tr('indizi')+')':status==='unknown'?tr('Non conclusivo'):tr('Non rilevato nei controlli eseguiti');desc.className='muted';desc.textContent=tr(description);card.append(h,p,desc);if(status==='present'&&key!=='pdfa')renderFindingLocations(card,r.locations?.[key],r.locationTruncated?.[key]===true);$('pdfInspectFindings').append(card);
  }
+ renderPrivacyReview('pdfInspectFindings');
  if(r.attachments?.length){$('pdfInspectAttachments').hidden=false;for(const name of r.attachments){const li=document.createElement('li');li.textContent=name;$('pdfInspectAttachmentNames').append(li)}if(r.attachmentsTruncated){const li=document.createElement('li');li.textContent='…';$('pdfInspectAttachmentNames').append(li)}}
 }
 async function runPdfInspection(file,originalBytes=null,password=''){

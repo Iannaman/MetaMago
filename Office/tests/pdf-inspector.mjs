@@ -53,6 +53,8 @@ try{
  for(const k of ['identity','xmp','annotations','hidden','attachments','javascript','actions','external','forms','layers'])assert.equal(await finding(k).getAttribute('data-status'),'present',k);
  assert.match(await id('pdfInspectAttachmentNames').textContent(),/synthetic.txt/);
  await finding('external').locator('.finding-locations summary').click();assert.match(await finding('external').locator('.finding-locations li').first().textContent(),/^\d+ \d+ R$/);assert.ok(!(await finding('external').textContent()).includes('example.invalid'));assert.ok(!(await finding('javascript').textContent()).includes('app.alert'));
+ const review=id('pdfInspectFindingsReview');await review.locator('[data-filter=present]').click();assert.ok(await id('pdfInspectFindings').locator('.finding').evaluateAll(a=>a.every(c=>c.hidden===(c.dataset.status!=='present'))));
+ await review.locator('[data-filter=na]').click();assert.ok(await review.locator('.notice').isVisible());await review.locator('[data-filter=all]').click();
  assert.equal(await id('pdfInspectProperties').locator('script').count(),0);
  await load('Signed.pdf',fixture.signed);assert.equal(await finding('signature').getAttribute('data-status'),'present');
  await load('Archival.pdf',fixture.archival);assert.equal(await finding('pdfa').getAttribute('data-status'),'present');
@@ -60,14 +62,14 @@ try{
  execFileSync('qpdf',['--encrypt',user,owner,'256','--print=none','--modify=none','--extract=n','--',plain,locked]);
  execFileSync('qpdf',['--encrypt','',owner,'256','--print=low','--modify=form','--extract=y','--',plain,ownerOnly]);
  const lockedBytes=await readFile(locked);
- await load('Locked.pdf',lockedBytes);assert.equal(await id('pdfInspectPasswordPanel').isVisible(),true);assert.equal(await finding('javascript').getAttribute('data-status'),'unknown');assert.equal(await id('pdfInspectFindings').locator('.finding-locations').count(),0);
+ await load('Locked.pdf',lockedBytes);assert.equal(await id('pdfInspectPasswordPanel').isVisible(),true);assert.equal(await finding('javascript').getAttribute('data-status'),'unknown');assert.equal(await id('pdfInspectFindings').locator('.finding-locations').count(),0);await review.locator('[data-filter=unknown]').click();assert.ok(await id('pdfInspectFindings').locator('.finding').evaluateAll(a=>a.every(c=>!c.hidden&&c.dataset.status==='unknown')));assert.match(await finding('javascript').locator('.finding-advice').textContent(),/Non considerare/);
  assert.equal(await id('pdfInspectHash').textContent(),createHash('sha256').update(lockedBytes).digest('hex'));
  await id('pdfInspectPassword').fill('Wrong-password-2026');await id('pdfInspectRetry').click();await wait();assert.equal(await id('pdfInspectPasswordPanel').isVisible(),true);assert.equal(await id('pdfInspectPassword').inputValue(),'');
  await id('pdfInspectPassword').fill(user);await id('pdfInspectRetry').click();await wait();assert.equal(await id('pdfInspectPasswordPanel').isVisible(),false);assert.equal(await id('pdfInspectResult').isVisible(),true,await id('inspectStatus').textContent());
  assert.match(await id('pdfInspectPermissions').textContent(),/AESv3/);assert.match(await id('pdfInspectPermissions').textContent(),/Stampa ad alta risoluzioneNon consentita/);
  assert.ok(!(await id('pdfInspectResult').textContent()).includes(user));assert.ok(!(await id('pdfInspectResult').textContent()).includes(owner));
  await load('Owner-only.pdf',await readFile(ownerOnly));assert.equal(await id('pdfInspectPasswordPanel').isVisible(),false);assert.match(await id('pdfInspectPermissions').textContent(),/Stampa a bassa risoluzioneConsentita/);
- await id('inspectClear').click();assert.equal(await id('pdfInspectResult').isVisible(),false);assert.equal(await page.evaluate(()=>pdfInspectInput),null);
+ await id('inspectClear').click();assert.equal(await id('pdfInspectResult').isVisible(),false);assert.equal(await page.evaluate(()=>pdfInspectInput),null);assert.equal(await review.count(),0);
  await load('Broken.pdf',Buffer.from('not a pdf'));assert.equal(await id('pdfInspectResult').isVisible(),false);assert.ok(await id('inspectStatus').evaluate(e=>e.classList.contains('error')));
  await id('inspectFile').setInputFiles(resolve(root,'Test','Prova.docx'));await page.waitForFunction(()=>!document.querySelector('#inspectResult').hidden&&!document.querySelector('#inspectChoose').disabled);assert.equal(await id('pdfInspectResult').isVisible(),false);
  await id('navPdf').click();await id('pdfFile').setInputFiles({name:'Plain.pdf',mimeType:'application/pdf',buffer:Buffer.from(fixture.plain)});await page.waitForFunction(()=>!document.querySelector('#pdfEditor').hidden&&!document.querySelector('#pdfChoose').disabled);

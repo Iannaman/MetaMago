@@ -60,9 +60,13 @@ try{
   assert.equal(await id('inspectChecks').locator('li').count(),5);
   const key={docx:'revisions',xlsx:'sheets',pptx:'slides'}[ext];
   const card=page.locator('#inspectFindings [data-finding="'+key+'"]');assert.equal(await card.getAttribute('data-status'),'present');await card.locator('.finding-locations summary').click();assert.ok(await card.locator('.finding-locations li').first().isVisible());
+  const review=id('inspectFindingsReview'),cards=id('inspectFindings').locator('.finding');assert.equal(await cards.count(),10);assert.equal(await review.locator('[data-filter=all]').getAttribute('aria-pressed'),'true');
+  await review.locator('[data-filter=present]').click();assert.ok(await cards.evaluateAll(a=>a.every(c=>c.hidden===(c.dataset.status!=='present'))));assert.ok(await card.locator('.finding-advice').isVisible());
+  await review.locator('[data-filter=na]').click();assert.ok(await cards.evaluateAll(a=>a.every(c=>c.hidden===(c.dataset.status!=='na'))));
+  await review.locator('[data-filter=all]').click();assert.ok(await cards.evaluateAll(a=>a.every(c=>!c.hidden)));
   assert.equal(await id('editorSection').isVisible(),false);
  }
- await id('inspectClear').click();assert.equal(await id('inspectResult').isVisible(),false);
+ await id('inspectClear').click();assert.equal(await id('inspectResult').isVisible(),false);assert.equal(await id('inspectFindingsReview').count(),0);
  await id('inspectFile').setInputFiles({name:'bad.docx',mimeType:'application/octet-stream',buffer:Buffer.from('broken')});
  await page.waitForFunction(()=>document.querySelector('#inspectStatus').textContent.includes('Impossibile analizzare'));
  assert.equal(await id('inspectResult').isVisible(),false);
