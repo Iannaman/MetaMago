@@ -10,8 +10,9 @@ function planCheck(root,id,label){const e=planInput(id,'checkbox'),l=planEl('lab
 function planDetails(root,title,open=false){const d=planEl('details');d.open=open;d.append(planEl('summary','',title));root.append(d);return d}
 function clearPlanPasswords(){for(const id of ['planUser','planUserConfirm','planOwner','planOwnerConfirm'])if($(id))$(id).value=''}
 function invalidatePlanReview(){planReviewed='';$('planReviewBox').hidden=true;$('planGenerate').disabled=true;$('planSummary').replaceChildren();msg('planStatus','')}
-function clearWorkspacePlan(){clearPlanPasswords();planSource=null;planKind='';invalidatePlanReview();$('workspacePlan').hidden=true;$('planFields').replaceChildren();$('planExtra').replaceChildren();$('planOpen').hidden=false}
+function clearWorkspacePlan(){if(typeof clearPlanPrivacyComparison==='function')clearPlanPrivacyComparison();$('planPrivacyCompare').checked=false;$('planPrivacyText').checked=false;$('planPrivacyText').disabled=true;clearPlanPasswords();planSource=null;planKind='';invalidatePlanReview();$('workspacePlan').hidden=true;$('planFields').replaceChildren();$('planExtra').replaceChildren();$('planOpen').hidden=false}
 function syncWorkspacePlan(source){
+ if(typeof syncPlanPrivacyComparison==='function')syncPlanPrivacyComparison(source);
  if(planSource&&planSource!==source)clearWorkspacePlan();
  $('planOpen').disabled=busy||!source;$('planControls').disabled=busy;
 }
@@ -100,29 +101,37 @@ function workspacePlanSummary(plan){
   if(plan.publication)lines.push(...publicationSummary(plan.publication));
   if(plan.protection)lines.push(tr('Cifra la copia finale (AES-256)')+' · '+tr('Stampa')+': '+$('planPrint').selectedOptions[0].textContent+' · '+tr('Modifiche')+': '+$('planModify').selectedOptions[0].textContent+' · '+tr('Consenti copia contenuti')+': '+tr(plan.protection.extract?'Sì':'No'));
  }
+ if($('planPrivacyCompare').checked)lines.push(tr('Confronta privacy prima e dopo')+($('planPrivacyText').checked?' · '+tr('Includi possibili dati personali nel testo'):''));
  return lines;
 }
 $('planOpen').onclick=startWorkspacePlan;$('planCancel').onclick=()=>{if(!busy){clearWorkspacePlan();$('planOpen').focus()}};
 for(const event of ['input','change'])$('planControls').addEventListener(event,()=>invalidatePlanReview());
 $('planReview').onclick=()=>{
  if(busy)return;
- try{const p=readWorkspacePlan();workspacePlanCredentials(p);const lines=workspacePlanSummary(p);if(!lines.length)throw operationPlanError();$('planSummary').replaceChildren(...lines.map(l=>{const el=planEl('li');el.textContent=l;return el}));planReviewed=JSON.stringify(p);$('planReviewBox').hidden=false;$('planGenerate').disabled=false;$('planGenerate').focus();msg('planStatus','')}
+ try{const p=readWorkspacePlan();workspacePlanCredentials(p);const lines=workspacePlanSummary(p);if(!lines.length)throw operationPlanError();$('planSummary').replaceChildren(...lines.map(l=>{const el=planEl('li');el.textContent=l;return el}));planReviewed=JSON.stringify([p,$('planPrivacyCompare').checked,$('planPrivacyText').checked]);$('planReviewBox').hidden=false;$('planGenerate').disabled=false;$('planGenerate').focus();msg('planStatus','')}
  catch(e){invalidatePlanReview();msg('planStatus',e.message,'error')}
 };
 $('planGenerate').onclick=async()=>{
  if(busy||!planReviewed)return;
  let credentials=null,started=false;
  try{
-  const p=readWorkspacePlan();if(JSON.stringify(p)!==planReviewed)throw operationPlanError();
+  const p=readWorkspacePlan();if(JSON.stringify([p,$('planPrivacyCompare').checked,$('planPrivacyText').checked])!==planReviewed)throw operationPlanError();
   credentials=workspacePlanCredentials(p);
   if(!confirm(tr('Generare una sola copia con le operazioni riepilogate? L’originale e la bozza dell’editor restano invariati.'))){clearPlanPasswords();invalidatePlanReview();return}
   const source=planSource,kind=planKind,ext=kind==='pdf'?'pdf':source.ext;
-  const name=safeStem(source.file.name.slice(0,-ext.length-1))+'_preparato.'+ext;
+  const name=safeStem(source.file.name.slice(0,-ext.length-1))+'_preparato.'+ext,compare=$('planPrivacyCompare').checked,compareText=compare&&$('planPrivacyText').checked;
   setBusy(true);started=true;clearPlanPasswords();msg('planStatus',tr('Elaborazione in corso…'));
   const r=kind==='pdf'?await executePdfOperationPlan(source.bytes,p,credentials):await executeOfficeOperationPlan(source.bytes,ext,p);
   if(workspaceSource()!==source)throw operationPlanError();
+  let comparison=null;
+  if(compare){
+   msg('planStatus',tr('Confronto privacy locale in corso…'));
+   try{comparison=await comparePreparedPrivacy(source.bytes,r.result,kind,ext,compareText,credentials?.owner||'')}catch{comparison={failed:true}}
+  }
+  if(workspaceSource()!==source)throw operationPlanError();
   download(r.result,name,kind==='pdf'?'application/pdf':'application/octet-stream');
   clearWorkspacePlan();msg('planStatus',tr('Copia unica generata e verificata: ')+name+'. '+tr('Non è una certificazione di anonimizzazione; verifica gli elementi residui.'),'ok');
+  if(compare){try{renderPreparedPrivacyComparison(source,name,comparison)}catch{renderPreparedPrivacyComparison(source,name,{failed:true})}}
  }catch(e){invalidatePlanReview();msg('planStatus',tr('Nessun file scaricato: ')+(e.diagnostic?tr('Verifica della cifratura non superata. Nessun file prodotto.'):e.message),'error')}
  finally{credentials=null;clearPlanPasswords();if(started)setBusy(false)}
 };
