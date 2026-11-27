@@ -1,6 +1,6 @@
 # Unified Workspace 3.4.0 — development stages
 
-Status: stage 1 implementation candidate, pending CI. This branch is not a complete 3.4.0 release; keep the version at 3.3.1 until the integrated candidate is ready.
+Status: stage 1 session regression passed on the earlier branch; stage 2 PDF engine implementation pending combined CI. Keep the internal version aligned to main (3.3.2) until the integrated 3.4.0 candidate is ready.
 
 ## Stage 1 — shared session adapter
 - Derive the active document and unsaved draft status from existing Office and PDF sessions; no duplicate bytes or persisted session state.
@@ -9,7 +9,7 @@ Status: stage 1 implementation candidate, pending CI. This branch is not a compl
 - Existing confirmation dialogs and read-only analysis remain unchanged. No automatic download.
 
 ## Stage 2 — operation plan
-Define format-specific operation schema, validate conflicts, preserve originals; implement metadata, selected cleanup, publication and protection as explicit ordered operations. Encryption runs last. Reuse verified engines; do not silently skip incompatible operations.
+Initial PDF-only engine: validate standard metadata, publication and protection settings; reject overlap between edits and selected cleanup. Reuse verified engines in the order metadata → publication → protection, credentials separate from the plan, no intermediate downloads. Tests independently decrypt the output and check final metadata and watermark text. Office combined operations and UI remain pending.
 
 ## Stage 3 — UI integration
 Expose a single planned-operation summary, remove redundant source selection for the unified path, provide preview and explicit final confirmation. No intermediate downloads required by the unified path.

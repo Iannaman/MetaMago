@@ -68,6 +68,8 @@ jobs:
         run: command -v qpdf || (sudo apt-get update && sudo apt-get install -y qpdf)
       - name: Test PDF protection
         run: node Office/tests/protection.mjs
+      - name: Test Unified PDF Operation Plan
+        run: node Office/tests/operation-plan.mjs
       - name: Test PDF Inspector
         run: node Office/tests/pdf-inspector.mjs
       - name: Test PDF Publication
