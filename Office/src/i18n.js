@@ -59,6 +59,8 @@ const EN=Object.freeze({
  'Aggiungi / aggiorna':'Add / update',
  'Rimuovi':'Remove',
  'Il tuo documento':'Your document',
+ "Il piano parte dall’originale, non dalle copie già scaricate. Importa le modifiche non salvate supportate. La bozza resta separata; cambiando documento o schermata il piano si azzera.":'The plan starts from the original, not previously downloaded copies. Supported unsaved edits are imported. The draft stays separate; switching document or screen resets the plan.',
+ "Sono presenti modifiche non salvate. Il piano unico importa quelle supportate; per le operazioni separate, salva o ripristina prima la bozza.":'Unsaved edits exist. The unified plan imports supported edits; for separate operations, save or reset the draft first.',
  "Prepara una copia unica":"Prepare a single copy",
  "Combina più operazioni in un solo documento finale.":"Combine multiple operations in one final document.",
  "Piano delle operazioni":"Operation plan",

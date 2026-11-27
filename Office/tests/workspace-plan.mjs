@@ -15,7 +15,7 @@ try{
  const seeded=Buffer.from(await page.evaluate(async b=>{const a=new Uint8Array(b),m=await inspect(a,'docx');return Array.from(await rewrite(a,'docx',{author:'Private author',title:'Original title'},m.final,'keep'))},Array.from(doc)));
  await id('homeFiles').setInputFiles({name:'sample.docx',mimeType:'application/vnd.openxmlformats-officedocument.wordprocessingml.document',buffer:seeded});await id('viewWorkspace').waitFor();
  await act('edit').click();await id('title').fill('Draft title');await id('officeWorkspace').click();
- await id('planOpen').click();assert.equal(await id('planValue-title').inputValue(),'Draft title');
+ await id('planOpen').click();assert.equal(await id('planValue-title').inputValue(),'Draft title');assert.match(await id('workspacePlan').textContent(),/non dalle copie già scaricate/);
  await id('planField-author').selectOption('remove');await id('planReview').click();assert.match(await id('planSummary').textContent(),/Draft title/);
  await id('planValue-title').fill('Final title');assert.equal(await id('planReviewBox').isVisible(),false);
  await id('planReview').click();let accept=false;page.on('dialog',d=>accept?d.accept():d.dismiss());

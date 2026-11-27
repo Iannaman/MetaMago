@@ -1,4 +1,4 @@
-# MetaMago 3.3.2 — PWA Validation Update: acceptance checklist
+# MetaMago 3.4.0 — Unified Workspace Edition: acceptance checklist
 
 Candidate until all applicable CI jobs and manual acceptance tests have passed.
 
