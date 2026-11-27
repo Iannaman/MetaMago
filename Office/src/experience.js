@@ -8,7 +8,7 @@ function updateWorkspaceStatus(){
 function goView(key,{focus=true}={}){
  if(busy||!viewKeys.includes(key))return;
  if(key==='workspace'&&(typeof renderDocumentWorkspace!=='function'||!renderDocumentWorkspace()))return;
- const changed=currentView!==key;currentView=key;
+ const changed=currentView!==key;if(changed&&currentView==='workspace'&&typeof clearWorkspacePlan==='function')clearWorkspacePlan();currentView=key;
  if(key==='edit')rememberWorkspaceDocument('office');else if(key==='pdf')rememberWorkspaceDocument('pdf');
  for(const pane of document.querySelectorAll('[data-view]')){pane.hidden=pane.dataset.view!==key;if(changed&&!pane.hidden&&typeof motionView==='function')motionView(pane)}
  for(const nav of document.querySelectorAll('.side-nav [data-view-target]')){

@@ -22,6 +22,7 @@ function syncDocumentWorkspace(){
  if(!$('workspaceResume'))return;
  const snapshot=workspaceSessionSnapshot();workspaceKind=snapshot.active?.kind||'';
  $('workspaceResume').hidden=!snapshot.active;$('officeWorkspace').hidden=!state;
+ if(typeof syncWorkspacePlan==='function')syncWorkspacePlan(snapshot.active?.source||null);
  const inspected=workspaceInspectionEntry(snapshot);if(!inspected)workspaceInspectionFile=null;
  $('inspectWorkspace').hidden=!inspected;
  $('workspaceSwitch').hidden=snapshot.entries.length<2;

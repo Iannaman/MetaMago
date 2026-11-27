@@ -1,0 +1,41 @@
+
+import assert from 'node:assert/strict';
+import {chromium} from 'playwright';
+import {resolve,dirname} from 'node:path';
+import {fileURLToPath,pathToFileURL} from 'node:url';
+import {readFile} from 'node:fs/promises';
+const root=resolve(dirname(fileURLToPath(import.meta.url)),'../..');
+const browser=await chromium.launch({headless:true});
+try{
+ const page=await browser.newPage({locale:'it-IT',offline:true,viewport:{width:375,height:800},acceptDownloads:true}),errors=[],downloads=[];
+ page.on('pageerror',e=>errors.push(e.message));page.on('download',d=>downloads.push(d.suggestedFilename()));
+ const id=k=>page.locator('#'+k),act=k=>id('workspaceActions').locator('[data-workspace-action='+k+']');
+ await page.goto(pathToFileURL(resolve(root,'Office','MetaMago-Office.html')).href);
+ const doc=await readFile(resolve(root,'Test','Prova.docx'));
+ const seeded=Buffer.from(await page.evaluate(async b=>{const a=new Uint8Array(b),m=await inspect(a,'docx');return Array.from(await rewrite(a,'docx',{author:'Private author',title:'Original title'},m.final,'keep'))},Array.from(doc)));
+ await id('homeFiles').setInputFiles({name:'sample.docx',mimeType:'application/vnd.openxmlformats-officedocument.wordprocessingml.document',buffer:seeded});await id('viewWorkspace').waitFor();
+ await act('edit').click();await id('title').fill('Draft title');await id('officeWorkspace').click();
+ await id('planOpen').click();assert.equal(await id('planValue-title').inputValue(),'Draft title');
+ await id('planField-author').selectOption('remove');await id('planReview').click();assert.match(await id('planSummary').textContent(),/Draft title/);
+ await id('planValue-title').fill('Final title');assert.equal(await id('planReviewBox').isVisible(),false);
+ await id('planReview').click();let accept=false;page.on('dialog',d=>accept?d.accept():d.dismiss());
+ await id('planGenerate').click();assert.equal(downloads.length,0);assert.equal(await id('planReviewBox').isVisible(),false);
+ accept=true;await id('planReview').click();const [office]=await Promise.all([page.waitForEvent('download'),id('planGenerate').click()]);
+ const out=Array.from(await readFile(await office.path()));const actual=await page.evaluate(async b=>{const m=await inspect(new Uint8Array(b),'docx');return [m.values.title,m.values.author]},out);assert.deepEqual(actual,['Final title','']);
+ assert.equal(await id('workspacePlan').isVisible(),false);await act('edit').click();assert.equal(await id('title').inputValue(),'Draft title');
+ const pdf=Buffer.from(await page.evaluate(async()=>{const d=await PDFLib.PDFDocument.create({updateMetadata:false});d.addPage();d.setAuthor('Private PDF author');return Array.from(await d.save({useObjectStreams:false}))}));
+ await id('navHome').click();await id('homeFiles').setInputFiles({name:'sample.pdf',mimeType:'application/pdf',buffer:pdf});await id('viewWorkspace').waitFor();
+ await id('planOpen').click();await id('planField-Title').selectOption('edit');await id('planValue-Title').fill('PDF prepared');await id('planField-Author').selectOption('remove');
+ await id('planExtra').locator('summary').first().click();await id('planWatermark').check();await id('planWatermarkText').fill('FINAL COPY');
+ await id('planExtra').locator('summary').last().click();await id('planProtect').check();
+ await id('planOwner').fill('Owner-test-12345');await id('planOwnerConfirm').fill('Different-owner-12345');await id('planReview').click();assert.equal(await id('planReviewBox').isVisible(),false);
+ await id('planOwnerConfirm').fill('Owner-test-12345');await id('planReview').click();assert.equal(await id('planReviewBox').isVisible(),true);assert.ok(!(await id('planSummary').textContent()).includes('Owner-test'));
+ assert.ok(await page.evaluate(()=>document.documentElement.scrollWidth<=innerWidth+1));
+ await id('workspaceSwitchOffice').click();assert.equal(await id('workspacePlan').isVisible(),false);assert.equal(await id('planOwner').count(),0);
+ await id('workspaceSwitchPdf').click();await id('planOpen').click();await id('planField-Title').selectOption('edit');await id('planValue-Title').fill('PDF prepared');
+ await id('planField-Author').selectOption('remove');await id('planExtra').locator('summary').first().click();await id('planWatermark').check();await id('planWatermarkText').fill('FINAL COPY');
+ await id('planExtra').locator('summary').last().click();await id('planProtect').check();await id('planOwner').fill('Owner-test-12345');await id('planOwnerConfirm').fill('Owner-test-12345');
+ await id('planReview').click();const [final]=await Promise.all([page.waitForEvent('download'),id('planGenerate').click()]);assert.equal(final.suggestedFilename(),'sample_preparato.pdf');assert.equal(await id('planOwner').count(),0);
+ assert.deepEqual(downloads,['sample_preparato.docx','sample_preparato.pdf']);assert.deepEqual(errors,[]);
+ console.log('PASS unified workspace UI: draft import, review invalidation, cancel, one copy, PDF protection, password mismatch and source switch isolation');
+}finally{await browser.close()}
