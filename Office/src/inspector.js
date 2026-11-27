@@ -1,7 +1,7 @@
 
 // Read-only Inspector: score metadata completeness, not authenticity or privacy.
 // Inspect only recognized parts; never fetch external links or execute embedded objects.
-const INSPECT_LIMIT=32*1024*1024, INSPECT_PARTS=300;
+const INSPECT_LIMIT=32*1024*1024, INSPECT_PARTS=300, INSPECT_LOCATION_LIMIT=20;
 const INSP_NS={word:'http://schemas.openxmlformats.org/wordprocessingml/2006/main',sheet:'http://schemas.openxmlformats.org/spreadsheetml/2006/main',slide:'http://schemas.openxmlformats.org/presentationml/2006/main'};
 const FINDINGS=[
  ['authors','Autori e ultimo autore','Nominativi dichiarati nelle proprietà del documento.','all'],
@@ -28,10 +28,11 @@ function completeness(values){
 async function inspectPrivacy(meta,ext,onProgress=()=>{}){
  const {z,ct,rel,parts,values}=meta, kind=formats[ext], main=target(one(elems(rel.documentElement).filter(e=>e.getAttribute('Type')===officeRel+'officeDocument'),'main'));
  const evidence=Object.fromEntries(FINDINGS.map(([k])=>[k,new Set()]));
- const add=(key,identity)=>evidence[key].add(identity);
- if(values.author.trim())add('authors','author');if(values.lastAuthor.trim())add('authors','lastAuthor');
- if(parts.custom)elems(parts.custom.doc.documentElement).forEach((n,i)=>add('custom',String(i)));
- if(['docm','dotm','xlsm','xltm','pptm','potm','ppsm'].includes(ext))add('macros','format');
+ const locations=Object.fromEntries(FINDINGS.map(([k])=>[k,[]]));
+ const add=(key,identity,location=identity)=>{const seen=evidence[key];if(seen.has(identity))return;seen.add(identity);if(locations[key].length<INSPECT_LOCATION_LIMIT)locations[key].push(String(location).slice(0,240))};
+ if(values.author.trim())add('authors','author',(parts.core?.path||'docProps/core.xml')+' · dc:creator');if(values.lastAuthor.trim())add('authors','lastAuthor',(parts.core?.path||'docProps/core.xml')+' · cp:lastModifiedBy');
+ if(parts.custom)elems(parts.custom.doc.documentElement).forEach((n,i)=>add('custom',String(i),parts.custom.path+' · #'+(i+1)));
+ if(['docm','dotm','xlsm','xltm','pptm','potm','ppsm'].includes(ext))add('macros','format',tr('Estensione abilitata alle macro')+' (.'+ext+')');
  const declared=new Map(),defaults=new Map();
  for(const el of elems(ct.documentElement)){const type=(el.getAttribute('ContentType')||'').toLowerCase();if(el.localName==='Override')declared.set((el.getAttribute('PartName')||'').replace(/^\//,''),type);else if(el.localName==='Default')defaults.set((el.getAttribute('Extension')||'').toLowerCase(),type)}
  const names=new Set([...Object.values(z.files).filter(x=>!x.dir).map(x=>x.name),...declared.keys()]);
@@ -74,7 +75,7 @@ async function inspectPrivacy(meta,ext,onProgress=()=>{}){
     }
    }else if(category==='sheets'){
     root(doc,INSP_NS.sheet,'workbook');
-    for(const el of doc.getElementsByTagNameNS(INSP_NS.sheet,'sheet'))if(['hidden','veryHidden'].includes(el.getAttribute('state')))add('sheets',el.getAttribute('sheetId')||String(evidence.sheets.size));
+    for(const el of doc.getElementsByTagNameNS(INSP_NS.sheet,'sheet'))if(['hidden','veryHidden'].includes(el.getAttribute('state'))){const id=el.getAttribute('sheetId')||String(evidence.sheets.size);add('sheets',id,name+' · sheetId='+id)}
    }else if(category==='slides'){
     root(doc,INSP_NS.slide,'sld');
     if(['0','false'].includes((r.getAttribute('show')||'').toLowerCase()))add('slides',name);
@@ -86,15 +87,81 @@ async function inspectPrivacy(meta,ext,onProgress=()=>{}){
   if(i%12===0)await new Promise(r=>setTimeout(r,0));
  }
  const partial=skipped+invalid>0;
- return {findings:FINDINGS.map(([key,label,description,applies])=>({key,label:tr(label),description:tr(description),count:evidence[key].size,status:applies!=='all'&&applies!==kind?'na':evidence[key].size?'present':partial?'unknown':'absent'})),partial,readParts,readBytes,skipped,invalid,total:scans.length};
+ return {findings:FINDINGS.map(([key,label,description,applies])=>({key,label:tr(label),description:tr(description),count:evidence[key].size,locations:locations[key],locationsTruncated:evidence[key].size>locations[key].length,status:applies!=='all'&&applies!==kind?'na':evidence[key].size?'present':partial?'unknown':'absent'})),partial,readParts,readBytes,skipped,invalid,total:scans.length};
+}
+function renderFindingLocations(card,locations,truncated=false){
+ if(!Array.isArray(locations)||!locations.length)return;
+ const details=document.createElement('details'),summary=document.createElement('summary'),list=document.createElement('ul'),note=document.createElement('p');
+ details.className='finding-locations';summary.textContent=tr('Posizione degli indizi')+' ('+locations.length+(truncated?'+':'')+')';
+ for(const value of locations.slice(0,INSPECT_LOCATION_LIMIT)){const li=document.createElement('li');li.textContent=String(value).slice(0,240);list.append(li)}
+ note.className='muted';note.textContent=tr('Riferimenti tecnici ai controlli eseguiti, non posizioni visive o contenuti completi.')+(truncated?' '+tr('Elenco limitato ai primi riferimenti rilevati.'):'');details.append(summary,list,note);card.append(details);
+}
+// Review queue is a view of existing findings, not a severity score or new scan.
+const privacyReviewStates=[['all','Tutte le categorie'],['present','Da verificare'],['unknown','Non conclusivo'],['absent','Non rilevato nei controlli eseguiti'],['na','Non applicabile']];
+const privacyReviewAdvice={
+ authors:'Controlla i nominativi nelle proprietà originali; per rimuoverli usa la pulizia selettiva su una copia.',
+ identity:'Controlla le proprietà Info e XMP. Usa la pulizia selettiva su una copia per i campi supportati.',
+ custom:'Esamina le proprietà personalizzate; il piano Office non rimuove tutte le proprietà personalizzate.',
+ xmp:'Confronta Info e XMP; uno stream presente non implica dati personali.',
+ comments:'Rivedi commenti e annotazioni nell’applicazione originale prima di condividere.',
+ revisions:'Rivedi le revisioni in Word e decidi quali accettare o rifiutare su una copia.',
+ sheets:'In Excel verifica i fogli nascosti, le formule e le dipendenze prima di modificare la visibilità.',
+ slides:'In PowerPoint rivedi le diapositive nascoste prima di condividere.',
+ notes:'Controlla le note del relatore in PowerPoint; possono contenere segnaposto vuoti.',
+ external:'Verifica le destinazioni senza aprire collegamenti non attendibili.',
+ embedded:'Esamina la necessità degli oggetti incorporati; non aprire oggetti non attendibili.',
+ macros:'Verifica la necessità delle macro secondo le regole IT, senza abilitarle per l’analisi.',
+ signature:'Verifica la firma nel lettore autorizzato; una riscrittura può invalidarla.',
+ annotations:'Rivedi le annotazioni nel lettore PDF; il piano non rimuove tutte le annotazioni.',
+ hidden:'Verifica le annotazioni nascoste nel lettore PDF.',
+ attachments:'Controlla i nomi degli allegati e la loro necessità senza estrarli automaticamente.',
+ javascript:'Non eseguire script; verifica il documento con strumenti e procedure autorizzati.',
+ actions:'Controlla le azioni dichiarate senza eseguirle.',
+ forms:'Verifica i moduli e i valori; l’appiattimento è disponibile solo per i moduli supportati.',
+ layers:'Rivedi i livelli e i contenuti opzionali nel lettore PDF.',
+ multimedia:'Verifica la necessità dei contenuti multimediali senza riprodurli.',
+ restrictions:'Controlla le autorizzazioni nel lettore; le restrizioni non sono un blocco assoluto.',
+ pdfa:'Verifica la conformità con un validatore PDF/A dedicato.'
+};
+function clearPrivacyReview(gridId){document.getElementById(gridId+'Review')?.remove()}
+function renderPrivacyReview(gridId){
+ const grid=$(gridId);clearPrivacyReview(gridId);
+ const cards=[...grid.querySelectorAll('.finding')],counts={all:cards.length,present:0,unknown:0,absent:0,na:0};
+ for(const card of cards){
+  const status=card.dataset.status;if(Object.hasOwn(counts,status))counts[status]++;
+  if(status==='present'||status==='unknown'){
+   const advice=document.createElement('p');advice.className='finding-advice';
+   advice.textContent=tr('Prossimo controllo: ')+tr(status==='unknown'?'Completa i controlli disponibili o usa il lettore appropriato. Non considerare questo risultato come assenza.':privacyReviewAdvice[card.dataset.finding]||'Verifica questo elemento nel lettore appropriato.');
+   card.append(advice);
+  }
+ }
+ const panel=document.createElement('section'),title=document.createElement('h3'),note=document.createElement('p'),filters=document.createElement('div'),live=document.createElement('p'),empty=document.createElement('p');
+ panel.id=gridId+'Review';panel.className='privacy-review';title.textContent=tr('Riepilogo dei controlli');
+ note.className='muted';note.textContent=tr('I numeri contano categorie, non dati personali o livelli di rischio.');
+ filters.className='privacy-review-filters';filters.setAttribute('role','group');filters.setAttribute('aria-label',tr('Filtra i controlli'));
+ live.id=gridId+'Visible';live.setAttribute('role','status');live.setAttribute('aria-live','polite');live.className='muted';
+ empty.className='notice';empty.textContent=tr('Nessuna categoria in questo filtro.');empty.hidden=true;
+ const buttons=[];
+ function choose(value){
+  let visible=0;for(const card of cards){card.hidden=value!=='all'&&card.dataset.status!==value;if(!card.hidden)visible++}
+  for(const button of buttons)button.setAttribute('aria-pressed',String(button.dataset.filter===value));
+  live.textContent=tr('Categorie visualizzate: ')+visible+' / '+cards.length;empty.hidden=visible!==0;
+ }
+ for(const [key,label] of privacyReviewStates){
+  const b=document.createElement('button'),n=document.createElement('strong'),caption=document.createElement('span');
+  b.type='button';b.className='secondary privacy-review-filter';b.dataset.filter=key;b.setAttribute('aria-controls',gridId);
+  n.textContent=String(counts[key]);caption.textContent=tr(label);b.append(n,caption);b.onclick=()=>choose(key);buttons.push(b);filters.append(b);
+ }
+ panel.append(title,note,filters,live,empty);grid.before(panel);choose('all');
 }
 function inspectCell(text){const td=document.createElement('td');td.textContent=String(text);return td}
 function clearInspection(){
+ if(typeof clearPersonalPatterns==='function')clearPersonalPatterns();
  if(typeof clearWorkspaceInspection==='function')clearWorkspaceInspection();
  if(typeof smartClear==='function')smartClear('smartInspectResult');
  if(typeof clearPdfInspection==='function')clearPdfInspection();
  if(typeof clearModelInspection==='function')clearModelInspection();if(typeof clearAuditInspection==='function')clearAuditInspection();
- $('inspectResult').hidden=true;$('inspectClear').hidden=true;$('inspectFilename').textContent='';$('inspectFiletype').textContent='';$('inspectScore').textContent='';$('inspectMeter').value=0;$('inspectChecks').replaceChildren();$('inspectProperties').replaceChildren();$('inspectFindings').replaceChildren();$('inspectCoverage').textContent='';$('inspectMarker').textContent='';msg('inspectStatus','');
+ $('inspectResult').hidden=true;$('inspectClear').hidden=true;$('inspectFilename').textContent='';$('inspectFiletype').textContent='';$('inspectScore').textContent='';$('inspectMeter').value=0;$('inspectChecks').replaceChildren();$('inspectProperties').replaceChildren();$('inspectFindings').replaceChildren();clearPrivacyReview('inspectFindings');$('inspectCoverage').textContent='';$('inspectMarker').textContent='';msg('inspectStatus','');
 }
 function renderInspection(file,ext,meta,privacy){
  const {checks,score}=completeness(meta.values);
@@ -109,17 +176,18 @@ function renderInspection(file,ext,meta,privacy){
   const card=document.createElement('article');card.className='finding';card.dataset.status=item.status;card.dataset.finding=item.key;
   const title=document.createElement('h3'),status=document.createElement('p'),desc=document.createElement('p');
   title.textContent=item.label;status.className='finding-state';status.textContent=item.status==='present'?tr('Da verificare')+' ('+item.count+' '+tr('indizi')+')':item.status==='na'?tr('Non applicabile'):item.status==='unknown'?tr('Non conclusivo'):tr('Non rilevato nei controlli eseguiti');
-  desc.className='muted';desc.textContent=item.description;card.append(title,status,desc);$('inspectFindings').append(card)
+  desc.className='muted';desc.textContent=item.description;card.append(title,status,desc);if(item.status==='present')renderFindingLocations(card,item.locations,item.locationsTruncated);$('inspectFindings').append(card)
  }
+ renderPrivacyReview('inspectFindings');
  $('inspectResult').hidden=false;$('inspectClear').hidden=false;if(typeof storeModelInspection==='function')storeModelInspection(ext,meta.values,privacy);if(typeof storeAuditInspection==='function')storeAuditInspection(file,ext,meta,privacy);
 }
 async function runInspection(file,originalBytes=null){
  if(!file||busy)return;if(/\.pdf$/i.test(file.name))return runPdfInspection(file,originalBytes);goView('inspect',{focus:false});clearInspection();setBusy(true);$('inspectProgress').hidden=false;$('inspectProgress').removeAttribute('value');msg('inspectStatus',tr('Analisi in corso…'));
  try{
   const ext=file.name.split('.').pop().toLowerCase();if(!Object.hasOwn(formats,ext))throw Error(tr('Formato non supportato.'));if(file.size>MAX)throw Error(tr('File superiore a 50 MiB.'));
-  const bytes=originalBytes||new Uint8Array(await file.arrayBuffer()),meta=await inspect(bytes,ext);
+  const bytes=originalBytes||new Uint8Array(await file.arrayBuffer()),meta=await inspect(bytes,ext),scanText=$('inspectTextOptIn').checked;
   const privacy=await inspectPrivacy(meta,ext,(done,total)=>{$('inspectProgress').max=Math.max(1,total);$('inspectProgress').value=done});
-  renderInspection(file,ext,meta,privacy);if(typeof smartOfficeInspection==='function')smartOfficeInspection(file,ext,meta,privacy);msg('inspectStatus',tr('Analisi completata. Nessun documento modificato.'),'ok');$('inspectFilename').focus();
+  renderInspection(file,ext,meta,privacy);if(scanText){try{renderPersonalPatterns(await inspectOfficePatterns(meta,ext))}catch{renderPersonalPatternFailure()}}if(typeof smartOfficeInspection==='function')smartOfficeInspection(file,ext,meta,privacy);msg('inspectStatus',tr('Analisi completata. Nessun documento modificato.'),'ok');$('inspectFilename').focus();
  }catch(err){clearInspection();msg('inspectStatus',tr('Impossibile analizzare il documento: ')+err.message,'error')}
  finally{$('inspectProgress').hidden=true;$('inspectFile').value='';setBusy(false)}
 }

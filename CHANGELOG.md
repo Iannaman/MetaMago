@@ -1,5 +1,13 @@
 # Changelog
 
+## Office Edition 3.5.0 — Privacy Inspector 2.0 Edition (candidato)
+- Localizzazione degli indizi strutturali Office e PDF: riferimenti tecnici limitati ed espandibili, senza apertura di collegamenti o esecuzione di contenuti.
+- Riepilogo delle categorie con filtri e suggerimenti contestuali, senza punteggio di rischio arbitrario.
+- Analisi testuale facoltativa e locale per Office e PDF non cifrati: possibili e-mail, codici fiscali e IBAN italiani con controllo matematico, telefoni con prefisso italiano. Nessuna stringa corrispondente nei nuovi risultati; limiti di copertura espliciti.
+- Confronto facoltativo tra originale e copia verificata nella Unified Workspace: esiti per categoria, non per identità; controlli parziali non presentati come miglioramenti certi. Confronto testuale non disponibile per PDF cifrati.
+- Nessun OCR o rimozione automatica di contenuti. I report preesistenti possono contenere metadati riservati; nessuna certificazione di anonimizzazione.
+- Le fasi implementative hanno superato la CI; nuova validazione sul commit versionato e collaudo manuale ancora necessari.
+
 ## Office Edition 3.4.0 — Unified Workspace Edition (candidato)
 - Gestore condiviso delle sessioni Office e PDF, selezione del documento attivo e bozze indipendenti.
 - Motore combinato Office: metadati, pulizia selettiva, stato finale e Mark in una riscrittura verificata.

@@ -44,36 +44,41 @@ function pdfInspectorWorker(){
    const check=await run([pass,'--check','input.pdf']);
    const partial=raw.code!==0||check.code!==0;
    const counts={identity:0,xmp:0,signature:0,annotations:0,hidden:0,attachments:0,javascript:0,actions:0,external:0,forms:0,layers:0,multimedia:0,restrictions:0};
+   const locations=Object.fromEntries(Object.keys(counts).map(k=>[k,[]])),locationSeen=Object.fromEntries(Object.keys(counts).map(k=>[k,new Set()])),locationTruncated={};
+   let currentRef='';
+   function locate(k,ref=currentRef){if(!ref||locationSeen[k].has(ref))return;if(locations[k].length>=20){locationTruncated[k]=true;return}locationSeen[k].add(ref);locations[k].push(ref)}
+   function hit(k){counts[k]++;locate(k)}
    const resolve=v=>typeof v==='string'&&/^\d+ \d+ R$/.test(v)?objects['obj:'+v]?.value??objects['obj:'+v]?.stream?.dict:v;
    const has=(o,k)=>Object.hasOwn(o,k),text=v=>typeof v==='string'&&v.startsWith('u:')?v.slice(2,2002):typeof v==='string'&&v.startsWith('b:')?'[binary string]':'';
    const trailer=objects.trailer?.value||{},info=resolve(trailer['/Info'])||{},properties=[];
    for(const [k,v] of Object.entries(info).slice(0,100)){if(k.startsWith('/'))properties.push([k.slice(1,81),text(resolve(v))|| (v===null?'':'[non-text]')])}
    counts.identity=properties.filter(([k,v])=>!!v&&!['CreationDate','ModDate','Trapped'].includes(k)).length;
+   if(counts.identity&&typeof trailer['/Info']==='string'&&/^\d+ \d+ R$/.test(trailer['/Info']))locate('identity',trailer['/Info']);
    let visited=0,walkPartial=false;
    function walk(o,depth=0){
     if(o===null||typeof o!=='object')return;
     if(visited>=200000||depth>80){walkPartial=true;return}visited++;
     if(Array.isArray(o)){for(const v of o){if(visited>=200000){walkPartial=true;break}walk(v,depth+1)}return}
     const type=resolve(o['/Type']),sub=resolve(o['/Subtype']),action=resolve(o['/S']),field=resolve(o['/FT']);
-    if(type==='/Metadata'||has(o,'/Metadata'))counts.xmp++;
-    if(type==='/Sig'||field==='/Sig'||has(o,'/ByteRange')||has(o,'/DocMDP')||has(o,'/SigFlags'))counts.signature++;
+    if(type==='/Metadata'||has(o,'/Metadata'))hit('xmp');
+    if(type==='/Sig'||field==='/Sig'||has(o,'/ByteRange')||has(o,'/DocMDP')||has(o,'/SigFlags'))hit('signature');
     const annot=type==='/Annot'||['/Text','/Link','/FreeText','/Line','/Square','/Circle','/Polygon','/PolyLine','/Highlight','/Underline','/Squiggly','/StrikeOut','/Stamp','/Caret','/Ink','/Popup','/FileAttachment','/Sound','/Movie','/Widget','/Screen','/PrinterMark','/TrapNet','/Watermark','/3D','/Redact','/RichMedia'].includes(sub);
-    if(annot){counts.annotations++;const flag=resolve(o['/F']);if(Number.isInteger(flag)&&(flag&35))counts.hidden++}
-    if(type==='/EmbeddedFile'||has(o,'/EmbeddedFiles')||has(o,'/EF')||sub==='/FileAttachment')counts.attachments++;
-    if(action==='/JavaScript'||has(o,'/JS')||has(o,'/JavaScript'))counts.javascript++;
-    if(has(o,'/OpenAction')||has(o,'/AA')||['/Launch','/SubmitForm','/ImportData','/JavaScript','/Rendition'].includes(action))counts.actions++;
-    if(['/URI','/GoToR','/GoToE','/Launch','/SubmitForm','/ImportData'].includes(action))counts.external++;
-    if(has(o,'/AcroForm')||has(o,'/XFA')||sub==='/Widget'||typeof field==='string')counts.forms++;
-    if(has(o,'/OCProperties')||has(o,'/OC')||type==='/OCG'||type==='/OCMD')counts.layers++;
-    if(['/RichMedia','/Movie','/Sound','/3D','/Screen'].includes(sub)||action==='/Rendition'||has(o,'/RichMediaContent'))counts.multimedia++;
-    if(has(o,'/Perms')||has(o,'/DocMDP')||resolve(o['/TransformMethod'])==='/FieldMDP')counts.restrictions++;
+    if(annot){hit('annotations');const flag=resolve(o['/F']);if(Number.isInteger(flag)&&(flag&35))hit('hidden')}
+    if(type==='/EmbeddedFile'||has(o,'/EmbeddedFiles')||has(o,'/EF')||sub==='/FileAttachment')hit('attachments');
+    if(action==='/JavaScript'||has(o,'/JS')||has(o,'/JavaScript'))hit('javascript');
+    if(has(o,'/OpenAction')||has(o,'/AA')||['/Launch','/SubmitForm','/ImportData','/JavaScript','/Rendition'].includes(action))hit('actions');
+    if(['/URI','/GoToR','/GoToE','/Launch','/SubmitForm','/ImportData'].includes(action))hit('external');
+    if(has(o,'/AcroForm')||has(o,'/XFA')||sub==='/Widget'||typeof field==='string')hit('forms');
+    if(has(o,'/OCProperties')||has(o,'/OC')||type==='/OCG'||type==='/OCMD')hit('layers');
+    if(['/RichMedia','/Movie','/Sound','/3D','/Screen'].includes(sub)||action==='/Rendition'||has(o,'/RichMediaContent'))hit('multimedia');
+    if(has(o,'/Perms')||has(o,'/DocMDP')||resolve(o['/TransformMethod'])==='/FieldMDP')hit('restrictions');
     for(const v of Object.values(o)){if(visited>=200000){walkPartial=true;break}walk(v,depth+1)}
    }
-   for(const [k,v] of Object.entries(objects)){if(visited>=200000){walkPartial=true;break}if(k!=='trailer')walk(v?.value??v?.stream?.dict)}
+   for(const [k,v] of Object.entries(objects)){if(visited>=200000){walkPartial=true;break}if(k!=='trailer'){currentRef=/^obj:\d+ \d+ R$/.test(k)?k.slice(4):'';walk(v?.value??v?.stream?.dict)}}
    const names=Object.keys(j.attachments||{});if(names.length)counts.attachments=Math.max(counts.attachments,names.length);
    const capabilities={};for(const k of ['printlow','printhigh','extract','modifyassembly','modifyforms','modifyannotations','modifyother','accessibility'])capabilities[k]=typeof e.capabilities?.[k]==='boolean'?e.capabilities[k]:null;
    // Deliberately exclude raw JSON, recovered passwords, encryption keys, streams and URLs.
-   self.postMessage({ok:true,result:{locked:false,encrypted:!!e.encrypted,needs,version:String(head.pdfversion||header[1]).slice(0,12),pages:j.pages.length,objects:keys.length-1,partial:partial||walkPartial,check:check.code,counts,properties,propertiesTruncated:Object.keys(info).length>100,attachments:names.slice(0,100).map(s=>s.slice(0,300)),attachmentsTruncated:names.length>100,method:typeof e.parameters?.method==='string'?e.parameters.method.slice(0,30):'',bits:e.parameters?.bits??null,revision:e.parameters?.R??null,capabilities}});
+   self.postMessage({ok:true,result:{locked:false,encrypted:!!e.encrypted,needs,version:String(head.pdfversion||header[1]).slice(0,12),pages:j.pages.length,objects:keys.length-1,partial:partial||walkPartial,check:check.code,counts,locations,locationTruncated,properties,propertiesTruncated:Object.keys(info).length>100,attachments:names.slice(0,100).map(s=>s.slice(0,300)),attachmentsTruncated:names.length>100,method:typeof e.parameters?.method==='string'?e.parameters.method.slice(0,30):'',bits:e.parameters?.bits??null,revision:e.parameters?.R??null,capabilities}});
   }catch(e){self.postMessage({ok:false})}
  };
  self.postMessage({ready:true});
@@ -109,7 +114,7 @@ async function inspectPdfReadOnly(bytes,password=''){
 }
 var pdfInspectInput=null;
 function clearPdfInspection(){
- pdfInspectInput=null;$('pdfInspectPassword').value='';$('pdfInspectPasswordPanel').hidden=true;$('pdfInspectResult').hidden=true;$('pdfInspectFilename').textContent='';$('pdfInspectSummary').textContent='';$('pdfInspectHash').textContent='';$('pdfInspectCoverage').textContent='';$('pdfInspectPermissions').replaceChildren();$('pdfInspectProperties').replaceChildren();$('pdfInspectXmp').textContent='';$('pdfInspectFindings').replaceChildren();$('pdfInspectAttachmentNames').replaceChildren();$('pdfInspectAttachments').hidden=true;
+ pdfInspectInput=null;$('pdfInspectPassword').value='';$('pdfInspectPasswordPanel').hidden=true;$('pdfInspectResult').hidden=true;$('pdfInspectFilename').textContent='';$('pdfInspectSummary').textContent='';$('pdfInspectHash').textContent='';$('pdfInspectCoverage').textContent='';$('pdfInspectPermissions').replaceChildren();$('pdfInspectProperties').replaceChildren();$('pdfInspectXmp').textContent='';$('pdfInspectFindings').replaceChildren();clearPrivacyReview('pdfInspectFindings');$('pdfInspectAttachmentNames').replaceChildren();$('pdfInspectAttachments').hidden=true;
 }
 function syncPdfInspectorControls(){
  if(!$('inspectPdfCurrent'))return;
@@ -134,8 +139,9 @@ function renderPdfInspection(file,r){
   const count=r.locked?0:key==='pdfa'?(r.pdfa===true?1:0):r.counts[key];
   const status=count?'present':r.locked||r.partial||(key==='pdfa'&&r.pdfa===null)?'unknown':'absent';
   const card=document.createElement('article'),h=document.createElement('h3'),p=document.createElement('p'),desc=document.createElement('p');
-  card.className='finding';card.dataset.status=status;card.dataset.finding=key;h.textContent=tr(label);p.className='finding-state';p.textContent=status==='present'?tr('Da verificare')+' ('+count+' '+tr('indizi')+')':status==='unknown'?tr('Non conclusivo'):tr('Non rilevato nei controlli eseguiti');desc.className='muted';desc.textContent=tr(description);card.append(h,p,desc);$('pdfInspectFindings').append(card);
+  card.className='finding';card.dataset.status=status;card.dataset.finding=key;h.textContent=tr(label);p.className='finding-state';p.textContent=status==='present'?tr('Da verificare')+' ('+count+' '+tr('indizi')+')':status==='unknown'?tr('Non conclusivo'):tr('Non rilevato nei controlli eseguiti');desc.className='muted';desc.textContent=tr(description);card.append(h,p,desc);if(status==='present'&&key!=='pdfa')renderFindingLocations(card,r.locations?.[key],r.locationTruncated?.[key]===true);$('pdfInspectFindings').append(card);
  }
+ renderPrivacyReview('pdfInspectFindings');
  if(r.attachments?.length){$('pdfInspectAttachments').hidden=false;for(const name of r.attachments){const li=document.createElement('li');li.textContent=name;$('pdfInspectAttachmentNames').append(li)}if(r.attachmentsTruncated){const li=document.createElement('li');li.textContent='…';$('pdfInspectAttachmentNames').append(li)}}
 }
 async function runPdfInspection(file,originalBytes=null,password=''){
@@ -143,7 +149,7 @@ async function runPdfInspection(file,originalBytes=null,password=''){
  try{
   if(file.size>PDF_MAX)throw pdfErr('PDF non valido o superiore a 20 MiB.');
   const bytes=originalBytes||new Uint8Array(await file.arrayBuffer()),r=await inspectPdfReadOnly(bytes,password);
-  renderPdfInspection(file,r);if(typeof smartPdfInspection==='function')smartPdfInspection(file,r);
+  renderPdfInspection(file,r);if($('inspectTextOptIn').checked){if(r.locked||r.encrypted)renderPersonalPatternFailure('pdfPersonalPattern','Controllo testuale non disponibile per PDF cifrati, anche dopo l’apertura.');else{try{renderPersonalPatterns(await inspectPdfPatterns(bytes,r),'pdfPersonalPattern')}catch{renderPersonalPatternFailure('pdfPersonalPattern')}}}if(typeof smartPdfInspection==='function')smartPdfInspection(file,r);
   if(r.locked){pdfInspectInput={file,bytes};$('pdfInspectPasswordPanel').hidden=false;msg('inspectStatus',tr('Password richiesta o non corretta.'),'error')}
   else msg('inspectStatus',tr(r.partial?'Analisi PDF parziale. Nessun documento modificato.':'Analisi PDF completata. Nessun documento modificato.'),'ok');
   $('pdfInspectFilename').focus();
