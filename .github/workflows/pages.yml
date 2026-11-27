@@ -54,8 +54,12 @@ jobs:
         run: node Office/tests/performance.mjs
       - name: Test professional
         run: node Office/tests/professional.mjs
-      - name: Test PWA updates
-        run: node Office/tests/update.mjs
+      - name: Test PWA updates (three independent runs)
+        run: |
+          for attempt in 1 2 3; do
+            echo "PWA migration validation $attempt/3"
+            node Office/tests/update.mjs || exit 1
+          done
       - name: Install PDF renderer
         run: command -v pdftoppm || (sudo apt-get update && sudo apt-get install -y poppler-utils)
       - name: Test PDF metadata and rendering
