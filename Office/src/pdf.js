@@ -232,7 +232,7 @@ async function openPdf(file){
  goView('pdf',{focus:false});clearPdfFailedInput();setBusy(true);let bytes=null;try{
   if(!/\.pdf$/i.test(file.name)||file.size>PDF_MAX)throw pdfErr('PDF non valido o superiore a 20 MiB.');
   bytes=new Uint8Array(await file.arrayBuffer());const meta=await inspectPdf(bytes);
-  pdfSession={file,bytes,meta};pdfLast=null;showPdf();if(typeof smartPdfSummary==='function')smartPdfSummary(file,meta);msg('pdfStatus',tr('PDF pronto. Seleziona i campi da modificare.'),'ok');
+  pdfSession={file,bytes,meta};rememberWorkspaceDocument('pdf');pdfLast=null;showPdf();if(typeof smartPdfSummary==='function')smartPdfSummary(file,meta);msg('pdfStatus',tr('PDF pronto. Seleziona i campi da modificare.'),'ok');
  }catch(e){$('pdfTechnicalError').textContent=e.message;$('pdfTechnicalPanel').hidden=false;const parserRefused=/Trying to parse invalid object/i.test(e.message);if(bytes&&bytes.length>=8&&bytes.length<=PDF_MAX&&new TextDecoder().decode(bytes.subarray(0,5))==='%PDF-'){offerPdfInspection(file,bytes);msg('pdfStatus',tr('PDF non apribile nell’editor. Puoi tentare l’analisi QPDF in sola lettura; nessuna modifica verrà effettuata.')+(parserRefused?' '+tr('Il lettore ha rilevato una struttura non supportata.'):' '+e.message)+(pdfSession?' '+tr('Il documento aperto in precedenza è ancora nell’editor.'):''),'error')}else msg('pdfStatus',tr('Impossibile aprire PDF: ')+e.message,'error')}finally{$('pdfFile').value='';setBusy(false);pdfRefresh()}
 }
 $('pdfChoose').onclick=()=>$('pdfFile').click();$('pdfFile').onchange=e=>openPdf(e.target.files[0]);

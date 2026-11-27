@@ -3,12 +3,13 @@ let currentView='home', tourIndex=0;
 const viewKeys=['home','edit','batch','rubric','settings','help','inspect','models','audit','pdf','workspace'];
 function updateWorkspaceStatus(){
  const el=$('workspaceStatus');if(!el)return;$('inspectCurrent').disabled=busy||!state;if(typeof syncPdfInspectorControls==='function')syncPdfInspectorControls();
- el.textContent=busy?tr('Elaborazione in corso…'):(pending()||(typeof pdfPending==='function'&&pdfPending()))?tr('Documento con modifiche non salvate'):state||(typeof pdfSession!=='undefined'&&pdfSession)?tr('Documento aperto'):tr('Nessun documento aperto');
+ el.textContent=busy?tr('Elaborazione in corso…'):workspaceSessionStatus();
 }
 function goView(key,{focus=true}={}){
  if(busy||!viewKeys.includes(key))return;
  if(key==='workspace'&&(typeof renderDocumentWorkspace!=='function'||!renderDocumentWorkspace()))return;
  const changed=currentView!==key;currentView=key;
+ if(key==='edit')rememberWorkspaceDocument('office');else if(key==='pdf')rememberWorkspaceDocument('pdf');
  for(const pane of document.querySelectorAll('[data-view]')){pane.hidden=pane.dataset.view!==key;if(changed&&!pane.hidden&&typeof motionView==='function')motionView(pane)}
  for(const nav of document.querySelectorAll('.side-nav [data-view-target]')){
   if(nav.dataset.viewTarget===key)nav.setAttribute('aria-current','page');else nav.removeAttribute('aria-current');
