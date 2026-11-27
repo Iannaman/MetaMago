@@ -61,6 +61,8 @@ jobs:
         run: node Office/tests/mark.mjs
       - name: Test web
         run: node Office/tests/web.mjs
+      - name: Test Document Workspace
+        run: node Office/tests/workspace.mjs
       - name: Test team
         run: node Office/tests/team.mjs
       - name: Test global
@@ -127,8 +129,6 @@ jobs:
         run: node Office/tests/ux-cleanup.mjs
       - name: Test Visual Identity
         run: node Office/tests/visual.mjs
-      - name: Test Document Workspace
-        run: node Office/tests/workspace.mjs
       - name: Test Visual Comparison
         run: node Office/tests/comparison.mjs
       - name: Test Visual Storytelling
