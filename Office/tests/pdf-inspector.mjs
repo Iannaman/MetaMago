@@ -52,6 +52,7 @@ try{
  assert.match(await id('pdfInspectProperties').textContent(),/XMP title/);
  for(const k of ['identity','xmp','annotations','hidden','attachments','javascript','actions','external','forms','layers'])assert.equal(await finding(k).getAttribute('data-status'),'present',k);
  assert.match(await id('pdfInspectAttachmentNames').textContent(),/synthetic.txt/);
+ await finding('external').locator('.finding-locations summary').click();assert.match(await finding('external').locator('.finding-locations li').first().textContent(),/^\d+ \d+ R$/);assert.ok(!(await finding('external').textContent()).includes('example.invalid'));assert.ok(!(await finding('javascript').textContent()).includes('app.alert'));
  assert.equal(await id('pdfInspectProperties').locator('script').count(),0);
  await load('Signed.pdf',fixture.signed);assert.equal(await finding('signature').getAttribute('data-status'),'present');
  await load('Archival.pdf',fixture.archival);assert.equal(await finding('pdfa').getAttribute('data-status'),'present');
@@ -59,7 +60,7 @@ try{
  execFileSync('qpdf',['--encrypt',user,owner,'256','--print=none','--modify=none','--extract=n','--',plain,locked]);
  execFileSync('qpdf',['--encrypt','',owner,'256','--print=low','--modify=form','--extract=y','--',plain,ownerOnly]);
  const lockedBytes=await readFile(locked);
- await load('Locked.pdf',lockedBytes);assert.equal(await id('pdfInspectPasswordPanel').isVisible(),true);assert.equal(await finding('javascript').getAttribute('data-status'),'unknown');
+ await load('Locked.pdf',lockedBytes);assert.equal(await id('pdfInspectPasswordPanel').isVisible(),true);assert.equal(await finding('javascript').getAttribute('data-status'),'unknown');assert.equal(await id('pdfInspectFindings').locator('.finding-locations').count(),0);
  assert.equal(await id('pdfInspectHash').textContent(),createHash('sha256').update(lockedBytes).digest('hex'));
  await id('pdfInspectPassword').fill('Wrong-password-2026');await id('pdfInspectRetry').click();await wait();assert.equal(await id('pdfInspectPasswordPanel').isVisible(),true);assert.equal(await id('pdfInspectPassword').inputValue(),'');
  await id('pdfInspectPassword').fill(user);await id('pdfInspectRetry').click();await wait();assert.equal(await id('pdfInspectPasswordPanel').isVisible(),false);assert.equal(await id('pdfInspectResult').isVisible(),true,await id('inspectStatus').textContent());

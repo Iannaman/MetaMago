@@ -1,7 +1,7 @@
 
 // Read-only Inspector: score metadata completeness, not authenticity or privacy.
 // Inspect only recognized parts; never fetch external links or execute embedded objects.
-const INSPECT_LIMIT=32*1024*1024, INSPECT_PARTS=300;
+const INSPECT_LIMIT=32*1024*1024, INSPECT_PARTS=300, INSPECT_LOCATION_LIMIT=20;
 const INSP_NS={word:'http://schemas.openxmlformats.org/wordprocessingml/2006/main',sheet:'http://schemas.openxmlformats.org/spreadsheetml/2006/main',slide:'http://schemas.openxmlformats.org/presentationml/2006/main'};
 const FINDINGS=[
  ['authors','Autori e ultimo autore','Nominativi dichiarati nelle proprietà del documento.','all'],
@@ -28,10 +28,11 @@ function completeness(values){
 async function inspectPrivacy(meta,ext,onProgress=()=>{}){
  const {z,ct,rel,parts,values}=meta, kind=formats[ext], main=target(one(elems(rel.documentElement).filter(e=>e.getAttribute('Type')===officeRel+'officeDocument'),'main'));
  const evidence=Object.fromEntries(FINDINGS.map(([k])=>[k,new Set()]));
- const add=(key,identity)=>evidence[key].add(identity);
- if(values.author.trim())add('authors','author');if(values.lastAuthor.trim())add('authors','lastAuthor');
- if(parts.custom)elems(parts.custom.doc.documentElement).forEach((n,i)=>add('custom',String(i)));
- if(['docm','dotm','xlsm','xltm','pptm','potm','ppsm'].includes(ext))add('macros','format');
+ const locations=Object.fromEntries(FINDINGS.map(([k])=>[k,[]]));
+ const add=(key,identity,location=identity)=>{const seen=evidence[key];if(seen.has(identity))return;seen.add(identity);if(locations[key].length<INSPECT_LOCATION_LIMIT)locations[key].push(String(location).slice(0,240))};
+ if(values.author.trim())add('authors','author',(parts.core?.path||'docProps/core.xml')+' · dc:creator');if(values.lastAuthor.trim())add('authors','lastAuthor',(parts.core?.path||'docProps/core.xml')+' · cp:lastModifiedBy');
+ if(parts.custom)elems(parts.custom.doc.documentElement).forEach((n,i)=>add('custom',String(i),parts.custom.path+' · #'+(i+1)));
+ if(['docm','dotm','xlsm','xltm','pptm','potm','ppsm'].includes(ext))add('macros','format',tr('Estensione abilitata alle macro')+' (.'+ext+')');
  const declared=new Map(),defaults=new Map();
  for(const el of elems(ct.documentElement)){const type=(el.getAttribute('ContentType')||'').toLowerCase();if(el.localName==='Override')declared.set((el.getAttribute('PartName')||'').replace(/^\//,''),type);else if(el.localName==='Default')defaults.set((el.getAttribute('Extension')||'').toLowerCase(),type)}
  const names=new Set([...Object.values(z.files).filter(x=>!x.dir).map(x=>x.name),...declared.keys()]);
@@ -74,7 +75,7 @@ async function inspectPrivacy(meta,ext,onProgress=()=>{}){
     }
    }else if(category==='sheets'){
     root(doc,INSP_NS.sheet,'workbook');
-    for(const el of doc.getElementsByTagNameNS(INSP_NS.sheet,'sheet'))if(['hidden','veryHidden'].includes(el.getAttribute('state')))add('sheets',el.getAttribute('sheetId')||String(evidence.sheets.size));
+    for(const el of doc.getElementsByTagNameNS(INSP_NS.sheet,'sheet'))if(['hidden','veryHidden'].includes(el.getAttribute('state'))){const id=el.getAttribute('sheetId')||String(evidence.sheets.size);add('sheets',id,name+' · sheetId='+id)}
    }else if(category==='slides'){
     root(doc,INSP_NS.slide,'sld');
     if(['0','false'].includes((r.getAttribute('show')||'').toLowerCase()))add('slides',name);
@@ -86,7 +87,14 @@ async function inspectPrivacy(meta,ext,onProgress=()=>{}){
   if(i%12===0)await new Promise(r=>setTimeout(r,0));
  }
  const partial=skipped+invalid>0;
- return {findings:FINDINGS.map(([key,label,description,applies])=>({key,label:tr(label),description:tr(description),count:evidence[key].size,status:applies!=='all'&&applies!==kind?'na':evidence[key].size?'present':partial?'unknown':'absent'})),partial,readParts,readBytes,skipped,invalid,total:scans.length};
+ return {findings:FINDINGS.map(([key,label,description,applies])=>({key,label:tr(label),description:tr(description),count:evidence[key].size,locations:locations[key],locationsTruncated:evidence[key].size>locations[key].length,status:applies!=='all'&&applies!==kind?'na':evidence[key].size?'present':partial?'unknown':'absent'})),partial,readParts,readBytes,skipped,invalid,total:scans.length};
+}
+function renderFindingLocations(card,locations,truncated=false){
+ if(!Array.isArray(locations)||!locations.length)return;
+ const details=document.createElement('details'),summary=document.createElement('summary'),list=document.createElement('ul'),note=document.createElement('p');
+ details.className='finding-locations';summary.textContent=tr('Posizione degli indizi')+' ('+locations.length+(truncated?'+':'')+')';
+ for(const value of locations.slice(0,INSPECT_LOCATION_LIMIT)){const li=document.createElement('li');li.textContent=String(value).slice(0,240);list.append(li)}
+ note.className='muted';note.textContent=tr('Riferimenti tecnici ai controlli eseguiti, non posizioni visive o contenuti completi.')+(truncated?' '+tr('Elenco limitato ai primi riferimenti rilevati.'):'');details.append(summary,list,note);card.append(details);
 }
 function inspectCell(text){const td=document.createElement('td');td.textContent=String(text);return td}
 function clearInspection(){
@@ -109,7 +117,7 @@ function renderInspection(file,ext,meta,privacy){
   const card=document.createElement('article');card.className='finding';card.dataset.status=item.status;card.dataset.finding=item.key;
   const title=document.createElement('h3'),status=document.createElement('p'),desc=document.createElement('p');
   title.textContent=item.label;status.className='finding-state';status.textContent=item.status==='present'?tr('Da verificare')+' ('+item.count+' '+tr('indizi')+')':item.status==='na'?tr('Non applicabile'):item.status==='unknown'?tr('Non conclusivo'):tr('Non rilevato nei controlli eseguiti');
-  desc.className='muted';desc.textContent=item.description;card.append(title,status,desc);$('inspectFindings').append(card)
+  desc.className='muted';desc.textContent=item.description;card.append(title,status,desc);if(item.status==='present')renderFindingLocations(card,item.locations,item.locationsTruncated);$('inspectFindings').append(card)
  }
  $('inspectResult').hidden=false;$('inspectClear').hidden=false;if(typeof storeModelInspection==='function')storeModelInspection(ext,meta.values,privacy);if(typeof storeAuditInspection==='function')storeAuditInspection(file,ext,meta,privacy);
 }

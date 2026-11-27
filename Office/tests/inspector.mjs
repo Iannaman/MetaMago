@@ -38,11 +38,13 @@ try{
    const generated=await z.generateAsync({type:'uint8array',compression:'STORE'});
    const meta=await inspect(generated,ext),p=await inspectPrivacy(meta,ext),get=k=>p.findings.find(x=>x.key===k);
    assert(!p.partial,'unexpected partial '+ext);
-   if(ext==='docx'){for(const k of ['revisions','comments','embedded','macros','external'])assert(get(k).status==='present',k+' not detected');assert(get('sheets').status==='na','sheet applicability')}
-   if(ext==='xlsx')assert(get('sheets').status==='present','hidden sheet not detected');
-   if(ext==='pptx'){assert(get('slides').status==='present','hidden slide not detected');assert(get('notes').status==='present','notes not detected')}
+   if(ext==='docx'){for(const k of ['revisions','comments','embedded','macros','external'])assert(get(k).status==='present',k+' not detected');assert(get('sheets').status==='na','sheet applicability');assert(get('revisions').locations.some(x=>x.startsWith('word/')),'revision location');assert(get('external').locations.some(x=>x.includes('#inspector-test')),'relationship location');assert(!get('external').locations.some(x=>x.includes('example.invalid')),'external target leaked')}
+   if(ext==='xlsx'){assert(get('sheets').status==='present','hidden sheet not detected');assert(get('sheets').locations.some(x=>x.includes('sheetId=')),'sheet location missing')}
+   if(ext==='pptx'){assert(get('slides').status==='present','hidden slide not detected');assert(get('notes').status==='present','notes not detected');assert(get('notes').locations.some(x=>x.includes('notesSlide900.xml')),'notes location missing')}
    files[ext]=Array.from(generated);
   }
+  const many=await JSZip.loadAsync(new Uint8Array(files.docx));for(let i=0;i<25;i++)many.file('word/embeddings/location'+i+'.bin',new Uint8Array([1]));
+  const capped=await inspectPrivacy(await inspect(await many.generateAsync({type:'uint8array',compression:'STORE'}),'docx'),'docx'),embedded=capped.findings.find(x=>x.key==='embedded');assert(embedded.count>20&&embedded.locations.length===20&&embedded.locationsTruncated,'bounded references');
   const bad=await JSZip.loadAsync(new Uint8Array(files.docx));bad.file('word/header999.xml','<broken');
   const damaged=await inspect(await bad.generateAsync({type:'uint8array',compression:'STORE'}),'docx');
   const partial=await inspectPrivacy(damaged,'docx');assert(partial.partial&&partial.invalid>0,'partial coverage missing');
@@ -57,7 +59,7 @@ try{
   await page.waitForFunction(ext=>document.querySelector('#inspectFilename').textContent==='Inspector.'+ext&&!document.querySelector('#inspectResult').hidden&&!document.querySelector('#inspectChoose').disabled,ext);
   assert.equal(await id('inspectChecks').locator('li').count(),5);
   const key={docx:'revisions',xlsx:'sheets',pptx:'slides'}[ext];
-  assert.equal(await page.locator('[data-finding="'+key+'"]').getAttribute('data-status'),'present');
+  const card=page.locator('#inspectFindings [data-finding="'+key+'"]');assert.equal(await card.getAttribute('data-status'),'present');await card.locator('.finding-locations summary').click();assert.ok(await card.locator('.finding-locations li').first().isVisible());
   assert.equal(await id('editorSection').isVisible(),false);
  }
  await id('inspectClear').click();assert.equal(await id('inspectResult').isVisible(),false);
