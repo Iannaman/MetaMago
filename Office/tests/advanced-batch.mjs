@@ -30,3 +30,22 @@ console.log('Advanced batch scheduler tests passed');
  cancelled.cancel();await cancelled.run();
  assert.deepEqual(statuses(cancelled),['cancelled','cancelled']);
  console.log('Advanced batch integration safety tests passed');
+
+ // Preview integration: cancellation after a yielded row must not inspect another file.
+ const inspected=[];
+ let preview;
+ preview=create(['first','second'],async file=>{
+  inspected.push(file);
+  await Promise.resolve();
+  preview.cancel();
+ });
+ await preview.run();
+ assert.deepEqual(inspected,['first']);
+ assert.deepEqual(statuses(preview),['cancelled','cancelled']);
+ const build=await readFile(new URL('../build.mjs',import.meta.url),'utf8');
+ const batch=await readFile(new URL('../src/batch.js',import.meta.url),'utf8');
+ assert.ok(build.includes("'src/advanced-batch.js','src/batch.js'"));
+ assert.ok(batch.includes('createAdvancedBatch(batchFiles,async file=>'));
+ assert.ok(batch.includes('if(batchCancelled)scheduler.cancel()'));
+ assert.ok(batch.includes('await scheduler.run();'));
+ console.log('Batch preview integration checks passed');
