@@ -34,6 +34,29 @@ try{
   const cases=[[{},null],[{...input,metadata:{Author:'Conflict'}},creds],[{...input,metadata:{Unknown:'invalid'}},creds],[{...input,protection:{...input.protection,owner:creds.owner}},creds],[input,{...creds,user:creds.owner}],[{metadata:{Title:'No encryption'}},creds]];
   let count=0;for(const [p,c] of cases){try{await executePdfOperationPlan(new Uint8Array(fixture),p,c)}catch{count++}}return count;
  },{fixture,input,creds});
- assert.equal(rejected,6);assert.deepEqual(errors,[]);assert.deepEqual(downloads,[]);assert.deepEqual(requests,[]);
+ assert.equal(rejected,6);
+ for(const ext of ['docx','xlsx','pptx']){
+  const bytes=Array.from(await readFile(resolve(root,'Test','Prova.'+ext)));
+  const office=await page.evaluate(async({bytes,ext})=>{
+   const original=new Uint8Array(bytes),base=await inspect(original,ext);
+   const seeded=await rewrite(original,ext,{author:'Private author',lastAuthor:'Private editor',title:'Previous title',company:'Keep company'},base.final,'add');
+   const untouched=seeded.slice(),before=await inspect(seeded,ext),progress=[];
+   const p={metadata:{title:'Unified title',modified:'2026-11-27T09:00:00Z'},cleanup:['author','lastAuthor'],final:!before.final,mark:'remove'};
+   const result=await executeOfficeOperationPlan(seeded,ext,p,s=>progress.push(s)),after=await inspect(result.result,ext);
+   const content=Object.keys(before.z.files).filter(n=>!before.z.files[n].dir&&!Object.values(before.parts).some(p=>p.path===n));
+   for(const n of content){
+    const a=await before.z.file(n).async('uint8array'),b=await after.z.file(n).async('uint8array');
+    if(!pdfSameBytes(a,b))throw Error('Content altered: '+n);
+   }
+   const invalid=[{}, {metadata:{author:'Conflict'},cleanup:['author']},{cleanup:['unknown']},{cleanup:['author','author']},{metadata:{modified:'2026-02-31T12:00:00Z'}},{final:'true'},{mark:'unknown'},{metadata:{unknown:'invalid'}},{metadata:{title:'Previous title'}}];
+   let rejected=0;for(const plan of invalid){try{await executeOfficeOperationPlan(seeded,ext,plan)}catch{rejected++}}
+   return {title:after.values.title,author:after.values.author,lastAuthor:after.values.lastAuthor,company:after.values.company,modified:after.values.modified,marker:after.marker.status,final:after.final,expectedFinal:!before.final,original:pdfSameBytes(seeded,untouched),steps:result.steps,progress,removed:result.removed,residual:!!result.residual,rejected};
+  },{bytes,ext});
+  assert.equal(office.title,'Unified title');assert.equal(office.author,'');assert.equal(office.lastAuthor,'');assert.equal(office.company,'Keep company');assert.equal(office.modified,'2026-11-27T09:00:00Z');
+  assert.equal(office.marker,'absent');assert.equal(office.final,office.expectedFinal);assert.equal(office.original,true);assert.equal(office.removed,2);assert.equal(office.residual,true);
+  assert.deepEqual(office.steps,['metadata','cleanup']);assert.deepEqual(office.progress,['rewrite','verify']);assert.equal(office.rejected,9);
+  console.log('PASS unified Office operation plan '+ext+': metadata, selective cleanup, final state, Mark removal, unchanged content, conflict/no-op rejection');
+ }
+ assert.deepEqual(errors,[]);assert.deepEqual(downloads,[]);assert.deepEqual(requests,[]);
  console.log('PASS unified PDF metadata, cleanup, watermark, AES protection, independent decrypt/content verification, conflict rejection and original preservation');
 }finally{await browser.close();await rm(dir,{recursive:true,force:true})}

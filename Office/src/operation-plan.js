@@ -63,3 +63,47 @@ async function executePdfOperationPlan(bytes,input,credentials=null,onProgress=(
   return {result,steps,pages:before.pages,encrypted:!!plan.protection};
  }finally{options=null;credentials=null}
 }
+
+/* Office combined plan: one verified OOXML rewrite, with no intermediate copies.
+   A cleanup field cannot also be edited; Mark and final state are explicit. */
+function validateOfficeOperationPlan(input){
+ const p=planRecord(input,['metadata','cleanup','final','mark']);
+ const metadata=planRecord(p.metadata===undefined?{}:p.metadata,Object.keys(specs)),changes=Object.create(null);
+ for(const [key,value] of Object.entries(metadata)){
+  if(typeof value!=='string'||value.length>100000||/[\x00-\x08\x0b\x0c\x0e-\x1f\ufffe\uffff]/.test(value))throw operationPlanError();
+  if(key==='author'&&value){
+   const names=split(value);
+   if(names.length>100||names.some(n=>n.length>200||/[\x00-\x1f]/.test(n)))throw operationPlanError();
+   changes[key]=names.join('; ');
+  }else if(specs[key][4]==='date'&&value){
+   try{changes[key]=pdfDate(value)}catch{throw operationPlanError()}
+  }else changes[key]=value;
+ }
+ const cleanup=p.cleanup===undefined?[]:p.cleanup;
+ if(!Array.isArray(cleanup)||cleanup.length>privacyOfficeKeys.length||new Set(cleanup).size!==cleanup.length||cleanup.some(k=>!privacyOfficeKeys.includes(k)||Object.hasOwn(changes,k)))throw operationPlanError();
+ const final=p.final===undefined?null:p.final,mark=p.mark===undefined?'keep':p.mark;
+ if(final!==null&&typeof final!=='boolean'||!['keep','add','remove'].includes(mark))throw operationPlanError();
+ if(!Object.keys(changes).length&&!cleanup.length&&final===null&&mark==='keep')throw operationPlanError();
+ return {metadata:changes,cleanup:[...cleanup],final,mark};
+}
+async function executeOfficeOperationPlan(bytes,ext,input,onProgress=()=>{}){
+ if(!(bytes instanceof Uint8Array)||!bytes.length||bytes.length>MAX||!Object.hasOwn(formats,ext))throw operationPlanError();
+ const plan=validateOfficeOperationPlan(input),before=await inspect(bytes,ext),changes=Object.create(null),steps=[];
+ const final=plan.final===null?before.final:plan.final;
+ const markChanged=markChanges(before.marker,plan.mark);
+ for(const [k,v] of Object.entries(plan.metadata))if(before.values[k]!==v)changes[k]=v;
+ const metadataChanged=Object.keys(changes).length>0;
+ let removed=0;
+ for(const k of plan.cleanup)if(before.values[k]!==''){changes[k]='';removed++}
+ if(!Object.keys(changes).length&&final===before.final&&!markChanged)throw Error(tr('Nessuna modifica necessaria'));
+ if(metadataChanged||final!==before.final||plan.mark==='add'&&markChanged)steps.push('metadata');
+ if(removed||plan.mark==='remove'&&markChanged)steps.push('cleanup');
+ onProgress('rewrite');
+ const result=await rewrite(bytes,ext,changes,final,plan.mark);
+ onProgress('verify');
+ const after=await inspect(result,ext);
+ for(const k of Object.keys(specs))if(after.values[k]!==(Object.hasOwn(changes,k)?changes[k]:before.values[k]))throw operationPlanError();
+ if(after.final!==final||plan.cleanup.some(k=>after.values[k]!=='')||plan.mark==='remove'&&after.marker.status!=='absent'||plan.mark==='add'&&after.marker.status!=='present')throw operationPlanError();
+ const residual=plan.cleanup.length||plan.mark==='remove'?await inspectPrivacy(after,ext):null;
+ return {result,steps,removed,residual,final};
+}

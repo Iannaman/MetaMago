@@ -62,6 +62,7 @@ const EN=Object.freeze({
  'Documenti aperti':'Open documents',
  'Due documenti aperti':'Two open documents',
  'Documento attivo':'Active document',
+ 'Piano operazioni non valido o incompatibile.':'Invalid or incompatible operation plan.',
  'Modifiche non salvate':'Unsaved changes',
  'Apri scheda documento':'Open document overview',
  'Vai alla scheda documento':'Go to document overview',
