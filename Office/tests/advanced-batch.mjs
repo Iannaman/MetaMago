@@ -49,3 +49,18 @@ console.log('Advanced batch scheduler tests passed');
  assert.ok(batch.includes('if(batchCancelled)scheduler.cancel()'));
  assert.ok(batch.includes('await scheduler.run();'));
  console.log('Batch preview integration checks passed');
+
+ // Copy pipeline contract: failed documents do not prevent subsequent copies;
+ // cancellation discards staged output and prevents subsequent processing.
+ const staged=[],visited=[];
+ let copies;
+ copies=create([1,2,3],async n=>{visited.push(n);if(n===2)throw Error('verification failed');staged.push(n)});
+ await copies.run();
+ assert.deepEqual(staged,[1,3]);
+ assert.deepEqual(statuses(copies),['success','failed','success']);
+ let stop;const discarded=[];
+ stop=create([1,2],async(n,ctx)=>{discarded.push(n);stop.cancel();assert.equal(ctx.isCancelled(),true)});
+ await stop.run();
+ assert.deepEqual(discarded,[1]);
+ assert.deepEqual(statuses(stop),['cancelled','cancelled']);
+ console.log('Copy scheduling contract tests passed');
