@@ -1,0 +1,13 @@
+import assert from 'node:assert/strict';
+import {readFile} from 'node:fs/promises';
+import vm from 'node:vm';
+const source=await readFile(new URL('../src/advanced-batch.js',import.meta.url),'utf8');
+const create=vm.runInNewContext(source+'\ncreateAdvancedBatch');
+const statuses=b=>Array.from(b.snapshot(),j=>j.status);
+let attempts=0,active=0,peak=0;
+const b=create([1,2,3],async n=>{active++;peak=Math.max(peak,active);try{if(n===2&&attempts++===0)throw Error('private')}finally{active--}});
+await b.run();assert.deepEqual(statuses(b),['success','failed','success']);
+assert.equal(peak,1);assert.equal(b.retryFailed(),true);await b.run();assert.deepEqual(statuses(b),['success','success','success']);
+let p;p=create([1,2],async n=>{if(n===1)p.pause()});await p.run();assert.deepEqual(statuses(p),['success','pending']);await p.run();assert.deepEqual(statuses(p),['success','success']);
+let c;c=create([1,2],async (_,ctx)=>{c.cancel();assert.equal(ctx.isCancelled(),true)});await c.run();assert.deepEqual(statuses(c),['cancelled','cancelled']);assert.equal(c.retryFailed(),false);
+console.log('Advanced batch scheduler tests passed');
