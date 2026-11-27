@@ -10,7 +10,7 @@ try{
  const page=await browser.newPage({locale:'it-IT',offline:true,viewport:{width:375,height:800},acceptDownloads:true}),errors=[],downloads=[],requests=[];let accept=true;
  page.on('pageerror',e=>errors.push(e.message));page.on('download',d=>downloads.push(d.suggestedFilename()));page.on('request',r=>{if(/^https?:/.test(r.url()))requests.push(r.url())});page.on('dialog',d=>accept?d.accept():d.dismiss());
  const id=x=>page.locator('#'+x);await page.goto(pathToFileURL(resolve(root,'Office','MetaMago-Office.html')).href);
- assert.match(await id('editionTag').textContent(),/3\.2\.\d+|3\.3\.0/);
+ assert.equal(await id('editionTag').textContent(),'v'+(await readFile(resolve(root,'Office','VERSION'),'utf8')).trim());
  const fixture=await page.evaluate(async input=>{
   const original=new Uint8Array(input),m=await inspect(original,'docx');
   const office=await rewrite(original,'docx',{author:'Synthetic private',lastAuthor:'Synthetic reviewer',company:'Synthetic company',manager:'Synthetic manager',title:'Experience fixture'},m.final,'keep');

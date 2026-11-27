@@ -3,7 +3,7 @@
 # MetaMago 🪄
 **Le proprietà cambiano, il contenuto no.**
 
-Editor locale dei metadati di Microsoft Word, Excel e PowerPoint. Sviluppato da [Iannaman](https://github.com/Iannaman). Office Edition 3.3.0 è candidata al rilascio stabile; Desktop Edition resta beta. Il collaudo manuale su Office ed Edge aziendale è necessario prima di adottarla.
+Editor locale dei metadati di Microsoft Word, Excel e PowerPoint. Sviluppato da [Iannaman](https://github.com/Iannaman). Office Edition 3.3.1 è candidata al rilascio stabile; Desktop Edition resta beta. Il collaudo manuale su Office ed Edge aziendale è necessario prima di adottarla.
 
 ## Scegli l'edizione
 
@@ -21,15 +21,17 @@ Editor locale dei metadati di Microsoft Word, Excel e PowerPoint. Sviluppato da 
 | MetaMago Mark e ispettore proprietà personalizzate | Sì, facoltativo | Non ancora |
 | Sola lettura Windows | No | Sì |
 
-### Office Edition — v3.3.0 · Visual Experience Edition
+### Office Edition — v3.3.1 · Stability & Quality Edition
 
 [**Avvia MetaMago**](https://iannaman.github.io/MetaMago/). Per aprirlo in una finestra dedicata, premi **Installa applicazione** o usa il comando App di Edge, se consentito. Seleziona un documento, modifica le proprietà e salva una copia. Verifica il risultato in Office > File > Informazioni.
 
 La modalità Semplice è predefinita; Avanzata mostra altre proprietà e protezione. Puoi gestire la rubrica anche senza aprire un documento, richiamare un profilo dal menu rapido, selezionare l'ultimo autore con un clic e confermare i nomi digitati anche al salvataggio. La schermata di completamento permette di scaricare di nuovo la copia o aprire un altro documento. Le date visualizzate seguono la lingua selezionata; il confronto Audit usa valori originali.
 
+**Stability & Quality Edition (3.3.1, candidato):** i workflow conservano il controllo privacy preliminare selezionato, anche nel backup della configurazione; le ricette precedenti restano importabili (controllo disattivato se assente). La checklist di rilascio è aggiornata; i gate manuali restano da completare.
+
 **Visual Experience Edition (3.3.0, candidato):** consolidamento dell’intera roadmap Visual UX, illustrazioni coerenti nella scheda documento, accesso diretto all’anteprima PDF, collaudo raster su Chromium/Firefox/WebKit e percorso Office completo con download diretto e verifica SHA-256. Consulta il [piano di collaudo](Office/EXPERIENCE-VALIDATION.md).
 
-**Usability Optimization (3.2.7, candidato):** download diretto opzionale con un singolo documento, ZIP per selezioni multiple, preset esterno con verifica preliminare degli originali, conferma di sostituzione solo quando esiste una configurazione o selezione. Formato di download e controllo preliminare sono opzioni di sessione, non campi dei workflow salvati.
+**Usability Optimization (3.2.7, candidato):** download diretto opzionale con un singolo documento, ZIP per selezioni multiple, preset esterno con verifica preliminare degli originali, conferma di sostituzione solo quando esiste una configurazione o selezione. In 3.2.7 entrambi erano opzioni di sessione; dalla 3.3.1 il controllo preliminare è conservato nei workflow, mentre il formato di download resta un’opzione di sessione.
 
 **Visual PDF Preview (3.2.6, candidato):** rendering locale a pagina singola e confronto con una copia temporanea delle operazioni di pubblicazione. PDF.js incorporato nella build con versione e hash fissati; nessuna connessione durante l’uso. La prima build richiede l’archivio della dipendenza dal registry npm. L’anteprima non è una certificazione di fedeltà grafica.
 
@@ -103,7 +105,7 @@ La modalità Semplice è predefinita; Avanzata mostra altre proprietà e protezi
 
 Per la modifica massiva apri **Modifica più documenti**, oppure trascina più file nella zona iniziale. Seleziona fino a 20 file, 100 MiB complessivi (50 MiB ciascuno). Scegli se aggiungere o sostituire autori, impostare esplicitamente ultimo autore, società, responsabile o MetaMago Mark. I campi non selezionati, date, titoli e stato finale restano invariati. Caricare un gruppo precompila la modalità aggiunta; caricare un profilo precompila solo i suoi valori non vuoti (autori in sostituzione). Controlla l'anteprima per ogni documento, poi conferma. Il risultato è uno ZIP con le sole copie modificate e verificate; errori, file invariati e file esclusi sono elencati nella pagina. Nessuna sovrascrittura, nessun invio al server.
 
-**MetaMago Mark:** in modalità Avanzata puoi scegliere di aggiungere, aggiornare o rimuovere il contrassegno applicativo. La scelta predefinita mantiene lo stato originale: nessun contrassegno viene aggiunto in automatico. Le tre proprietà testuali personalizzate sono `MetaMago.Editor` (`Edited with MetaMago`), `MetaMago.Version` (`2.4.0`) e `MetaMago.Edition` (`Office`). L'app rileva i contrassegni presenti e mostra le proprietà personalizzate originali in un ispettore di sola lettura. Nomi riservati non riconosciuti o duplicati vengono preservati; non vengono sovrascritti. Nessun dato personale, timestamp o identificativo del dispositivo viene aggiunto. Il contrassegno non è una firma digitale né prova di provenienza, può essere modificato o rimosso da Office e da altri programmi.
+**MetaMago Mark:** in modalità Avanzata puoi scegliere di aggiungere, aggiornare o rimuovere il contrassegno applicativo. La scelta predefinita mantiene lo stato originale: nessun contrassegno viene aggiunto in automatico. Le tre proprietà testuali personalizzate sono `MetaMago.Editor` (`Edited with MetaMago`), `MetaMago.Version` (versione corrente da `Office/VERSION`) e `MetaMago.Edition` (`Office`). L'app rileva i contrassegni presenti e mostra le proprietà personalizzate originali in un ispettore di sola lettura. Nomi riservati non riconosciuti o duplicati vengono preservati; non vengono sovrascritti. Nessun dato personale, timestamp o identificativo del dispositivo viene aggiunto. Il contrassegno non è una firma digitale né prova di provenienza, può essere modificato o rimosso da Office e da altri programmi.
 
 Il file è autonomo, contiene il motore ZIP e non richiede server, macro, PowerShell o connessione di rete durante l'elaborazione. Nella versione web e installata la memorizzazione permanente dei nominativi è disabilitata per evitare la condivisione dello storage tra progetti dello stesso dominio. Usa import/export JSON. La visita al sito può generare normali log del servizio di hosting. Non distribuire rubriche personali tramite il repository.
 
