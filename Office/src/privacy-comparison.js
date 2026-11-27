@@ -24,8 +24,10 @@ async function preparedPrivacySnapshot(bytes,kind,ext,includeText,password=''){
   for(const [key] of PDF_INSPECT_FINDINGS){
    const count=r.locked?null:key==='pdfa'?(r.pdfa===true?1:r.pdfa===false?0:null):r.counts?.[key];
    const status=count>0?'present':partial||!Number.isInteger(count)?'unknown':'absent';
-   findings[key]={status,count:Number.isInteger(count)?count:null,partial};
+   findings[key]={status,count:Number.isInteger(count)?count:null,partial:partial||(key==='identity'&&!!r.propertiesTruncated)};
+   if(key==='identity'&&r.propertiesTruncated&&status==='absent')findings[key].status='unknown';
   }
+  if(r.propertiesTruncated)partial=true;
   if(includeText){
    if(r.encrypted||r.locked)textUnavailable=true;
    else try{const t=await inspectPdfPatterns(bytes,r);textPartial=t.partial;for(const [k,v] of Object.entries(t.items))patterns[k]={status:v.count?'present':t.partial?'unknown':'absent',count:v.count,partial:t.partial}}catch{textUnavailable=true}

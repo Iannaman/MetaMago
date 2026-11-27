@@ -1,6 +1,6 @@
 # Checklist di rilascio — Office Edition
 
-Versione candidata: leggere `Office/VERSION` (3.4.0 al momento di questo aggiornamento). Non segnare un controllo come superato senza evidenza riferita al commit esatto. La Desktop Edition resta beta.
+Versione candidata: leggere `Office/VERSION` (3.5.0 al momento di questo aggiornamento). Non segnare un controllo come superato senza evidenza riferita al commit esatto. La Desktop Edition resta beta.
 
 ## Gate automatici
 - [ ] Windows tests: integrazione PowerShell, pacchetto portable, build deterministica e intera suite Chromium (Office, PDF, privacy, batch, workflow, audit, PWA e UX).
@@ -9,6 +9,7 @@ Versione candidata: leggere `Office/VERSION` (3.4.0 al momento di questo aggiorn
 - [ ] Regressione workflow: controllo privacy preliminare salvato, backup e compatibilità legacy, esclusione delle password.
 - [ ] Nessun errore JavaScript inatteso, verifica strutturale indipendente QPDF e originali invariati nei test pertinenti.
 - [ ] Per la 3.4.0: regressioni motore combinato Office/PDF e interfaccia guidata, verifica indipendente delle copie, annullamento senza download, credenziali escluse dal piano, originali e bozze preservati.
+- [ ] Per la 3.5.0: localizzazione e filtri, controlli testuali facoltativi Office/PDF e confronto della copia reale, esclusione dei valori corrispondenti dai nuovi risultati, copertura parziale e PDF cifrati non conclusivi dove applicabile.
 - [ ] Verifica dei benchmark sintetici; nessuna promessa di velocità o RAM non misurata.
 - [ ] Controllo dipendenze: lockfile, licenze, integrity npm, hash WASM e renderer; revisione delle segnalazioni di sicurezza applicabili (inclusi JSZip vendorizzato e PDF.js incorporato).
 

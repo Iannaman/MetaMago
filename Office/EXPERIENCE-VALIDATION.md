@@ -1,4 +1,4 @@
-# MetaMago 3.4.0 — Unified Workspace Edition: acceptance checklist
+# MetaMago 3.5.0 — Privacy Inspector 2.0 Edition: acceptance checklist
 
 Candidate until all applicable CI jobs and manual acceptance tests have passed.
 
@@ -23,6 +23,14 @@ Candidate until all applicable CI jobs and manual acceptance tests have passed.
 - Guided planner: pending supported draft import, review invalidation on edits, refused confirmation produces no download, exactly one verified output on success, source switch clears plan and passwords, mismatch rejected, original and editor draft remain separate.
 - Manual: compare the planned operations to the resulting copy; explicitly distinguish the original source from copies already downloaded in the specialist editors. Verify unsupported pending PDF custom/Mark edits are refused and not lost.
 - Manual: check both languages, mobile and keyboard navigation; confirm password clearing on cancel, error, document change and completion. A summary is not a rendered preview and selective cleanup is not anonymisation.
+
+## Privacy Inspector 2.0 — additional candidate gates
+
+- Structural references: Office part/relationship/sheet IDs and PDF object IDs, bounded to 20 per category; no opening external links or executing active content.
+- Review queue: category counts, all/present/unknown/absent/not-applicable filters, contextual guidance and reset on new inspection. Do not equate metadata completeness or category counts with privacy risk.
+- Optional text patterns: synthetic positive and negative checksums, supported Word/Excel/PowerPoint text, local PDF.js page extraction, empty pages and coverage limits. No match strings in new results; no network or automatic downloads.
+- Actual-copy comparison: original and output identity, unchanged input/draft, one download, cancellation before generation, encrypted PDF text unavailable, partial/unknown results not scored as reductions. Check that the comparison remains separate from copy verification.
+- Manual: test both languages and keyboard, long technical references and mobile layout; verify that users understand missing text, unsupported formats, false positives/negatives and that text findings do not constitute redaction. Use only synthetic documents; existing metadata reports may contain confidential values.
 
 ## Usability study protocol (not yet executed)
 

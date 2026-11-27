@@ -3,7 +3,7 @@
 # MetaMago 🪄
 **Le proprietà cambiano, il contenuto no.**
 
-Editor locale dei metadati di Microsoft Word, Excel e PowerPoint. Sviluppato da [Iannaman](https://github.com/Iannaman). Office Edition 3.4.0 è candidata al rilascio stabile; Desktop Edition resta beta. Il collaudo manuale su Office ed Edge aziendale è necessario prima di adottarla.
+Editor locale dei metadati di Microsoft Word, Excel e PowerPoint. Sviluppato da [Iannaman](https://github.com/Iannaman). Office Edition 3.5.0 è candidata al rilascio stabile; Desktop Edition resta beta. Il collaudo manuale su Office ed Edge aziendale è necessario prima di adottarla.
 
 ## Scegli l'edizione
 
@@ -21,11 +21,13 @@ Editor locale dei metadati di Microsoft Word, Excel e PowerPoint. Sviluppato da 
 | MetaMago Mark e ispettore proprietà personalizzate | Sì, facoltativo | Non ancora |
 | Sola lettura Windows | No | Sì |
 
-### Office Edition — v3.4.0 · Unified Workspace Edition
+### Office Edition — v3.5.0 · Privacy Inspector 2.0 Edition
 
 [**Avvia MetaMago**](https://iannaman.github.io/MetaMago/). Per aprirlo in una finestra dedicata, premi **Installa applicazione** o usa il comando App di Edge, se consentito. Seleziona un documento, modifica le proprietà e salva una copia. Verifica il risultato in Office > File > Informazioni.
 
 La modalità Semplice è predefinita; Avanzata mostra altre proprietà e protezione. Puoi gestire la rubrica anche senza aprire un documento, richiamare un profilo dal menu rapido, selezionare l'ultimo autore con un clic e confermare i nomi digitati anche al salvataggio. La schermata di completamento permette di scaricare di nuovo la copia o aprire un altro documento. Le date visualizzate seguono la lingua selezionata; il confronto Audit usa valori originali.
+
+**Privacy Inspector 2.0 (3.5.0, candidato):** riepilogo delle categorie con filtri, riferimenti tecnici espandibili e suggerimenti di verifica. Attiva l’analisi testuale facoltativa prima di analizzare un documento Office o PDF non cifrato: individua possibili e-mail, codici fiscali italiani, IBAN italiani e telefoni con prefisso italiano, mostrando conteggi e riferimenti, non i valori corrispondenti. Nel piano unificato puoi confrontare gli indizi dell’originale e della copia effettivamente elaborata; il controllo testuale della copia cifrata resta non disponibile. I risultati parziali o non confrontabili sono espliciti. Nessun OCR o rimozione automatica dei contenuti. [Copertura e limiti](docs/PRIVACY-3.5.md).
 
 **Unified Workspace Edition (3.4.0, candidato):** dalla scheda documento, scegli **Prepara una copia unica**. Il piano parte dall'originale e importa le modifiche non salvate supportate; scegli mantieni, modifica o rimuovi per le proprietà, aggiungi le opzioni Office o la preparazione e protezione PDF, controlla il riepilogo e genera una sola copia. Le bozze degli editor restano separate. Le password PDF non sono salvate nel piano; le proprietà personalizzate e il Mark PDF modificati nell'editor richiedono il percorso specialistico. Il riepilogo non è un'anteprima renderizzata. La pulizia non garantisce anonimizzazione e le restrizioni PDF dipendono dal lettore. [Piano e limiti](docs/WORKSPACE-3.4.md).
 
