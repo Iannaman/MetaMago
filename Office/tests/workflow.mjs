@@ -7,6 +7,14 @@ const browser=await chromium.launch({headless:true});
 try{
  const page=await browser.newPage({locale:'it-IT',offline:true});const errors=[];page.on('pageerror',e=>errors.push(e.message));
  await page.goto(pathToFileURL(resolve(root,'Office','MetaMago-Office.html')).href);
+ const preflight=await page.evaluate(()=>{
+  const legacy={name:'Legacy',options:workflowCapture()};
+  const old=validateWorkflow(legacy);
+  const current=validateWorkflow({...legacy,name:'External',preflight:true});
+  let rejected=0;for(const value of [null,'true',1,{},[]]){try{validateWorkflow({...legacy,preflight:value})}catch{rejected++}}
+  return {legacy:old.preflight,current:current.preflight,rejected};
+ });
+ assert.deepEqual(preflight,{legacy:false,current:true,rejected:5});
  const result=await page.evaluate(()=>{
   $('batchProtectOn').checked=true;$('batchOwner').value='Secret-test-123';$('batchPrivacyPdf').checked=true;
   const w=validateWorkflow({name:'Test',options:workflowCapture()});
@@ -16,6 +24,11 @@ try{
  });
  assert.equal(result.secret,false);assert.deepEqual(result.changes,{Author:'',Creator:''});
  await page.locator('#navBatch').click();await page.locator('#batchPanel > summary').click().catch(()=>{});await page.evaluate(()=>{document.querySelector('#batchPanel').open=true;document.querySelector('#workflowPanel').open=true});
- await page.locator('#workflowName').fill('Example');await page.locator('#workflowSave').click();assert.equal(await page.locator('#workflowSelect').inputValue(),'Example');await page.locator('#workflowLoad').click();assert.equal(await page.locator('#batchOwner').inputValue(),'');assert.deepEqual(errors,[]);
- console.log('PASS workflow validation and password exclusion');
+ await page.evaluate(()=>{$('batchPreflight').checked=true});
+ await page.locator('#workflowName').fill('Example');await page.locator('#workflowSave').click();assert.equal(await page.locator('#workflowSelect').inputValue(),'Example');await page.evaluate(()=>{$('batchPreflight').checked=false});await page.locator('#workflowLoad').click();assert.equal(await page.locator('#batchOwner').inputValue(),'');
+ assert.equal(await page.locator('#batchPreflight').isChecked(),true);
+ assert.equal(await page.evaluate(()=>validateConfiguration(JSON.parse(JSON.stringify(configData()))).workflows[0].preflight),true);
+ const imported=await page.evaluate(()=>{const w=JSON.parse(JSON.stringify(workflows[0]));delete w.preflight;workflows=[validateWorkflow(w)];workflowRender('Example');$('workflowLoad').click();return $('batchPreflight').checked});
+ assert.equal(imported,false);assert.deepEqual(errors,[]);
+ console.log('PASS workflow validation, preflight roundtrip, legacy compatibility and password exclusion');
 }finally{await browser.close()}

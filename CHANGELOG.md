@@ -1,5 +1,11 @@
 # Changelog
 
+## Office Edition 3.3.1 — Stability & Quality Edition (candidato)
+- Salvataggio e ripristino del controllo privacy preliminare nei workflow e nei backup; nessuna password inclusa.
+- Compatibilità con workflow precedenti privi del campo: controllo disattivato; valori non booleani rifiutati.
+- Test di regressione per ripristino, roundtrip configurazione e ricette legacy.
+- Checklist di rilascio allineata alla versione corrente e collaudo manuale esplicitamente ancora necessario.
+
 ## Office Edition 3.3.0 — Visual Experience Edition (candidato)
 - Consolidamento di UX Cleanup, Visual Identity, Document Workspace, Visual Comparison, Visual Storytelling, Visual PDF Preview e Usability Optimization.
 - Illustrazioni contestuali anche nella scheda documento e accesso diretto all’anteprima del PDF originale.

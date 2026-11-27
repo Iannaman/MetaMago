@@ -1,21 +1,26 @@
-# Checklist di rilascio — Publication Edition 2.4.0
+# Checklist di rilascio — Office Edition
 
-Versione candidata alla stabilità. Non segnare come superato un controllo senza evidenza.
+Versione candidata: leggere `Office/VERSION` (3.3.1 al momento di questo aggiornamento). Non segnare un controllo come superato senza evidenza riferita al commit esatto. La Desktop Edition resta beta.
 
 ## Gate automatici
-- [ ] CI Windows tests verde sul commit esatto: Desktop, build riproducibile, smoke, mark, web, team, global, quality, experience, inspector, automation, audit, performance, professional, update, pdf, protection, pdf-inspector, publication.
-- [ ] Nessun errore JavaScript inatteso nei test; verifica dei file generati e limiti di sicurezza.
+- [ ] Windows tests: integrazione PowerShell, pacchetto portable, build deterministica e intera suite Chromium (Office, PDF, privacy, batch, workflow, audit, PWA e UX).
+- [ ] Matrice Chromium / Firefox / WebKit verde, rendering PDF incluso.
+- [ ] Regressione workflow: controllo privacy preliminare salvato, backup e compatibilità legacy, esclusione delle password.
+- [ ] Nessun errore JavaScript inatteso, verifica strutturale indipendente QPDF e originali invariati nei test pertinenti.
 - [ ] Verifica dei benchmark sintetici; nessuna promessa di velocità o RAM non misurata.
+- [ ] Controllo dipendenze: lockfile, licenze, integrity npm, hash WASM e renderer; revisione delle segnalazioni di sicurezza applicabili (inclusi JSZip vendorizzato e PDF.js incorporato).
 
 ## Gate manuali
+Seguire [il piano di accettazione](../Office/EXPERIENCE-VALIDATION.md).
 - [ ] Windows 10/11, Edge e Chrome ammessi, PWA in finestra autonoma.
-- [ ] Office 365 Word/Excel/PowerPoint: aprire originali/copie sintetici e verificare proprietà, contenuto, Mark e macro preservate senza esecuzione.
-- [ ] Test di accessibilità con tastiera, zoom e lettore di schermo; entrambe le lingue.
-- [ ] Test osservato con utenti non tecnici, come definito in UX.md.
-- [ ] Verifica autorizzazione IT e procedure sui documenti istituzionali.
-- [ ] Registrare versione, commit, ambiente, data, esito, eventuali difetti e responsabile del collaudo in un documento interno, non nel repo pubblico se riservato.
+- [ ] Word, Excel e PowerPoint reali: aprire originali/copie sintetici e verificare proprietà, contenuto, Mark e macro preservate senza esecuzione.
+- [ ] Lettore PDF: proprietà, pagine, filigrana, password e restrizioni.
+- [ ] Accessibilità con tastiera, zoom, lettore di schermo e contrasto; entrambe le lingue.
+- [ ] Test osservato con utenti non tecnici; registrare esiti e difetti, non solo obiettivi.
+- [ ] Verificare autorizzazione IT e procedure sui documenti istituzionali.
+- [ ] Registrare versione, commit, ambiente, data, esito, eventuali difetti e responsabile del collaudo senza dati riservati nel repository.
 
 ## Pubblicazione
-Dopo i gate, avvia manualmente Deploy MetaMago Web su main, verifica job verde e versione effettiva nel browser (verifica l'avviso di aggiornamento e la ricarica consensuale; per il passaggio da versioni precedenti, chiudi e riapri tutte le finestre PWA). Crea release manuale con tag v2.4.0 sul commit collaudato. Mantieni pre-release finché i gate manuali non sono soddisfatti. La Desktop Edition resta 1.0.0-beta. Non promuovere in produzione se un test essenziale fallisce. Per rollback, predisporre un commit/revert verificato e nuovo deploy manuale; non riscrivere la cronologia.
+Dopo i gate automatici, un eventuale deploy candidato deve essere esplicitamente identificato come tale. La promozione stabile richiede anche il collaudo manuale. Avviare manualmente Deploy MetaMago Web su main, verificare job verde, versione effettiva nel browser, aggiornamento PWA consensuale e download di prova. Per una release GitHub, usare il tag v seguito dalla versione di Office/VERSION sul commit collaudato; mantenerla pre-release fino al completamento dei gate manuali. Non promuovere in produzione se fallisce un controllo essenziale. Per rollback usare un revert verificato e nuovo deploy manuale; non riscrivere la cronologia.
 
-Gate Protection aggiuntivo: verificare licenze, integrity npm del lockfile e SHA256 WASM; verificare policy aziendale per WebAssembly e compatibilità lettori.
+I report non certificano anonimizzazione, autenticità o conformità legale; le restrizioni PDF non costituiscono un blocco assoluto.
