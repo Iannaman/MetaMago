@@ -120,4 +120,4 @@ main{max-width:1220px}.workspace{display:grid;grid-template-columns:210px minmax
 
 .privacy-review{margin:12px 0;padding:12px;border:1px solid var(--border);border-radius:12px;min-width:0}.privacy-review h3{margin-top:0}.privacy-review-filters{display:grid;grid-template-columns:repeat(auto-fit,minmax(min(100%,140px),1fr));gap:8px}.privacy-review-filter{display:flex;flex-direction:column;align-items:flex-start;gap:4px;text-align:left;white-space:normal;overflow-wrap:anywhere;min-width:0;min-height:64px}.privacy-review-filter strong{font-size:1.35rem}.privacy-review-filter[aria-pressed=true]{outline:2px solid var(--accent);outline-offset:1px}.finding-advice{border-left:3px solid var(--accent);padding-left:8px;margin-top:8px!important}.finding[hidden]{display:none!important}
 
-#personalPatternResult{margin:16px 0;padding:12px;border:1px solid var(--border);border-radius:12px;min-width:0}#personalPatternCoverage{overflow-wrap:anywhere}
+#personalPatternResult,#pdfPersonalPatternResult{margin:16px 0;padding:12px;border:1px solid var(--border);border-radius:12px;min-width:0}#personalPatternCoverage,#pdfPersonalPatternCoverage{overflow-wrap:anywhere}

@@ -149,7 +149,7 @@ async function runPdfInspection(file,originalBytes=null,password=''){
  try{
   if(file.size>PDF_MAX)throw pdfErr('PDF non valido o superiore a 20 MiB.');
   const bytes=originalBytes||new Uint8Array(await file.arrayBuffer()),r=await inspectPdfReadOnly(bytes,password);
-  renderPdfInspection(file,r);if(typeof smartPdfInspection==='function')smartPdfInspection(file,r);
+  renderPdfInspection(file,r);if($('inspectTextOptIn').checked){if(r.locked||r.encrypted)renderPersonalPatternFailure('pdfPersonalPattern','Controllo testuale non disponibile per PDF cifrati, anche dopo l’apertura.');else{try{renderPersonalPatterns(await inspectPdfPatterns(bytes,r),'pdfPersonalPattern')}catch{renderPersonalPatternFailure('pdfPersonalPattern')}}}if(typeof smartPdfInspection==='function')smartPdfInspection(file,r);
   if(r.locked){pdfInspectInput={file,bytes};$('pdfInspectPasswordPanel').hidden=false;msg('inspectStatus',tr('Password richiesta o non corretta.'),'error')}
   else msg('inspectStatus',tr(r.partial?'Analisi PDF parziale. Nessun documento modificato.':'Analisi PDF completata. Nessun documento modificato.'),'ok');
   $('pdfInspectFilename').focus();

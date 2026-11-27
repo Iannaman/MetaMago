@@ -83,19 +83,67 @@ async function inspectOfficePatterns(meta,ext){
  const result=a.result();
  return {...result,parts,total:candidates.length,skipped,invalid,partial:result.limited||skipped>0||invalid>0};
 }
-function clearPersonalPatterns(){
- $('personalPatternResult').hidden=true;$('personalPatternCoverage').textContent='';$('personalPatternFindings').replaceChildren();
+function clearPersonalPatterns(prefix=null){
+ for(const id of prefix?[prefix]:['personalPattern','pdfPersonalPattern']){$(id+'Result').hidden=true;$(id+'Coverage').textContent='';$(id+'Findings').replaceChildren()}
 }
-function renderPersonalPatternFailure(){
- clearPersonalPatterns();$('personalPatternResult').hidden=false;msg('personalPatternCoverage',tr('Analisi testuale non disponibile. Nessuna conclusione sui dati personali.'),'error');
+function renderPersonalPatternFailure(prefix='personalPattern',message='Analisi testuale non disponibile. Nessuna conclusione sui dati personali.'){
+ clearPersonalPatterns(prefix);$(prefix+'Result').hidden=false;msg(prefix+'Coverage',tr(message),'error');
 }
-function renderPersonalPatterns(result){
- clearPersonalPatterns();$('personalPatternResult').hidden=false;
- msg('personalPatternCoverage',tr(result.partial?'Controllo testuale parziale.':'Controllo testuale mirato completato.')+' '+tr('Parti XML lette: ')+result.parts+' / '+result.total+' · '+tr('Caratteri controllati: ')+result.chars+' · '+tr('Saltate per limiti: ')+result.skipped+' · '+tr('Non leggibili: ')+result.invalid,result.partial?'error':'');
+function renderPersonalPatterns(result,prefix='personalPattern'){
+ clearPersonalPatterns(prefix);$(prefix+'Result').hidden=false;
+ const pdf=prefix==='pdfPersonalPattern',coverage=pdf?tr('Pagine controllate: ')+result.pages+' / '+result.total+' · '+tr('Pagine senza testo estraibile: ')+result.empty:tr('Parti XML lette: ')+result.parts+' / '+result.total;
+ msg(prefix+'Coverage',tr(result.partial?'Controllo testuale parziale.':'Controllo testuale mirato completato.')+' '+coverage+' · '+tr('Caratteri controllati: ')+result.chars+' · '+tr('Saltate per limiti: ')+result.skipped+' · '+tr('Non leggibili: ')+result.invalid,result.partial?'error':'');
  for(const [key,label] of PATTERN_TYPES){
   const item=result.items[key],card=document.createElement('article'),h=document.createElement('h3'),p=document.createElement('p');
   card.className='finding';card.dataset.pattern=key;card.dataset.status=item.count?'present':result.partial?'unknown':'absent';h.textContent=tr(label);p.className='finding-state';
   p.textContent=item.count?tr('Corrispondenze potenziali: ')+item.count:tr(result.partial?'Non conclusivo':'Non rilevato nei controlli eseguiti');
-  card.append(h,p);renderFindingLocations(card,item.locations,item.locationsTruncated);$('personalPatternFindings').append(card);
+  card.append(h,p);renderFindingLocations(card,item.locations,item.locationsTruncated);$(prefix+'Findings').append(card);
  }
+}
+
+// PDF text review is deliberately limited to unencrypted documents. It reads
+// page text through the already bundled local PDF.js worker, never rendering,
+// executing actions or visiting links. No OCR and no annotation/form extraction.
+const PATTERN_PDF_PAGES=50,PATTERN_PDF_TIMEOUT=20000,PATTERN_PDF_ITEMS=100000;
+async function inspectPdfPatterns(bytes,structural){
+ if(!(bytes instanceof Uint8Array)||!bytes.length||bytes.length>PDF_MAX||!structural||structural.locked||structural.encrypted)throw Error('pattern-pdf-unavailable');
+ const a=newPatternAccumulator(),url=URL.createObjectURL(new Blob([PDF_RENDER_WORKER],{type:'text/javascript'}));
+ let port,worker,task,reader,timer,doc,total=0,pages=0,empty=0,invalid=0,items=0,limited=false,timedOut=false;
+ const timeout=new Promise((_,reject)=>{timer=setTimeout(()=>{timedOut=true;reject(Error('pattern-pdf-timeout'))},PATTERN_PDF_TIMEOUT)});
+ const within=promise=>Promise.race([promise,timeout]);
+ try{
+  port=new Worker(url);worker=new MetaMagoRenderer.PDFWorker({port});
+  task=MetaMagoRenderer.getDocument({data:bytes.slice(),worker,disableWorkerRendering:true,disableFontFace:true,useSystemFonts:false,useWasm:false,useWorkerFetch:false,enableXfa:false,enableScripting:false,isEvalSupported:false,isOffscreenCanvasSupported:false,isImageDecoderSupported:false,stopAtErrors:true,maxImageSize:8000000,canvasMaxAreaInBytes:16000000,cMapUrl:'local-cmaps/',standardFontDataUrl:'local-fonts/',BinaryDataFactory:LocalPreviewBinaryDataFactory});
+  doc=await within(task.promise);total=doc.numPages;
+  if(!Number.isInteger(total)||total<1||total!==structural.pages)throw Error('pattern-pdf-page-count');
+  for(let n=1;n<=Math.min(total,PATTERN_PDF_PAGES);n++){
+   if(a.exhausted||items>=PATTERN_PDF_ITEMS){limited=true;break}
+   let line='',hasText=false,complete=true,page;
+   const flush=()=>{if(line.trim())hasText=true;a.add(line,'PDF · '+tr('Pagina')+' '+n);line=''};
+   try{
+    page=await within(doc.getPage(n));
+    reader=page.streamTextContent({includeMarkedContent:false}).getReader();
+    for(;;){
+     const chunk=await within(reader.read());if(chunk.done)break;
+     for(const item of chunk.value.items||[]){
+      if(++items>PATTERN_PDF_ITEMS||a.exhausted){limited=true;complete=false;break}
+      if(typeof item.str!=='string')continue;
+      // Preserve text order as provided by PDF.js; join adjacent text items
+      // but never across end-of-line or page boundaries. Very long lines
+      // are explicitly truncated rather than searched beyond the limit.
+      if(line.length<=PATTERN_BLOCK)line+=item.str.slice(0,PATTERN_BLOCK+1-line.length);
+      if(item.hasEOL)flush();
+     }
+     if(!complete)break;
+    }
+    flush();
+    if(complete){pages++;if(!hasText)empty++}
+   }catch{invalid++;if(timedOut)break}
+   finally{if(reader){try{const closing=reader.cancel();await Promise.race([closing.catch(()=>{}),new Promise(r=>setTimeout(r,200))])}catch{}reader=null}try{page?.cleanup()}catch{}}
+   if(!complete||timedOut)break;
+  }
+ }catch{if(!total)throw Error('pattern-pdf-unavailable');invalid++}
+ finally{clearTimeout(timer);try{const closing=task?.destroy();if(closing)await Promise.race([closing.catch(()=>{}),new Promise(r=>setTimeout(r,500))])}catch{}try{worker?.destroy()}catch{}port?.terminate();URL.revokeObjectURL(url)}
+ const result=a.result(),skipped=Math.max(0,total-pages-invalid);
+ return {...result,pages,total,empty,skipped,invalid,partial:!!structural.partial||result.limited||limited||timedOut||empty>0||skipped>0||invalid>0};
 }
