@@ -61,6 +61,8 @@ jobs:
         run: node Office/tests/mark.mjs
       - name: Test web
         run: node Office/tests/web.mjs
+      - name: Test Document Workspace
+        run: node Office/tests/workspace.mjs
       - name: Test team
         run: node Office/tests/team.mjs
       - name: Test global
@@ -93,6 +95,10 @@ jobs:
         run: command -v qpdf || (sudo apt-get update && sudo apt-get install -y qpdf)
       - name: Test PDF protection
         run: node Office/tests/protection.mjs
+      - name: Test Unified Operation Plan
+        run: node Office/tests/operation-plan.mjs
+      - name: Test Unified Workspace UI
+        run: node Office/tests/workspace-plan.mjs
       - name: Test PDF Inspector
         run: node Office/tests/pdf-inspector.mjs
       - name: Test PDF Publication
@@ -131,8 +137,6 @@ jobs:
         run: node Office/tests/ux-cleanup.mjs
       - name: Test Visual Identity
         run: node Office/tests/visual.mjs
-      - name: Test Document Workspace
-        run: node Office/tests/workspace.mjs
       - name: Test Visual Comparison
         run: node Office/tests/comparison.mjs
       - name: Test Visual Storytelling

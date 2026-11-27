@@ -1,5 +1,13 @@
 # Changelog
 
+## Office Edition 3.4.0 — Unified Workspace Edition (candidato)
+- Gestore condiviso delle sessioni Office e PDF, selezione del documento attivo e bozze indipendenti.
+- Motore combinato Office: metadati, pulizia selettiva, stato finale e Mark in una riscrittura verificata.
+- Motore PDF: metadati standard, pulizia, filigrana, appiattimento compatibile e cifratura AES-256 R6 per ultima, con verifica delle operazioni.
+- Piano guidato con import delle modifiche non salvate supportate, riepilogo, conferma esplicita, un solo download e invalidazione al cambio di configurazione.
+- Credenziali separate, azzeramento del piano al cambio di documento o schermata, originale e bozza preservati. Percorsi specialistici mantenuti.
+- Test motori e interfaccia end-to-end; verifica della candidata sul commit versionato e collaudo manuale ancora necessari.
+
 ## Office Edition 3.3.2 — PWA Validation Update (candidato)
 - Rafforzato il gate di migrazione PWA: handshake del worker attivo, verifica della shell, controllo della prima navigazione e del controller.
 - Tre esecuzioni indipendenti obbligatorie senza retry che nascondano un errore, sia in CI sia nel deploy.

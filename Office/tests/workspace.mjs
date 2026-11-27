@@ -19,6 +19,18 @@ try{
  await action('protect').click();assert.equal(await id('viewPdf').isVisible(),true);assert.equal(await id('protectSource').evaluate(e=>document.activeElement===e),true);
  await id('pdfWorkspace').click();await action('clean').click();assert.equal(await id('publicationSource').evaluate(e=>document.activeElement===e),true);
  await id('navHome').click();await id('workspaceResume').click();assert.match(await id('workspaceDocumentHead').textContent(),/sample.pdf/);
+ assert.equal(await id('workspaceSwitch').isVisible(),true);
+ assert.equal(await id('workspaceSwitchPdf').getAttribute('aria-pressed'),'true');
+ assert.match(await id('workspaceSwitchOffice').textContent(),/Prova.docx.*Modifiche non salvate/);
+ await action('edit').click();await id('pdfRows').locator('[data-key=Title] input[type=text]').fill('PDF draft');await id('pdfWorkspace').click();
+ assert.match(await id('workspaceSwitchPdf').textContent(),/sample.pdf.*Modifiche non salvate/);
+ await id('workspaceSwitchOffice').click();assert.match(await id('workspaceDocumentHead').textContent(),/Prova.docx/);assert.equal(await id('workspaceSwitchOffice').getAttribute('aria-pressed'),'true');
+ assert.equal(await id('workspaceDraft').isVisible(),true);await action('edit').click();assert.equal(await id('title').inputValue(),'Unsaved workspace draft');await id('officeWorkspace').click();
+ await id('workspaceSwitchPdf').click();await action('edit').click();assert.equal(await id('pdfRows').locator('[data-key=Title] input[type=text]').inputValue(),'PDF draft');
+ let closeAccepted=false;page.on('dialog',d=>closeAccepted?d.accept():d.dismiss());await id('pdfClose').click();assert.equal(await id('pdfEditor').isVisible(),true);
+ closeAccepted=true;await id('pdfClose').click();assert.equal(await id('pdfEditor').isVisible(),false);
+ await id('navHome').click();await id('workspaceResume').click();assert.match(await id('workspaceDocumentHead').textContent(),/Prova.docx/);assert.equal(await id('workspaceSwitch').isVisible(),false);
+ assert.equal(await page.evaluate(()=>workspaceSessionSnapshot().entries.length),1);
  assert.ok(await page.evaluate(()=>document.documentElement.scrollWidth<=innerWidth+1));assert.deepEqual(errors,[]);assert.deepEqual(downloads,[]);
- console.log('PASS Document Workspace: contextual Office/PDF actions, preserved draft, original inspection, compatible actions and no re-selection/download');
+ console.log('PASS Document Workspace: contextual actions, active session switching, retained drafts, cancel/close fallback, original inspection and no re-selection/download');
 }finally{await browser.close()}
