@@ -11,3 +11,22 @@ assert.equal(peak,1);assert.equal(b.retryFailed(),true);await b.run();assert.dee
 let p;p=create([1,2],async n=>{if(n===1)p.pause()});await p.run();assert.deepEqual(statuses(p),['success','pending']);await p.run();assert.deepEqual(statuses(p),['success','success']);
 let c;c=create([1,2],async (_,ctx)=>{c.cancel();assert.equal(ctx.isCancelled(),true)});await c.run();assert.deepEqual(statuses(c),['cancelled','cancelled']);assert.equal(c.retryFailed(),false);
 console.log('Advanced batch scheduler tests passed');
+
+ // Integration safety: no overlapping runs, no retry while active, no private snapshot data.
+ let release;
+ const gate=new Promise(resolve=>{release=resolve});
+ let calls=0;
+ const concurrent=create([{secret:'private-document'}],async()=>{calls++;await gate});
+ const first=concurrent.run();
+ await concurrent.run();
+ assert.equal(calls,1);
+ assert.equal(concurrent.retryFailed(),false);
+ assert.equal(JSON.stringify(concurrent.snapshot()).includes('private-document'),false);
+ release();await first;
+ assert.deepEqual(statuses(concurrent),['success']);
+ const observer=create([1],async()=>{}, {onChange(){throw Error('observer failure')}});
+ await observer.run();assert.deepEqual(statuses(observer),['success']);
+ const cancelled=create([1,2],async()=>{throw Error('must not run')});
+ cancelled.cancel();await cancelled.run();
+ assert.deepEqual(statuses(cancelled),['cancelled','cancelled']);
+ console.log('Advanced batch integration safety tests passed');
