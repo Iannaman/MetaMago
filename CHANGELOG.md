@@ -3,7 +3,7 @@
 ## Office Edition 3.3.2 — PWA Validation Update (candidato)
 - Rafforzato il gate di migrazione PWA: handshake del worker attivo, verifica della shell, controllo della prima navigazione e del controller.
 - Tre esecuzioni indipendenti obbligatorie senza retry che nascondano un errore, sia in CI sia nel deploy.
-- Diagnostica aggiuntiva; nessuna modifica al motore PWA. Causa dell'intermittenza da confermare con le nuove evidenze.
+- Diagnostica aggiuntiva e polling esplicito dei risultati booleani asincroni: il test non apre una nuova finestra prima dell’effettiva attivazione. Test di regressione sul polling stesso. Nessuna modifica al motore PWA; conferma in CI necessaria.
 
 ## Office Edition 3.3.1 — Stability & Quality Edition (candidato)
 - Salvataggio e ripristino del controllo privacy preliminare nei workflow e nei backup; nessuna password inclusa.

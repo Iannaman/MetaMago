@@ -2,6 +2,8 @@ import assert from 'node:assert/strict';
 import { readFile,readdir } from 'node:fs/promises';
 import { createServer } from 'node:http';
 import { createHash } from 'node:crypto';
+import { setTimeout as delay } from 'node:timers/promises';
+import { performance } from 'node:perf_hooks';
 import { resolve,dirname } from 'node:path';
 import { fileURLToPath } from 'node:url';
 import { chromium } from 'playwright';
@@ -41,7 +43,23 @@ const url='http://127.0.0.1:'+server.address().port+'/MetaMago/';
 const browser=await chromium.launch({headless:true});
 const ctx=await browser.newContext({locale:'it-IT',acceptDownloads:true}),errors=[];
 function watch(page){page.on('pageerror',e=>errors.push(e.message));return page}
+// Poll the resolved boolean in Node, not the truthiness of a browser Promise.
+// A false asynchronous result must never release the activation gate.
+async function waitResolved(check,label,timeout=60000){
+ const deadline=performance.now()+timeout;
+ do{
+  const result=await check();
+  assert.equal(typeof result,'boolean',label+' must return a boolean');
+  if(result===true)return;
+  if(performance.now()>=deadline)break;
+  await delay(100);
+ }while(performance.now()<deadline);
+ throw Error(label+' timed out');
+}
 try{
+ let attempts=0;
+ await waitResolved(async()=>++attempts===3,'async polling regression',5000);
+ assert.equal(attempts,3,'false async results must be polled again');
  let a=watch(await ctx.newPage());
  await a.goto(url);await a.waitForFunction(()=>!!navigator.serviceWorker.controller);
  await a.evaluate(()=>caches.open('unrelated-cache'));
@@ -50,14 +68,16 @@ try{
  // Legacy UI has no update button. Browser installs a waiting worker, then closing the
  // old windows allows activation; no force-reload is introduced into the old app.
  await a.evaluate(async()=>{const r=await navigator.serviceWorker.getRegistration();await r.update()});
- await a.waitForFunction(async()=>!!(await navigator.serviceWorker.getRegistration()).waiting);
+ await waitResolved(()=>a.evaluate(async()=>{
+  const r=await navigator.serviceWorker.getRegistration();return r?.waiting?.state==='installed';
+ }),'legacy replacement installed');
  const probe=watch(await ctx.newPage());await probe.goto(new URL('/activation-probe',url).href);
  assert.equal(await probe.evaluate(()=>navigator.serviceWorker.controller===null),true,'observer must be outside the worker scope');
  await a.close();
  // Opening another scoped window immediately can race activation and keep
  // the old shell in use indefinitely. Observe activation without a scoped client.
  try{
-  await probe.waitForFunction(async({url,version})=>{
+  await waitResolved(()=>probe.evaluate(async({url,version})=>{
    const r=await navigator.serviceWorker.getRegistration(url);
    if(!r?.active||r.active.state!=='activated'||r.waiting||r.installing)return false;
    const active=r.active,channel=new MessageChannel();
@@ -72,7 +92,7 @@ try{
    if(!keys.includes(prefix+version)||keys.includes(prefix+'1.9.0'))return false;
    const cache=await caches.open(prefix+version),response=await cache.match(new URL('index.html',url).href);
    return !!response&&(await response.text()).includes('id="editionTag">v'+version+'</span>');
-  },{url,version},{timeout:60000});
+  },{url,version}),'legacy replacement activated');
  }catch(e){
   console.error('Legacy migration activation diagnostics',await probe.evaluate(async url=>{
    const r=await navigator.serviceWorker.getRegistration(url);
@@ -105,7 +125,9 @@ try{
  // Reject a mixed deployment: new worker + old HTML. Keep active cache unchanged.
  phase='mismatch';
  await a.evaluate(async()=>{try{await updateReg.update()}catch(e){/* rejected inconsistent install */}});
- await a.waitForFunction(async()=>{const r=await navigator.serviceWorker.getRegistration();return !r.installing&&!r.waiting});
+ await waitResolved(()=>a.evaluate(async()=>{
+  const r=await navigator.serviceWorker.getRegistration();return !!r&&!r.installing&&!r.waiting;
+ }),'mixed deployment rejected');
  assert.equal(await id(a,'updateBanner').isVisible(),false);
  assert.ok(await a.evaluate(async()=>(await caches.keys()).some(k=>k.endsWith(':'+APP_VERSION))));
  phase='next';
