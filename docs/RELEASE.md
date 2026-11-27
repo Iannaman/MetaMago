@@ -8,6 +8,7 @@ Versione candidata: leggere `Office/VERSION` (3.3.2 al momento di questo aggiorn
 - [ ] Tre migrazioni PWA indipendenti consecutive: nessun risultato intermittente ignorato.
 - [ ] Regressione workflow: controllo privacy preliminare salvato, backup e compatibilità legacy, esclusione delle password.
 - [ ] Nessun errore JavaScript inatteso, verifica strutturale indipendente QPDF e originali invariati nei test pertinenti.
+- [ ] Per la 3.4.0: regressioni motore combinato Office/PDF e interfaccia guidata, verifica indipendente delle copie, annullamento senza download, credenziali escluse dal piano, originali e bozze preservati.
 - [ ] Verifica dei benchmark sintetici; nessuna promessa di velocità o RAM non misurata.
 - [ ] Controllo dipendenze: lockfile, licenze, integrity npm, hash WASM e renderer; revisione delle segnalazioni di sicurezza applicabili (inclusi JSZip vendorizzato e PDF.js incorporato).
 

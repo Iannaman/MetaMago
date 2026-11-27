@@ -16,6 +16,14 @@ Candidate until all applicable CI jobs and manual acceptance tests have passed.
 - Visual UX: home disclosure, illustrations, document workspace, planned/verified comparison, isolated synthetic tutorial, single-page local raster and publication preview.
 - Render a known coloured rectangle and verify pixel output on Chromium, Firefox and WebKit; verify direct single-file Office/PDF downloads separately from ZIP.
 
+## Unified Workspace 3.4.0 — additional candidate gates
+
+- Combined PDF engine: metadata, selective cleanup, watermark, AES-256 R6 last; independently decrypt and verify metadata, text, page count and restrictions.
+- Combined Office engine: DOCX/XLSX/PPTX metadata, selective cleanup, final state and Mark; verify unchanged non-property parts and original input bytes.
+- Guided planner: pending supported draft import, review invalidation on edits, refused confirmation produces no download, exactly one verified output on success, source switch clears plan and passwords, mismatch rejected, original and editor draft remain separate.
+- Manual: compare the planned operations to the resulting copy; explicitly distinguish the original source from copies already downloaded in the specialist editors. Verify unsupported pending PDF custom/Mark edits are refused and not lost.
+- Manual: check both languages, mobile and keyboard navigation; confirm password clearing on cancel, error, document change and completion. A summary is not a rendered preview and selective cleanup is not anonymisation.
+
 ## Usability study protocol (not yet executed)
 
 Recruit at least five novice or occasional users and five experienced users; use synthetic documents and counterbalance the order of 3.2.0 and 3.3.0. Give a task goal, not navigation instructions. Record success without help, elapsed time excluding processing, errors, unnecessary steps, whether the original was understood to remain unchanged, and the System Usability Scale (SUS) after each version. Record exclusions and failures rather than silently discarding them.
