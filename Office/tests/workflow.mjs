@@ -29,6 +29,8 @@ try{
  assert.equal(await page.locator('#batchPreflight').isChecked(),true);
  assert.equal(await page.evaluate(()=>validateConfiguration(JSON.parse(JSON.stringify(configData()))).workflows[0].preflight),true);
  const imported=await page.evaluate(()=>{const w=JSON.parse(JSON.stringify(workflows[0]));delete w.preflight;workflows=[validateWorkflow(w)];workflowRender('Example');$('workflowLoad').click();return $('batchPreflight').checked});
- assert.equal(imported,false);assert.deepEqual(errors,[]);
+ assert.equal(imported,false);
+ const scoped=await page.evaluate(()=>{const options=workflowCapture();options.batchAuthorMode='replace';options.batchAuthors='Office Author';options.batchPrivacyOffice=false;options.batchPrivacyPdf=true;const w=validateWorkflow({name:'Scoped',options,pdfRules:{mode:'keep',authors:'',mark:'remove'}});let rejected=0;for(const pdfRules of [false,{}, {mode:'replace',authors:'PDF Author',mark:'keep'}, {mode:'keep',authors:'',mark:'invalid'}]){try{validateWorkflow({name:'Bad',options,pdfRules})}catch{rejected++}}workflows=[w];workflowRender('Scoped');$('workflowLoad').click();const roundtrip=validateConfiguration(JSON.parse(JSON.stringify(configData()))).workflows[0];return {separate:$('batchSeparatePdf').checked,mode:$('batchPdfAuthorMode').value,mark:$('batchPdfMark').value,rejected,pdfRules:roundtrip.pdfRules}});
+ assert.deepEqual(scoped,{separate:true,mode:'keep',mark:'remove',rejected:4,pdfRules:{mode:'keep',authors:'',mark:'remove'}});assert.deepEqual(errors,[]);
  console.log('PASS workflow validation, preflight roundtrip, legacy compatibility and password exclusion');
 }finally{await browser.close()}
