@@ -156,6 +156,7 @@ function renderPrivacyReview(gridId){
 }
 function inspectCell(text){const td=document.createElement('td');td.textContent=String(text);return td}
 function clearInspection(){
+ if(typeof clearPersonalPatterns==='function')clearPersonalPatterns();
  if(typeof clearWorkspaceInspection==='function')clearWorkspaceInspection();
  if(typeof smartClear==='function')smartClear('smartInspectResult');
  if(typeof clearPdfInspection==='function')clearPdfInspection();
@@ -184,9 +185,9 @@ async function runInspection(file,originalBytes=null){
  if(!file||busy)return;if(/\.pdf$/i.test(file.name))return runPdfInspection(file,originalBytes);goView('inspect',{focus:false});clearInspection();setBusy(true);$('inspectProgress').hidden=false;$('inspectProgress').removeAttribute('value');msg('inspectStatus',tr('Analisi in corso…'));
  try{
   const ext=file.name.split('.').pop().toLowerCase();if(!Object.hasOwn(formats,ext))throw Error(tr('Formato non supportato.'));if(file.size>MAX)throw Error(tr('File superiore a 50 MiB.'));
-  const bytes=originalBytes||new Uint8Array(await file.arrayBuffer()),meta=await inspect(bytes,ext);
+  const bytes=originalBytes||new Uint8Array(await file.arrayBuffer()),meta=await inspect(bytes,ext),scanText=$('inspectTextOptIn').checked;
   const privacy=await inspectPrivacy(meta,ext,(done,total)=>{$('inspectProgress').max=Math.max(1,total);$('inspectProgress').value=done});
-  renderInspection(file,ext,meta,privacy);if(typeof smartOfficeInspection==='function')smartOfficeInspection(file,ext,meta,privacy);msg('inspectStatus',tr('Analisi completata. Nessun documento modificato.'),'ok');$('inspectFilename').focus();
+  renderInspection(file,ext,meta,privacy);if(scanText){try{renderPersonalPatterns(await inspectOfficePatterns(meta,ext))}catch{renderPersonalPatternFailure()}}if(typeof smartOfficeInspection==='function')smartOfficeInspection(file,ext,meta,privacy);msg('inspectStatus',tr('Analisi completata. Nessun documento modificato.'),'ok');$('inspectFilename').focus();
  }catch(err){clearInspection();msg('inspectStatus',tr('Impossibile analizzare il documento: ')+err.message,'error')}
  finally{$('inspectProgress').hidden=true;$('inspectFile').value='';setBusy(false)}
 }

@@ -45,6 +45,22 @@ try{
   }
   const many=await JSZip.loadAsync(new Uint8Array(files.docx));for(let i=0;i<25;i++)many.file('word/embeddings/location'+i+'.bin',new Uint8Array([1]));
   const capped=await inspectPrivacy(await inspect(await many.generateAsync({type:'uint8array',compression:'STORE'}),'docx'),'docx'),embedded=capped.findings.find(x=>x.key==='embedded');assert(embedded.count>20&&embedded.locations.length===20&&embedded.locationsTruncated,'bounded references');
+  // Synthetic patterns: reserved example domain, generated checksum and example IBAN.
+  const sample='demo@example.invalid RSSMRA85T10A562S IT60X0542811101000000123456 +39 333 123 4567';
+  const matches=countPersonalPatterns(sample);assert(matches.email===1&&matches.fiscal===1&&matches.iban===1&&matches.phone===1,'pattern positives '+JSON.stringify(matches));
+  const negative=countPersonalPatterns('RSSMRA85T10A562A IT61X0542811101000000123456');assert(negative.fiscal===0&&negative.iban===0,'checksum rejection');
+  const bounded=newPatternAccumulator();bounded.add('a'.repeat(PATTERN_BLOCK+1),'synthetic');assert(bounded.result().limited,'text truncation');
+  for(const ext of ['docx','xlsx','pptx']){
+   const m=await inspect(new Uint8Array(files[ext]),ext),z=m.z;
+   if(ext==='docx'){
+    const main=target(one(elems(m.rel.documentElement).filter(e=>e.getAttribute('Type')===officeRel+'officeDocument'),'main')),doc=await xmlpart(z,main),w=INSP_NS.word;
+    const p=doc.createElementNS(w,'w:p');for(const v of ['demo@','example.invalid']){const r=doc.createElementNS(w,'w:r'),t=doc.createElementNS(w,'w:t');t.textContent=v;r.append(t);p.append(r)}doc.getElementsByTagNameNS(w,'body')[0].append(p);z.file(main,serialize(doc));
+   }else if(ext==='xlsx')z.file('xl/worksheets/pattern-test.xml','<worksheet xmlns="'+INSP_NS.sheet+'"><sheetData><row><c t="inlineStr"><is><t>demo@example.invalid</t></is></c><c><f>ignored@example.invalid</f></c></row></sheetData></worksheet>');
+   else z.file('ppt/slides/pattern-test.xml','<p:sld xmlns:p="'+INSP_NS.slide+'" xmlns:a="http://schemas.openxmlformats.org/drawingml/2006/main"><a:p><a:r><a:t>demo@example.invalid</a:t></a:r></a:p></p:sld>');
+   const output=await z.generateAsync({type:'uint8array',compression:'STORE'}),scan=await inspectOfficePatterns(await inspect(output,ext),ext);
+   assert(scan.items.email.count>=1,'text detection '+ext);assert(!JSON.stringify(scan).includes('demo@example.invalid'),'raw match leak');assert(!JSON.stringify(scan).includes('ignored@example.invalid'),'formula leak');
+   files[ext]=Array.from(output);
+  }
   const bad=await JSZip.loadAsync(new Uint8Array(files.docx));bad.file('word/header999.xml','<broken');
   const damaged=await inspect(await bad.generateAsync({type:'uint8array',compression:'STORE'}),'docx');
   const partial=await inspectPrivacy(damaged,'docx');assert(partial.partial&&partial.invalid>0,'partial coverage missing');
@@ -59,6 +75,7 @@ try{
   await page.waitForFunction(ext=>document.querySelector('#inspectFilename').textContent==='Inspector.'+ext&&!document.querySelector('#inspectResult').hidden&&!document.querySelector('#inspectChoose').disabled,ext);
   assert.equal(await id('inspectChecks').locator('li').count(),5);
   const key={docx:'revisions',xlsx:'sheets',pptx:'slides'}[ext];
+  assert.equal(await id('personalPatternResult').isVisible(),false);
   const card=page.locator('#inspectFindings [data-finding="'+key+'"]');assert.equal(await card.getAttribute('data-status'),'present');await card.locator('.finding-locations summary').click();assert.ok(await card.locator('.finding-locations li').first().isVisible());
   const review=id('inspectFindingsReview'),cards=id('inspectFindings').locator('.finding');assert.equal(await cards.count(),10);assert.equal(await review.locator('[data-filter=all]').getAttribute('aria-pressed'),'true');
   await review.locator('[data-filter=present]').click();assert.ok(await cards.evaluateAll(a=>a.every(c=>c.hidden===(c.dataset.status!=='present'))));assert.ok(await card.locator('.finding-advice').isVisible());
@@ -66,7 +83,8 @@ try{
   await review.locator('[data-filter=all]').click();assert.ok(await cards.evaluateAll(a=>a.every(c=>!c.hidden)));
   assert.equal(await id('editorSection').isVisible(),false);
  }
- await id('inspectClear').click();assert.equal(await id('inspectResult').isVisible(),false);assert.equal(await id('inspectFindingsReview').count(),0);
+ await id('inspectTextOptIn').check();await id('inspectFile').setInputFiles({name:'Patterns.docx',mimeType:'application/octet-stream',buffer:Buffer.from(result.docx)});await page.waitForFunction(()=>!document.querySelector('#personalPatternResult').hidden&&!document.querySelector('#inspectChoose').disabled);assert.match(await id('personalPatternFindings').locator('[data-pattern=email]').textContent(),/Corrispondenze potenziali/);assert.ok(!(await id('personalPatternResult').textContent()).includes('demo@example.invalid'));
+ await id('inspectTextOptIn').uncheck();await id('inspectClear').click();assert.equal(await id('personalPatternResult').isVisible(),false);assert.equal(await id('inspectResult').isVisible(),false);assert.equal(await id('inspectFindingsReview').count(),0);
  await id('inspectFile').setInputFiles({name:'bad.docx',mimeType:'application/octet-stream',buffer:Buffer.from('broken')});
  await page.waitForFunction(()=>document.querySelector('#inspectStatus').textContent.includes('Impossibile analizzare'));
  assert.equal(await id('inspectResult').isVisible(),false);
