@@ -121,3 +121,22 @@ console.log('Advanced batch scheduler tests passed');
  assert.ok(batch.includes('await batchRunWithPause(scheduler)'));
  assert.ok(batch.includes('batchPauseController?.cancel()'));
  console.log('Smart Batch pause/resume tests passed');
+
+ // Selective retry uses production orchestration and scheduler, not filename matching.
+ const retrySource=batch.match(/async function batchRetrySelected\(scheduler,rows,choose,run,isCancelled\)\{[^\n]+\}/)?.[0];
+ assert.ok(retrySource);
+ const retrySelected=vm.runInNewContext(retrySource+'\nbatchRetrySelected');
+ const visits=[],outputs=[],attemptsById=new Map();
+ const selective=create([0,1,2],async id=>{visits.push(id);const attempts=(attemptsById.get(id)||0)+1;attemptsById.set(id,attempts);if(id!==0&&attempts===1)throw Error('failed');outputs.push(id)});
+ let choices=0;
+ const result=await retrySelected(selective,[{name:'a'},{name:'same'},{name:'same'}],async()=>choices++===0?[2,0,999]:[],s=>s.run(),()=>false);
+ assert.deepEqual(visits,[0,1,2,2]);
+ assert.deepEqual(outputs,[0,2]);
+ assert.deepEqual(Array.from(result,j=>j.status),['success','failed','success']);
+ assert.equal(selective.retryFailed([]),false);
+ assert.equal(selective.retryFailed([0,2]),false);
+ let cancelRetry=false;
+ const interrupted=create([0],async()=>{throw Error('failed')});
+ await retrySelected(interrupted,[],async()=>{cancelRetry=true;return [0]},s=>s.run(),()=>cancelRetry);
+ assert.deepEqual(statuses(interrupted),['failed']);
+ console.log('Selective retry tests passed');
