@@ -23,5 +23,5 @@ function createAdvancedBatch(items, process, {onChange=()=>{}}={}){
  }
  return Object.freeze({snapshot,run,pause(){paused=true;emit()},cancel(){
   cancelled=true;for(const j of jobs)if(j.status==='pending')j.status='cancelled';emit();
- },retryFailed(){if(running||cancelled)return false;for(const j of jobs)if(j.status==='failed')j.status='pending';emit();return true}});
+ },retryFailed(ids){if(running||cancelled||ids!==undefined&&!Array.isArray(ids))return false;const selected=ids===undefined?null:new Set(ids);let changed=false;for(const j of jobs)if(j.status==='failed'&&(!selected||selected.has(j.id))){j.status='pending';changed=true}if(changed)emit();return changed}});
 }
