@@ -47,7 +47,7 @@ console.log('Advanced batch scheduler tests passed');
  assert.ok(build.includes("'src/advanced-batch.js','src/batch.js'"));
  assert.ok(batch.includes('createAdvancedBatch(batchFiles,async file=>'));
  assert.ok(batch.includes('if(batchCancelled)scheduler.cancel()'));
- assert.ok(batch.includes('await scheduler.run();'));
+ assert.ok(batch.includes('await batchRunWithPause(scheduler);'));
  console.log('Batch preview integration checks passed');
 
  // Copy pipeline contract: failed documents do not prevent subsequent copies;
@@ -97,3 +97,27 @@ console.log('Advanced batch scheduler tests passed');
  assert.ok(batch.includes('batchRenderCounters(ready)'));
  assert.ok(batch.includes('batchRenderCounters(rows)'));
  console.log('Smart Batch progress counter tests passed');
+
+ // Exercise the production pause controller with the real scheduler.
+ const pauseSource=batch.match(/function createBatchPauseController\(scheduler,onState=\(\)=>\{\}\)\{[^\n]+\}/)?.[0];
+ assert.ok(pauseSource);
+ const controller=vm.runInNewContext(pauseSource+'\ncreateBatchPauseController');
+ for(const cancel of [false,true]){
+  const visited=[],stagedCopies=[];
+  let ctl,signal;
+  const pausedGate=new Promise(resolve=>{signal=resolve});
+  const engine=create([1,2,3],async n=>{visited.push(n);if(n===1)ctl.toggle();stagedCopies.push(n)});
+  ctl=controller(engine,state=>{if(state==='paused')signal()});
+  const run=ctl.run();
+  await pausedGate;
+  assert.deepEqual(visited,[1]);
+  assert.deepEqual(statuses(engine),['success','pending','pending']);
+  if(cancel)ctl.cancel();else ctl.toggle();
+  await run;
+  assert.deepEqual(visited,cancel?[1]:[1,2,3]);
+  assert.deepEqual(stagedCopies,visited);
+  assert.deepEqual(statuses(engine),cancel?['success','cancelled','cancelled']:['success','success','success']);
+ }
+ assert.ok(batch.includes('await batchRunWithPause(scheduler)'));
+ assert.ok(batch.includes('batchPauseController?.cancel()'));
+ console.log('Smart Batch pause/resume tests passed');
