@@ -64,3 +64,20 @@ console.log('Advanced batch scheduler tests passed');
  assert.deepEqual(discarded,[1]);
  assert.deepEqual(statuses(stop),['cancelled','cancelled']);
  console.log('Copy scheduling contract tests passed');
+
+ // Smart Batch Interface: use the actual row-state adapter without DOM setup.
+ const adapterSource=batch.match(/function batchApplyJobStates\(rows,snapshot\)\{[^\n]+\}/)?.[0];
+ assert.ok(adapterSource);
+ const apply=vm.runInNewContext(adapterSource+'\nbatchApplyJobStates');
+ const uiRows=[{status:'Pronto',file:{name:'same.pdf'}},{status:'Pronto',file:{name:'same.pdf'}}];
+ const transitions=[];
+ let ui;
+ ui=create([1,2],async n=>{assert.equal(uiRows[n-1].jobState,'running');if(n===1)ui.cancel()},{onChange:s=>{apply(uiRows,s);transitions.push(uiRows.map(r=>r.jobState))}});
+ await ui.run();
+ assert.deepEqual(uiRows.map(r=>r.jobState),['cancelled','cancelled']);
+ assert.deepEqual(uiRows.map(r=>r.status),['Pronto','Pronto']);
+ assert.ok(transitions.some(s=>s[0]==='running'&&s[1]==='pending'));
+ apply(uiRows,[{id:0,status:'success'},{id:1,status:'failed'}]);
+ assert.deepEqual(uiRows.map(r=>r.jobState),['success','failed']);
+ assert.ok(batch.includes('status.dataset.batchState'));
+ console.log('Smart Batch row state tests passed');
