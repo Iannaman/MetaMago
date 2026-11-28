@@ -1,0 +1,28 @@
+name: Advanced Batch tests
+on:
+  push:
+    branches:
+      - feature/3.6.0-advanced-batch
+    paths:
+      - 'Office/src/advanced-batch.js'
+      - 'Office/tests/advanced-batch.mjs'
+      - '.github/workflows/advanced-batch-tests.yml'
+  pull_request:
+    paths:
+      - 'Office/src/advanced-batch.js'
+      - 'Office/tests/advanced-batch.mjs'
+      - '.github/workflows/advanced-batch-tests.yml'
+  workflow_dispatch:
+permissions:
+  contents: read
+jobs:
+  scheduler:
+    runs-on: windows-latest
+    timeout-minutes: 5
+    steps:
+      - uses: actions/checkout@v5
+      - uses: actions/setup-node@v5
+        with:
+          node-version: '22'
+      - name: Test Advanced Batch Engine
+        run: node Office/tests/advanced-batch.mjs
