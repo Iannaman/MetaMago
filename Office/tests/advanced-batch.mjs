@@ -81,3 +81,19 @@ console.log('Advanced batch scheduler tests passed');
  assert.deepEqual(uiRows.map(r=>r.jobState),['success','failed']);
  assert.ok(batch.includes('status.dataset.batchState'));
  console.log('Smart Batch row state tests passed');
+
+ // Smart Batch counters: exercise the actual production aggregation helper.
+ const countSource=batch.match(/function batchJobCounts\(rows\)\{[^\n]+\}/)?.[0];
+ assert.ok(countSource);
+ const count=vm.runInNewContext(countSource+'\nbatchJobCounts');
+ const model=(...states)=>states.map(jobState=>({jobState}));
+ assert.equal(count([]).percent,0);
+ assert.equal(count(model('pending','running')).done,0);
+ const mixed=count(model('success','failed','running','pending','cancelled'));
+ assert.equal(mixed.total,5);assert.equal(mixed.done,3);assert.equal(mixed.percent,60);
+ for(const key of ['success','failed','running','pending','cancelled'])assert.equal(mixed[key],1);
+ assert.equal(count(model('cancelled','failed','success')).percent,100);
+ assert.equal(count(model('success','pending','pending')).percent,33);
+ assert.ok(batch.includes('batchRenderCounters(ready)'));
+ assert.ok(batch.includes('batchRenderCounters(rows)'));
+ console.log('Smart Batch progress counter tests passed');
